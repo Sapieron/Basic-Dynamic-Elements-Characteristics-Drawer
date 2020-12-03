@@ -42,6 +42,7 @@ private:
     void connectSignals();
     QChart *createSplineChart() const;
     void showGraphGotPressed();
+    void enableShowGraphButton();
 
 private:
     int m_listCount;

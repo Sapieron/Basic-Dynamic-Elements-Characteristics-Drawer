@@ -52,7 +52,17 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
 
     //create button
     m_ui->equationPushButton->setDefault(false);
-    connect(m_ui->equationPushButton, &QAbstractButton::clicked, this, &ThemeWidget::showGraphGotPressed);
+    connect(m_ui->equationPushButton,
+            &QAbstractButton::clicked,
+            this,
+            &ThemeWidget::showGraphGotPressed);
+
+    //create text box
+    m_ui->equationPushButton->setEnabled(false);
+    connect(m_ui->equationLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
 
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
@@ -232,7 +242,7 @@ void ThemeWidget::showGraphGotPressed()
 {
     //TODO This is where we get when ,,show graph" get's pressed. Handle it, mr Pedro
     //f.e.:
-    //auto inputFromTextBox = ThemeWidget::
+    //auto inputFromTextBox = m_ui->equationLineEdit->text();
     //auto data = ThemeWidget::calculateSomeStuff(inputFromTextBox);
     //ThemeWidget::populateDataForSplineChart(data);
     //ThemeWidget::updateUI();
@@ -240,4 +250,10 @@ void ThemeWidget::showGraphGotPressed()
 
     //FIXME it's here just to show the idea is working!
 //    auto data = ThemeWidget::generateRandomData(m_listCount, m_valueMax, m_valueCount);
+
+}
+
+void ThemeWidget::enableShowGraphButton()
+{
+    m_ui->equationPushButton->setEnabled(! m_ui->equationLineEdit->text().isEmpty() );
 }
