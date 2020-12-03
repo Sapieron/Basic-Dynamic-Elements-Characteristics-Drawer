@@ -31,6 +31,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_listCount(3),
     m_valueMax(10),
     m_valueCount(7),
+    main_chart(new QChart()),
     m_dataTable(generateRandomData(m_listCount, m_valueMax, m_valueCount)),
     m_ui(new Ui_ThemeWidgetForm)
 {
@@ -134,28 +135,28 @@ void ThemeWidget::populateLegendBox()
 
 QChart *ThemeWidget::createSplineChart() const
 {
-    QChart *chart = new QChart();
-    chart->setTitle("Spline chart");
+//    QChart *chart = new QChart();
+    this->main_chart->setTitle("Spline chart");
     QString name("Series ");
     int nameIndex = 0;
     for (const DataList &list : m_dataTable) {
-        QSplineSeries *series = new QSplineSeries(chart);
+        QSplineSeries *series = new QSplineSeries(this->main_chart);
         for (const Data &data : list)
             series->append(data.first);
         series->setName(name + QString::number(nameIndex));
         nameIndex++;
-        chart->addSeries(series);
+        this->main_chart->addSeries(series);
     }
 
-    chart->createDefaultAxes();
-    chart->axes(Qt::Horizontal).first()->setRange(0, m_valueMax);
-    chart->axes(Qt::Vertical).first()->setRange(0, m_valueCount);
+    this->main_chart->createDefaultAxes();
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, m_valueMax);
+    this->main_chart->axes(Qt::Vertical).first()->setRange(0, m_valueCount);
 
     // Add space to label to add space between labels and axis
-    QValueAxis *axisY = qobject_cast<QValueAxis*>(chart->axes(Qt::Vertical).first());
+    QValueAxis *axisY = qobject_cast<QValueAxis*>(this->main_chart->axes(Qt::Vertical).first());
     Q_ASSERT(axisY);
     axisY->setLabelFormat("%.1f  ");
-    return chart;
+    return this->main_chart;
 }
 
 void ThemeWidget::updateUI()
@@ -244,13 +245,29 @@ void ThemeWidget::showGraphGotPressed()
     //f.e.:
     //auto inputFromTextBox = m_ui->equationLineEdit->text();
     //auto data = ThemeWidget::calculateSomeStuff(inputFromTextBox);
-    //ThemeWidget::populateDataForSplineChart(data);
-    //ThemeWidget::updateUI();
+    //ThemeWidget::updateChart(data)
     //That's how I suggest solving this. Single function, single responsibility.
 
-    //FIXME it's here just to show the idea is working!
-//    auto data = ThemeWidget::generateRandomData(m_listCount, m_valueMax, m_valueCount);
+    auto data = this->generateRandomData(this->m_listCount,
+                                         this->m_valueMax,
+                                         this->m_valueCount);
+    this->updateChart(data);
+}
 
+void ThemeWidget::updateChart(DataTable dataTable)
+{
+    this->main_chart->setTitle("Spline chart");    //TODO Pedro, you can set whatever name you want based on what equation we get
+    this->main_chart->removeAllSeries();
+    QString name("Series ");
+    int nameIndex = 0;
+    for (const DataList &list : dataTable) {
+        QSplineSeries *series = new QSplineSeries(this->main_chart);
+        for (const Data &data : list)
+            series->append(data.first);
+        series->setName(name + QString::number(nameIndex));
+        nameIndex++;
+        this->main_chart->addSeries(series);
+    }
 }
 
 void ThemeWidget::enableShowGraphButton()

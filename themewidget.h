@@ -43,12 +43,15 @@ private:
     QChart *createSplineChart() const;
     void showGraphGotPressed();
     void enableShowGraphButton();
+    void updateChart(DataTable dataTable);
 
 private:
     int m_listCount;
     int m_valueMax;
     int m_valueCount;
     QList<QChartView *> m_charts;
+    QChart *main_chart;
+
     DataTable m_dataTable;
 
     Ui_ThemeWidgetForm *m_ui;
