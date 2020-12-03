@@ -54,6 +54,23 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="equationLabel">
+       <property name="text">
+        <string>Equation:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="equationLineEdit"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="equationPushButton">
+       <property name="text">
+        <string>Show graph</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -80,22 +97,6 @@
    <hints>
     <hint type="sourcelabel">
      <x>83</x>
-     <y>384</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>475</x>
-     <y>385</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>legendComboBox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>ThemeWidgetForm</receiver>
-   <slot>updateUI()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>341</x>
      <y>384</y>
     </hint>
     <hint type="destinationlabel">

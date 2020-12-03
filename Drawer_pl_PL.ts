@@ -28,5 +28,15 @@
         <source>Anti-Aliasing</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="themewidget.ui" line="59"/>
+        <source>Equation:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="69"/>
+        <source>Show graph</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

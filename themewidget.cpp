@@ -50,6 +50,10 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     // Set defaults
     m_ui->antialiasCheckBox->setChecked(true);
 
+    //create button
+    m_ui->equationPushButton->setDefault(false);
+    connect(m_ui->equationPushButton, &QAbstractButton::clicked, this, &ThemeWidget::showGraphGotPressed);
+
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
     pal.setColor(QPalette::Window, QRgb(0xf0f0f0));
@@ -224,3 +228,16 @@ void ThemeWidget::updateUI()
     //![10]
 }
 
+void ThemeWidget::showGraphGotPressed()
+{
+    //TODO This is where we get when ,,show graph" get's pressed. Handle it, mr Pedro
+    //f.e.:
+    //auto inputFromTextBox = ThemeWidget::
+    //auto data = ThemeWidget::calculateSomeStuff(inputFromTextBox);
+    //ThemeWidget::populateDataForSplineChart(data);
+    //ThemeWidget::updateUI();
+    //That's how I suggest solving this. Single function, single responsibility.
+
+    //FIXME it's here just to show the idea is working!
+//    auto data = ThemeWidget::generateRandomData(m_listCount, m_valueMax, m_valueCount);
+}

@@ -8,6 +8,8 @@
 QT_BEGIN_NAMESPACE
 class QComboBox;
 class QCheckBox;
+class QLineEdit;
+class QPushButton;
 class Ui_ThemeWidgetForm;
 QT_END_NAMESPACE
 
@@ -39,6 +41,7 @@ private:
     void populateLegendBox();
     void connectSignals();
     QChart *createSplineChart() const;
+    void showGraphGotPressed();
 
 private:
     int m_listCount;
