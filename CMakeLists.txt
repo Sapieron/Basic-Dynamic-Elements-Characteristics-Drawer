@@ -40,7 +40,6 @@ add_executable(Drawer
     themewidget.h
     themewidget.ui
     types.h
-    drawer_io.h
     ${TS_FILES}
 )
 

@@ -1,6 +1,5 @@
 #include "themewidget.h"
 #include "ui_themewidget.h"
-#include "drawer_io.h"
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QPieSeries>
