@@ -258,7 +258,7 @@ void ThemeWidget::enableShowGraphButton()
     m_ui->equationPushButton->setEnabled(this->isAllDataProvided());
 }
 
-bool ThemeWidget::isAllDataProvided()  //FIXME it should be a drawer responsibility!
+bool ThemeWidget::isAllDataProvided()
 {
     using Drawer::MemberType_t;
 
@@ -306,7 +306,7 @@ bool ThemeWidget::isAllDataProvided()  //FIXME it should be a drawer responsibil
     return result;
 }
 
-void ThemeWidget::connectCallbackToPushButton() //TODO refactor it
+void ThemeWidget::connectCallbackToPushButton()
 {
     connect(m_ui->kLineEdit,
             &QLineEdit::textChanged,
