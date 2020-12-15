@@ -15,62 +15,8 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="themeLabel">
-       <property name="text">
-        <string>Theme</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="themeComboBox"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="animatedLabel">
-       <property name="text">
-        <string>Animation:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="animatedComboBox"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="legendLabel">
-       <property name="text">
-        <string>Legend:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="legendComboBox"/>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="antialiasCheckBox">
-       <property name="text">
-        <string>Anti-Aliasing</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="equationLabel">
-       <property name="text">
-        <string>Equation:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="equationLineEdit"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="equationPushButton">
-       <property name="text">
-        <string>Show graph</string>
-       </property>
-      </widget>
-     </item>
-     <item>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="7">
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -82,6 +28,131 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="1" column="5">
+      <widget class="QLineEdit" name="kLineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="signalTypeLabel">
+       <property name="text">
+        <string>Signal type:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QLineEdit" name="t1LineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QLabel" name="kLabel">
+       <property name="text">
+        <string>k:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="memberTypeComboBox"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="memberTypeLabel">
+       <property name="text">
+        <string>Member type:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="5">
+      <widget class="QLineEdit" name="t3LineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QComboBox" name="signalTypeComboBox"/>
+     </item>
+     <item row="1" column="6">
+      <widget class="QPushButton" name="equationPushButton">
+       <property name="text">
+        <string>Show graph</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="5">
+      <widget class="QLineEdit" name="t2LineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="9">
+      <widget class="QComboBox" name="themeComboBox"/>
+     </item>
+     <item row="1" column="8">
+      <widget class="QLabel" name="themeLabel">
+       <property name="text">
+        <string>Theme</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="5">
+      <widget class="QLineEdit" name="t4LineEdit">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QLabel" name="t1Label">
+       <property name="text">
+        <string>T1:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="4">
+      <widget class="QLabel" name="t2Label">
+       <property name="text">
+        <string>T2:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="4">
+      <widget class="QLabel" name="t3Label">
+       <property name="text">
+        <string>T3:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="4">
+      <widget class="QLabel" name="t4Label">
+       <property name="text">
+        <string>T4:</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -106,23 +177,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>antialiasCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>ThemeWidgetForm</receiver>
-   <slot>updateUI()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>419</x>
-     <y>385</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>475</x>
-     <y>385</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>animatedComboBox</sender>
+   <sender>memberTypeComboBox</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>ThemeWidgetForm</receiver>
    <slot>updateUI()</slot>

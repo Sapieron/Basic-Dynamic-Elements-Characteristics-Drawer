@@ -33,23 +33,17 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts LinguistTools REQUI
 set(TS_FILES Drawer_pl_PL.ts)
 
 
-if(ANDROID)
-  add_library(Drawer SHARED
+
+add_executable(Drawer
     main.cpp
     themewidget.cpp
     themewidget.h
     themewidget.ui
+    types.h
+    drawer_io.h
     ${TS_FILES}
-  )
-else()
-  add_executable(Drawer
-    main.cpp
-    themewidget.cpp
-    themewidget.h
-    themewidget.ui
-    ${TS_FILES}
-  )
-endif()
+)
+
 
 target_link_libraries(Drawer
     PRIVATE

@@ -1,5 +1,6 @@
 #include "themewidget.h"
 #include "ui_themewidget.h"
+#include "drawer_io.h"
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QPieSeries>
@@ -26,30 +27,31 @@
 #include <QtWidgets/QApplication>
 #include <QtCharts/QValueAxis>
 
+using Drawer::DataTable;
+using Drawer::DataList;
+using Drawer::Data;
+
 ThemeWidget::ThemeWidget(QWidget *parent) :
     QWidget(parent),
-    m_listCount(3),
+    m_listCount(1),
     m_valueMax(10),
     m_valueCount(7),
     main_chart(new QChart()),
-    m_dataTable(generateRandomData(m_listCount, m_valueMax, m_valueCount)),
+    m_dataTable(generateRandomData(m_listCount, 0, 0)),
     m_ui(new Ui_ThemeWidgetForm)
 {
     m_ui->setupUi(this);
     populateThemeBox();
-    populateAnimationBox();
-    populateLegendBox();
+    populateResponseTypeBox();
+    populateMemberTypeBox();
 
     //create charts
 
     QChartView *chartView;
 
     chartView = new QChartView(createSplineChart());
-    m_ui->gridLayout->addWidget(chartView, 2, 0);
+    m_ui->gridLayout->addWidget(chartView, 1, 0);
     m_charts << chartView;
-
-    // Set defaults
-    m_ui->antialiasCheckBox->setChecked(true);
 
     //create button
     m_ui->equationPushButton->setDefault(false);
@@ -60,10 +62,17 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
 
     //create text box
     m_ui->equationPushButton->setEnabled(false);
-    connect(m_ui->equationLineEdit,
-            &QLineEdit::textChanged,
+    connectCallbackToPushButton();
+    m_ui->t1LineEdit->setEnabled(false);
+    m_ui->t2LineEdit->setEnabled(false);
+    m_ui->t3LineEdit->setEnabled(false);
+    m_ui->t4LineEdit->setEnabled(false);
+
+    connect(m_ui->memberTypeComboBox,
+            SIGNAL(currentIndexChanged(int)),
             this,
-            &ThemeWidget::enableShowGraphButton);
+            SLOT(memberChangedCallback(int)));
+
 
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
@@ -103,41 +112,42 @@ DataTable ThemeWidget::generateRandomData(int listCount, int valueMax, int value
 void ThemeWidget::populateThemeBox()
 {
     // add items to theme combobox
-    m_ui->themeComboBox->addItem("Light", QChart::ChartThemeLight);
-    m_ui->themeComboBox->addItem("Blue Cerulean", QChart::ChartThemeBlueCerulean);
-    m_ui->themeComboBox->addItem("Dark", QChart::ChartThemeDark);
-    m_ui->themeComboBox->addItem("Brown Sand", QChart::ChartThemeBrownSand);
-    m_ui->themeComboBox->addItem("Blue NCS", QChart::ChartThemeBlueNcs);
-    m_ui->themeComboBox->addItem("High Contrast", QChart::ChartThemeHighContrast);
-    m_ui->themeComboBox->addItem("Blue Icy", QChart::ChartThemeBlueIcy);
-    m_ui->themeComboBox->addItem("Qt", QChart::ChartThemeQt);
+    m_ui->themeComboBox->addItem("Light",           QChart::ChartThemeLight);
+    m_ui->themeComboBox->addItem("Blue Cerulean",   QChart::ChartThemeBlueCerulean);
+    m_ui->themeComboBox->addItem("Dark",            QChart::ChartThemeDark);
+    m_ui->themeComboBox->addItem("Brown Sand",      QChart::ChartThemeBrownSand);
+    m_ui->themeComboBox->addItem("Blue NCS",        QChart::ChartThemeBlueNcs);
+    m_ui->themeComboBox->addItem("High Contrast",   QChart::ChartThemeHighContrast);
+    m_ui->themeComboBox->addItem("Blue Icy",        QChart::ChartThemeBlueIcy);
+    m_ui->themeComboBox->addItem("Qt",              QChart::ChartThemeQt);
 }
 
-void ThemeWidget::populateAnimationBox()
+void ThemeWidget::populateResponseTypeBox()
 {
-    // add items to animation combobox
-    m_ui->animatedComboBox->addItem("No Animations", QChart::NoAnimation);
-    m_ui->animatedComboBox->addItem("GridAxis Animations", QChart::GridAxisAnimations);
-    m_ui->animatedComboBox->addItem("Series Animations", QChart::SeriesAnimations);
-    m_ui->animatedComboBox->addItem("All Animations", QChart::AllAnimations);
+    using Drawer::ResponseType_t;
+
+    m_ui->signalTypeComboBox->addItem("Step",    ResponseType_t::Step);
+    m_ui->signalTypeComboBox->addItem("Impulse", ResponseType_t::Impulse);
 }
 
-void ThemeWidget::populateLegendBox()
+void ThemeWidget::populateMemberTypeBox()
 {
-    // add items to legend combobox
-    m_ui->legendComboBox->addItem("No Legend ", 0);
-    m_ui->legendComboBox->addItem("Legend Top", Qt::AlignTop);
-    m_ui->legendComboBox->addItem("Legend Bottom", Qt::AlignBottom);
-    m_ui->legendComboBox->addItem("Legend Left", Qt::AlignLeft);
-    m_ui->legendComboBox->addItem("Legend Right", Qt::AlignRight);
-}
+    using Drawer::MemberType_t;
 
+    m_ui->memberTypeComboBox->addItem("Proportional",           MemberType_t::Proportional);
+    m_ui->memberTypeComboBox->addItem("Inertion First Order",   MemberType_t::InertionFirstOrder);
+    m_ui->memberTypeComboBox->addItem("Inertion Second Order",  MemberType_t::InertionFourthOrder);
+    m_ui->memberTypeComboBox->addItem("Inertion Third Order",   MemberType_t::InertionThirdOrder);
+    m_ui->memberTypeComboBox->addItem("Inertion Fourth Order",  MemberType_t::InertionFourthOrder);
+    m_ui->memberTypeComboBox->addItem("Integration",            MemberType_t::Integration);
+    m_ui->memberTypeComboBox->addItem("Differentiation",        MemberType_t::Differentiation);
+}
 
 QChart *ThemeWidget::createSplineChart() const
 {
 //    QChart *chart = new QChart();
-    this->main_chart->setTitle("Spline chart");
-    QString name("Series ");
+    this->main_chart->setTitle("ChartNameBasedOnTypeEntered"); //TODO add it
+    QString name("Equation: ");
     int nameIndex = 0;
     for (const DataList &list : m_dataTable) {
         QSplineSeries *series = new QSplineSeries(this->main_chart);
@@ -205,38 +215,12 @@ void ThemeWidget::updateUI()
         window()->setPalette(pal);
     }
 
-    // Update antialiasing
-    //![11]
-    bool checked = m_ui->antialiasCheckBox->isChecked();
-    for (QChartView *chart : charts)
-        chart->setRenderHint(QPainter::Antialiasing, checked);
-    //![11]
 
-    // Update animation options
-    //![9]
-    QChart::AnimationOptions options(
-                m_ui->animatedComboBox->itemData(m_ui->animatedComboBox->currentIndex()).toInt());
-    if (!m_charts.isEmpty() && m_charts.at(0)->chart()->animationOptions() != options) {
-        for (QChartView *chartView : charts)
-            chartView->chart()->setAnimationOptions(options);
+    for (QChartView *chartView : charts)
+    {
+        chartView->chart()->legend()->setAlignment(Qt::AlignLeft);
+        chartView->chart()->legend()->show();
     }
-    //![9]
-
-    // Update legend alignment
-    //![10]
-    Qt::Alignment alignment(
-                m_ui->legendComboBox->itemData(m_ui->legendComboBox->currentIndex()).toInt());
-
-    if (!alignment) {
-        for (QChartView *chartView : charts)
-            chartView->chart()->legend()->hide();
-    } else {
-        for (QChartView *chartView : charts) {
-            chartView->chart()->legend()->setAlignment(alignment);
-            chartView->chart()->legend()->show();
-        }
-    }
-    //![10]
 }
 
 void ThemeWidget::showGraphGotPressed()
@@ -272,5 +256,151 @@ void ThemeWidget::updateChart(DataTable dataTable)
 
 void ThemeWidget::enableShowGraphButton()
 {
-    m_ui->equationPushButton->setEnabled(! m_ui->equationLineEdit->text().isEmpty() );
+    m_ui->equationPushButton->setEnabled(this->isAllDataProvided());
+}
+
+bool ThemeWidget::isAllDataProvided()  //FIXME it should be a drawer responsibility!
+{
+    using Drawer::MemberType_t;
+
+    bool result = false;
+
+    switch(this->_whichMemberIsPicked)
+    {
+    case MemberType_t::Proportional:
+        result = ! this->m_ui->kLineEdit->text().isEmpty();
+        break;
+    case MemberType_t::InertionFirstOrder:
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
+                     this->m_ui->t1LineEdit->text().isEmpty() );
+        break;
+    case MemberType_t::InertionSecondOrder:
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
+                     this->m_ui->t1LineEdit->text().isEmpty() ||
+                     this->m_ui->t2LineEdit->text().isEmpty() );
+        break;
+    case MemberType_t::InertionThirdOrder:
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
+                     this->m_ui->t1LineEdit->text().isEmpty() ||
+                     this->m_ui->t2LineEdit->text().isEmpty() ||
+                     this->m_ui->t3LineEdit->text().isEmpty() );
+        break;
+    case MemberType_t::InertionFourthOrder:
+
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
+                     this->m_ui->t1LineEdit->text().isEmpty() ||
+                     this->m_ui->t2LineEdit->text().isEmpty() ||
+                     this->m_ui->t3LineEdit->text().isEmpty() ||
+                     this->m_ui->t4LineEdit->text().isEmpty() );
+        break;
+    case MemberType_t::Integration:
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty() );
+        break;
+    case MemberType_t::Differentiation:
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty() );
+        break;
+
+    default:
+        break;
+    }
+
+    return result;
+}
+
+void ThemeWidget::connectCallbackToPushButton() //TODO refactor it
+{
+    connect(m_ui->kLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->t1LineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->t2LineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->t3LineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->t4LineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+
+    connect(m_ui->memberTypeComboBox,
+            &QComboBox::currentTextChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+}
+
+void ThemeWidget::memberChangedCallback(int index)
+{
+    using Drawer::MemberType_t;
+
+    this->_whichMemberIsPicked = static_cast<MemberType_t>(index+1);
+
+    switch(this->_whichMemberIsPicked)
+    {
+    case MemberType_t::Proportional:
+    case MemberType_t::Integration:
+    case MemberType_t::Differentiation:
+        m_ui->t1LineEdit->setEnabled(false);
+        m_ui->t2LineEdit->setEnabled(false);
+        m_ui->t3LineEdit->setEnabled(false);
+        m_ui->t4LineEdit->setEnabled(false);
+
+        m_ui->t1LineEdit->clear();
+        m_ui->t2LineEdit->clear();
+        m_ui->t3LineEdit->clear();
+        m_ui->t4LineEdit->clear();
+        break;
+
+    case MemberType_t::InertionFirstOrder:
+        m_ui->t1LineEdit->setEnabled(true);
+        m_ui->t2LineEdit->setEnabled(false);
+        m_ui->t3LineEdit->setEnabled(false);
+        m_ui->t4LineEdit->setEnabled(false);
+
+        m_ui->t2LineEdit->clear();
+        m_ui->t3LineEdit->clear();
+        m_ui->t4LineEdit->clear();
+        break;
+
+    case MemberType_t::InertionSecondOrder:
+        m_ui->t1LineEdit->setEnabled(true);
+        m_ui->t2LineEdit->setEnabled(true);
+        m_ui->t3LineEdit->setEnabled(false);
+        m_ui->t4LineEdit->setEnabled(false);
+
+        m_ui->t3LineEdit->clear();
+        m_ui->t4LineEdit->clear();
+        break;
+
+    case MemberType_t::InertionThirdOrder:
+        m_ui->t1LineEdit->setEnabled(true);
+        m_ui->t2LineEdit->setEnabled(true);
+        m_ui->t3LineEdit->setEnabled(true);
+        m_ui->t4LineEdit->setEnabled(false);
+
+        m_ui->t4LineEdit->clear();
+        break;
+
+    case MemberType_t::InertionFourthOrder:
+        m_ui->t1LineEdit->setEnabled(true);
+        m_ui->t2LineEdit->setEnabled(true);
+        m_ui->t3LineEdit->setEnabled(true);
+        m_ui->t4LineEdit->setEnabled(true);
+        break;
+
+    default:
+        break;
+    }
 }

@@ -9,33 +9,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="22"/>
-        <source>Theme</source>
+        <location filename="themewidget.ui" line="62"/>
+        <source>k:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="32"/>
-        <source>Animation:</source>
+        <location filename="themewidget.ui" line="72"/>
+        <source>Member type:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="42"/>
-        <source>Legend:</source>
+        <location filename="themewidget.ui" line="132"/>
+        <source>T1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="52"/>
-        <source>Anti-Aliasing</source>
+        <location filename="themewidget.ui" line="139"/>
+        <source>T2:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="59"/>
-        <source>Equation:</source>
+        <location filename="themewidget.ui" line="146"/>
+        <source>T3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="69"/>
+        <location filename="themewidget.ui" line="153"/>
+        <source>T4:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="45"/>
+        <source>Signal type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="92"/>
         <source>Show graph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="112"/>
+        <source>Theme</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
