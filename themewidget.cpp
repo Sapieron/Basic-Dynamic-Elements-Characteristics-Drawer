@@ -26,9 +26,9 @@
 #include <QtWidgets/QApplication>
 #include <QtCharts/QValueAxis>
 
-using Drawer::DataTable;
-using Drawer::DataList;
-using Drawer::Data;
+using Calculation::DataTable;
+using Calculation::DataList;
+using Calculation::Data;
 
 ThemeWidget::ThemeWidget(QWidget *parent) :
     QWidget(parent),
@@ -123,7 +123,7 @@ void ThemeWidget::populateThemeBox()
 
 void ThemeWidget::populateResponseTypeBox()
 {
-    using Drawer::ResponseType_t;
+    using Calculation::ResponseType_t;
 
     m_ui->signalTypeComboBox->addItem("Step",    ResponseType_t::Step);
     m_ui->signalTypeComboBox->addItem("Impulse", ResponseType_t::Impulse);
@@ -131,7 +131,7 @@ void ThemeWidget::populateResponseTypeBox()
 
 void ThemeWidget::populateMemberTypeBox()
 {
-    using Drawer::MemberType_t;
+    using Calculation::MemberType_t;
 
     m_ui->memberTypeComboBox->addItem("Proportional",           MemberType_t::Proportional);
     m_ui->memberTypeComboBox->addItem("Inertion First Order",   MemberType_t::InertionFirstOrder);
@@ -144,7 +144,6 @@ void ThemeWidget::populateMemberTypeBox()
 
 QChart *ThemeWidget::createSplineChart() const
 {
-//    QChart *chart = new QChart();
     this->main_chart->setTitle("ChartNameBasedOnTypeEntered"); //TODO add it
     QString name("Equation: ");
     int nameIndex = 0;
@@ -231,10 +230,23 @@ void ThemeWidget::showGraphGotPressed()
     //ThemeWidget::updateChart(data)
     //That's how I suggest solving this. Single function, single responsibility.
 
-    auto data = this->generateRandomData(this->m_listCount,
-                                         this->m_valueMax,
-                                         this->m_valueCount);
-    this->updateChart(data);
+//    auto result = this->generateRandomData(this->m_listCount,
+//                                         this->m_valueMax,
+//                                         this->m_valueCount);
+//    auto data = getData();
+    Calculation::DataAcquired_t data;
+    data.k  = m_ui->kLineEdit->text().toInt();
+    data.t1 = m_ui->t1LineEdit->text().toInt();
+    data.t2 = m_ui->t2LineEdit->text().toInt();
+    data.t3 = m_ui->t3LineEdit->text().toInt();
+    data.t4 = m_ui->t4LineEdit->text().toInt();
+
+    auto response = static_cast<Calculation::ResponseType_t>(
+                m_ui->signalTypeComboBox->itemData(m_ui->signalTypeComboBox->currentIndex()).toInt());
+    auto member = static_cast<Calculation::MemberType_t>(
+                m_ui->memberTypeComboBox->itemData(m_ui->memberTypeComboBox->currentIndex()).toInt());
+    auto result = ThemeWidget::calculate(data, response, member);
+    this->updateChart(result);
 }
 
 void ThemeWidget::updateChart(DataTable dataTable)
@@ -260,7 +272,7 @@ void ThemeWidget::enableShowGraphButton()
 
 bool ThemeWidget::isAllDataProvided()
 {
-    using Drawer::MemberType_t;
+    using Calculation::MemberType_t;
 
     bool result = false;
 
@@ -342,7 +354,7 @@ void ThemeWidget::connectCallbackToPushButton()
 
 void ThemeWidget::memberChangedCallback(int index)
 {
-    using Drawer::MemberType_t;
+    using Calculation::MemberType_t;
 
     this->_whichMemberIsPicked = static_cast<MemberType_t>(index+1);
 
@@ -402,4 +414,15 @@ void ThemeWidget::memberChangedCallback(int index)
     default:
         break;
     }
+}
+
+//TODO this function should be moved to calculation.cpp
+Calculation::DataTable ThemeWidget::calculate(Calculation::DataAcquired_t data,
+                                              Calculation::ResponseType_t response,
+                                              Calculation::MemberType_t   member)
+{
+    Calculation::DataTable result;
+
+    //TODO check how it's done in generateRandomData
+    return result;
 }

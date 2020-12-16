@@ -9,6 +9,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="themewidget.ui" line="45"/>
+        <source>Signal type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="themewidget.ui" line="62"/>
         <source>k:</source>
         <translation type="unfinished"></translation>
@@ -16,6 +21,16 @@
     <message>
         <location filename="themewidget.ui" line="72"/>
         <source>Member type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="92"/>
+        <source>Show graph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="112"/>
+        <source>Theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -36,21 +51,6 @@
     <message>
         <location filename="themewidget.ui" line="153"/>
         <source>T4:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="themewidget.ui" line="45"/>
-        <source>Signal type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="themewidget.ui" line="92"/>
-        <source>Show graph</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="themewidget.ui" line="112"/>
-        <source>Theme</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

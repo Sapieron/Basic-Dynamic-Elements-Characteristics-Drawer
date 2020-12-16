@@ -35,14 +35,14 @@ private Q_SLOTS:
     void updateUI();
 
 private:
-    Drawer::DataTable generateRandomData(int listCount, int valueMax, int valueCount) const;
+    Calculation::DataTable generateRandomData(int listCount, int valueMax, int valueCount) const;
     void populateThemeBox();
     void populateResponseTypeBox();
     void populateMemberTypeBox();
     void connectSignals();
     QChart *createSplineChart() const;
     void showGraphGotPressed();
-    void updateChart(Drawer::DataTable dataTable);
+    void updateChart(Calculation::DataTable dataTable);
     bool isAllDataProvided();
     void connectCallbackToPushButton();
     void enableShowGraphButton();
@@ -56,11 +56,13 @@ private:
     int m_valueCount;
     QList<QChartView *> m_charts;
     QChart *main_chart;
-    Drawer::MemberType_t _whichMemberIsPicked;
-
-    Drawer::DataTable m_dataTable;
-
+    Calculation::MemberType_t _whichMemberIsPicked;
+    Calculation::DataTable m_dataTable;
     Ui_ThemeWidgetForm *m_ui;
+
+    Calculation::DataTable calculate(Calculation::DataAcquired_t data,
+                                     Calculation::ResponseType_t response,
+                                     Calculation::MemberType_t   member);
 };
 
 #endif /* THEMEWIDGET_H */

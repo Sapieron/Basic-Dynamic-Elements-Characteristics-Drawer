@@ -5,7 +5,7 @@
 #include "qstring.h"
 #include "qpair.h"
 
-namespace Drawer
+namespace Calculation
 {
     using Data = QPair<QPointF, QString>;
     using DataList = QList<Data>;
@@ -26,6 +26,15 @@ namespace Drawer
     {
         Step    = 0x01U,
         Impulse = 0x02U
+    };
+
+    struct DataAcquired_t
+    {
+        uint32_t k  = 0;
+        uint32_t t1 = 0;
+        uint32_t t2 = 0;
+        uint32_t t3 = 0;
+        uint32_t t4 = 0;
     };
 }
 
