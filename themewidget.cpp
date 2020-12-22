@@ -29,12 +29,13 @@
 using Calculation::DataTable;
 using Calculation::DataList;
 using Calculation::Data;
+using Calculation::MemberType_t;
 
 ThemeWidget::ThemeWidget(QWidget *parent) :
     QWidget(parent),
     m_listCount(1),
     m_valueMax(10),
-    m_valueCount(7),
+    m_valueCount(10),
     main_chart(new QChart()),
     m_dataTable(generateRandomData(m_listCount, 0, 0)),
     m_ui(new Ui_ThemeWidgetForm)
@@ -45,6 +46,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     populateMemberTypeBox();
 
     //create charts
+    //TODO: PAWEL - please add line chart. Or whatever, just to make it work with proportional equation
 
     QChartView *chartView;
 
@@ -234,6 +236,7 @@ void ThemeWidget::showGraphGotPressed()
 //                                         this->m_valueMax,
 //                                         this->m_valueCount);
 //    auto data = getData();
+
     Calculation::DataAcquired_t data;
     data.k  = m_ui->kLineEdit->text().toInt();
     data.t1 = m_ui->t1LineEdit->text().toInt();
@@ -245,7 +248,8 @@ void ThemeWidget::showGraphGotPressed()
                 m_ui->signalTypeComboBox->itemData(m_ui->signalTypeComboBox->currentIndex()).toInt());
     auto member = static_cast<Calculation::MemberType_t>(
                 m_ui->memberTypeComboBox->itemData(m_ui->memberTypeComboBox->currentIndex()).toInt());
-    auto result = ThemeWidget::calculate(data, response, member);
+    auto result = this->calculate(data, response, member);
+//    auto result = this->generateRandomData(3,10,7); //PEDRO: for test purposes
     this->updateChart(result);
 }
 
@@ -417,12 +421,91 @@ void ThemeWidget::memberChangedCallback(int index)
 }
 
 //TODO this function should be moved to calculation.cpp
-Calculation::DataTable ThemeWidget::calculate(Calculation::DataAcquired_t data,
+DataTable ThemeWidget::calculate(Calculation::DataAcquired_t data,
                                               Calculation::ResponseType_t response,
                                               Calculation::MemberType_t   member)
 {
-    Calculation::DataTable result;
+    DataTable result;
+    DataList dataList;
 
-    //TODO check how it's done in generateRandomData
+    //TODO: PAWEL - please add rest of the functions
+
+    switch(this->_whichMemberIsPicked)
+    {
+    case MemberType_t::Proportional:
+        //TODO LINE GRAPH
+        break;
+    case MemberType_t::InertionFirstOrder:
+        result = this->inertionFirstOrderCalculation(data, response);
+        break;
+    case MemberType_t::InertionSecondOrder:
+    {
+        result = this->inertionSecondOrderCalculation(data, response);
+        break;
+    }
+    default:
+        break;
+    }
+
+    return result;
+}
+
+
+DataTable ThemeWidget::proportionalCalculation(Calculation::DataAcquired_t data,
+                                               Calculation::ResponseType_t response)
+{
+    //TODO: PAWEL
+    //this one generates points in line but it is not graphed
+    //please check if it is matter of chart type or what
+    DataTable result;
+    DataList  dataList;
+    {
+        qreal yValue(0);
+        for (int t(0); t < m_valueCount; t++) {
+            yValue = (qreal) t;
+            QPointF value((qreal) t, yValue);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
+            dataList << Data(value, label);
+        }
+        result << dataList;
+    }
+}
+
+DataTable ThemeWidget::inertionFirstOrderCalculation(Calculation::DataAcquired_t data,
+                                                     Calculation::ResponseType_t response)
+{
+    //this is the only one that works properly
+    DataTable result;
+    DataList  dataList;
+    {
+        qreal yValue(0);
+        for (int t(0); t < m_valueCount; t++) {
+            yValue = (qreal) data.k * ((1 - exp(-qreal(t)/qreal(data.t1))))*qreal(1);
+            QPointF value((qreal) t, yValue);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
+            dataList << Data(value, label);
+        }
+        result << dataList;
+    }
+    return result;
+}
+
+DataTable ThemeWidget::inertionSecondOrderCalculation(Calculation::DataAcquired_t data,
+                                                     Calculation::ResponseType_t response)
+{
+    //this one is based on first order but it does not work
+    //please advise what is wrong
+    DataTable result;
+    DataList  dataList;
+    {
+        qreal yValue(0);
+        for (int t(0); t < m_valueCount; t++) {
+            yValue = (qreal) data.k * (1 - (data.t1/(data.t1-data.t2))*exp(-qreal(t)/qreal(data.t1)) + (data.t2/(data.t1-data.t2))*exp(-qreal(t)/qreal(data.t2)))*qreal(1);
+            QPointF value((qreal) t, yValue);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
+            dataList << Data(value, label);
+        }
+        result << dataList;
+    }
     return result;
 }

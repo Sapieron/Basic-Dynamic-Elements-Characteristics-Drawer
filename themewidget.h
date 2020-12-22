@@ -63,6 +63,13 @@ private:
     Calculation::DataTable calculate(Calculation::DataAcquired_t data,
                                      Calculation::ResponseType_t response,
                                      Calculation::MemberType_t   member);
+
+    Calculation::DataTable proportionalCalculation(Calculation::DataAcquired_t data,
+                                                   Calculation::ResponseType_t response);
+    Calculation::DataTable inertionFirstOrderCalculation(Calculation::DataAcquired_t data,
+                                                         Calculation::ResponseType_t response);
+    Calculation::DataTable inertionSecondOrderCalculation(Calculation::DataAcquired_t data,
+                                                         Calculation::ResponseType_t response);
 };
 
 #endif /* THEMEWIDGET_H */
