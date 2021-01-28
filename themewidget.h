@@ -49,6 +49,7 @@ private:
 
 private slots:
     void memberChangedCallback(int index);
+    void responseChangedCallback(int index);
 
 private:
     int m_listCount;
@@ -57,23 +58,27 @@ private:
     Calculation::DataAcquired_t _data;
     QList<QChartView *> m_charts;
     QChart *main_chart;
-    Calculation::MemberType_t _whichMemberIsPicked;
+    Calculation::MemberType_t   _whichMemberIsPicked;
+    Calculation::ResponseType_t _whichResponseIsPicked;
     Calculation::DataTable m_dataTable;
     Ui_ThemeWidgetForm *m_ui;
 
-    Calculation::DataTable calculate(Calculation::DataAcquired_t& data,
-                                     Calculation::ResponseType_t response);
+    Calculation::DataTable calculate(Calculation::DataAcquired_t& data);
 
-    Calculation::DataTable proportionalCalculation(Calculation::DataAcquired_t& data,
-                                                   Calculation::ResponseType_t response);
-    Calculation::DataTable inertionFirstOrderCalculation(Calculation::DataAcquired_t& data,
-                                                         Calculation::ResponseType_t response);
-    Calculation::DataTable inertionSecondOrderCalculation(Calculation::DataAcquired_t& data,
-                                                         Calculation::ResponseType_t response);
+    Calculation::DataTable proportionalCalculation(Calculation::DataAcquired_t& data);
+    Calculation::DataTable inertionFirstOrderCalculation(Calculation::DataAcquired_t& data);
+    Calculation::DataTable inertionSecondOrderCalculation(Calculation::DataAcquired_t& data);
 
-    qreal getFirstOrderValue(Calculation::DataAcquired_t& data,
-                             int timeStamp,
-                             Calculation::ResponseType_t response); //TODO get rid of parameter reponse, it can be class-related like member type
+    void setBorderValues(Calculation::DataAcquired_t& data,
+                         std::vector<qreal> xValVector,
+                         std::vector<qreal> yValVector);
+
+    qreal getInertionFirstOrderValue(Calculation::DataAcquired_t& data,
+                                     int timeStamp);
+    qreal getInertionSecondOrderValue(Calculation::DataAcquired_t& data,
+                                      int timeStamp);
+    qreal getProportional(Calculation::DataAcquired_t& data,
+                                                   int timeStamp);  //FIXME these 3 functions are temporary
 };
 
 #endif /* THEMEWIDGET_H */

@@ -40,7 +40,7 @@ namespace Calculation
         qreal maxXValue = 0;
 
         qreal minYValue = 0;
-        double maxYValue = 0;
+        qreal maxYValue = 0;
     };
 }
 

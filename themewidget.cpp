@@ -32,6 +32,7 @@ using Calculation::DataTable;
 using Calculation::DataList;
 using Calculation::Data;
 using Calculation::MemberType_t;
+using Calculation::ResponseType_t;
 
 ThemeWidget::ThemeWidget(QWidget *parent) :
     QWidget(parent),
@@ -84,6 +85,11 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
             this,
             SLOT(memberChangedCallback(int)));
 
+    connect(m_ui->signalTypeComboBox,
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(responseChangedCallback(int)));
+
 
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
@@ -91,7 +97,8 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     pal.setColor(QPalette::WindowText, QRgb(0x404044));
     qApp->setPalette(pal);
 
-    this->_whichMemberIsPicked = MemberType_t::Proportional;
+    this->_whichResponseIsPicked = ResponseType_t::Step;    //TODO maybe move to ctor?
+    this->_whichMemberIsPicked   = MemberType_t::Proportional;
 
     updateUI();
 }
@@ -243,13 +250,11 @@ void ThemeWidget::showGraphGotPressed()
     _data.t3 = m_ui->t3LineEdit->text().toInt();
     _data.t4 = m_ui->t4LineEdit->text().toInt();
 
-    auto response = static_cast<Calculation::ResponseType_t>(
-                m_ui->signalTypeComboBox->itemData(m_ui->signalTypeComboBox->currentIndex()).toInt());
-    auto result = this->calculate(_data, response);
+    auto result = this->calculate(_data);
 
     //FIXME make it call ,,setBorderValues()" from here
-    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue);
-    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue);
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue * 1.2);
+    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue * 1.2);
 
     this->updateChart(result);
 }
@@ -421,9 +426,14 @@ void ThemeWidget::memberChangedCallback(int index)
     }
 }
 
+void ThemeWidget::responseChangedCallback(int index)
+{
+    this->_whichResponseIsPicked = static_cast<Calculation::ResponseType_t>(index+1);
+}
+
+
 //TODO this function should be moved to calculation.cpp
-DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data,
-                                              Calculation::ResponseType_t response)
+DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
 {
     DataTable result;
     DataList dataList;
@@ -431,19 +441,19 @@ DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data,
     switch(this->_whichMemberIsPicked)
     {
     case MemberType_t::Proportional:
-        result = this->proportionalCalculation(data, response);
+        result = this->proportionalCalculation(data);
         break;
     case MemberType_t::InertionFirstOrder:
-        result = this->inertionFirstOrderCalculation(data, response);
+        result = this->inertionFirstOrderCalculation(data);
         break;
     case MemberType_t::InertionSecondOrder:
-        result = this->inertionSecondOrderCalculation(data, response);
+        result = this->inertionSecondOrderCalculation(data);
         break;
     case MemberType_t::InertionThirdOrder:
-        result = this->inertionSecondOrderCalculation(data, response);
+        result = this->inertionSecondOrderCalculation(data);
         break;
     case MemberType_t::InertionFourthOrder:
-        result = this->inertionSecondOrderCalculation(data, response);
+        result = this->inertionSecondOrderCalculation(data);
         break;
     default:
         break;
@@ -453,47 +463,17 @@ DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data,
 }
 
 
-DataTable ThemeWidget::proportionalCalculation(Calculation::DataAcquired_t& data,
-                                               Calculation::ResponseType_t response)
+DataTable ThemeWidget::proportionalCalculation(Calculation::DataAcquired_t& data)
 {
-    //TODO: PAWEL
-    //this one generates points in line but it is not graphed
-    //please check if it is matter of chart type or what
     DataTable result;
     DataList  dataList;
+    std::vector<qreal> xValVector;
+    std::vector<qreal> yValVector;
+
     {
         qreal yValue(0);
         for (int t(0); t < m_valueCount; t++) {
-            yValue = data.k + (qreal)t * (qreal)0.0001;
-            QPointF value((qreal) t, yValue);
-            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
-            dataList << Data(value, label);
-        }
-        result << dataList;
-    }
-
-    //FIXME make it call get rid of it, it needs to be called ,,setBorderValues(auto& reference)"
-//    data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
-//    data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
-//    data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
-//    data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
-
-    return result;
-}
-
-DataTable ThemeWidget::inertionFirstOrderCalculation(Calculation::DataAcquired_t& data,
-                                                     Calculation::ResponseType_t response)
-{
-    DataTable result;
-    DataList  dataList;
-
-    std::vector<qreal> xValVector;
-    std::vector<qreal> yValVector;
-    {
-        qreal yValue(0);
-        for (int t(-10); t < m_valueCount; t++) {
-//            yValue = data.k * ((1 - exp(-qreal(t)/qreal(data.t1))))*qreal(1);
-            yValue = getFirstOrderValue(data, t, response);
+            yValue = this->getProportional(data, t);
             QPointF value((qreal) t, yValue);
             QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
             dataList << Data(value, label);
@@ -503,49 +483,120 @@ DataTable ThemeWidget::inertionFirstOrderCalculation(Calculation::DataAcquired_t
         result << dataList;
     }
 
-    //TODO refactor
+
+    this->setBorderValues(data, xValVector, yValVector);
+    return result;
+}
+
+DataTable ThemeWidget::inertionFirstOrderCalculation(Calculation::DataAcquired_t& data)
+{
+    DataTable result;
+    DataList  dataList;
+    std::vector<qreal> xValVector;
+    std::vector<qreal> yValVector;
+
+    {
+        qreal yValue(0);
+        for (int t(-10); t < m_valueCount; t++) {   //TODO hardcoded temporary
+            yValue = this->getInertionFirstOrderValue(data, t);
+            QPointF value((qreal) t, yValue);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
+            dataList << Data(value, label);
+            xValVector.push_back(t);
+            yValVector.push_back(yValue);
+        }
+        result << dataList;
+    }
+
+    this->setBorderValues(data, xValVector, yValVector);
+    return result;
+}
+
+DataTable ThemeWidget::inertionSecondOrderCalculation(Calculation::DataAcquired_t& data)
+{
+    DataTable result;
+    DataList  dataList;
+    std::vector<qreal> xValVector;
+    std::vector<qreal> yValVector;
+
+    {
+        qreal yValue(0);
+        for (int t(0); t < m_valueCount; t++) {   //TODO hardcoded temporary
+            yValue = this->getInertionSecondOrderValue(data, t);//TODO all this logic is the same in all functions, refactor
+            QPointF value((qreal) t, yValue);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
+            dataList << Data(value, label);
+            xValVector.push_back(t);
+            yValVector.push_back(yValue);
+        }
+        result << dataList;
+    }
+
+    this->setBorderValues(data, xValVector, yValVector);
+    return result;
+}
+
+void ThemeWidget::setBorderValues(Calculation::DataAcquired_t& data,    //TODO move it to calculations namespace
+                                  std::vector<qreal> xValVector,
+                                  std::vector<qreal> yValVector)
+{
+
     data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
     data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
     data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
     data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
 
-    return result;
+    return;
 }
 
-DataTable ThemeWidget::inertionSecondOrderCalculation(Calculation::DataAcquired_t& data,
-                                                     Calculation::ResponseType_t response)
+qreal ThemeWidget::getProportional(Calculation::DataAcquired_t& data,
+                                   int timeStamp)
 {
-    //this one is based on first order but it does not work
-    //please advise what is wrong
-    DataTable result;
-    DataList  dataList;
+    qreal result = 0;
+
+    if(this->_whichResponseIsPicked == Calculation::ResponseType_t::Step)
     {
-        qreal yValue(0);
-        for (int t(0); t < m_valueCount; t++) {
-            yValue = data.k * (1 - (data.t1/(data.t1-data.t2))*exp(-qreal(t)/qreal(data.t1)) + (data.t2/(data.t1-data.t2))*exp(-qreal(t)/qreal(data.t2)))*qreal(1);
-            QPointF value((qreal) t, yValue);
-            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
-            dataList << Data(value, label);
-        }
-        result << dataList;
+        result = (qreal)data.k * (qreal)timeStamp;
     }
+    else
+    {
+        result = 0; //TODO TEMPORARY
+    }
+
     return result;
 }
 
 
-qreal ThemeWidget::getFirstOrderValue(Calculation::DataAcquired_t& data,
-                         int timeStamp,
-                         Calculation::ResponseType_t response) //TODO get rid of parameter reponse, it can be class-related like member type
+qreal ThemeWidget::getInertionFirstOrderValue(Calculation::DataAcquired_t& data,
+                                              int timeStamp)
 {
     qreal result;
 
-    if(response == Calculation::ResponseType_t::Step)
+    if(this->_whichResponseIsPicked == Calculation::ResponseType_t::Step)
     {
         result = data.k * (1 - exp(-qreal(timeStamp)/qreal(data.t1)));
     }
     else
     {
         result = data.k / qreal(data.t1) * exp(-(qreal)timeStamp/(qreal)data.t1);
+    }
+
+    return result;
+}
+
+qreal ThemeWidget::getInertionSecondOrderValue(Calculation::DataAcquired_t& data,
+                                               int timeStamp)
+{
+    qreal result = 0;
+
+    if(this->_whichResponseIsPicked == Calculation::ResponseType_t::Step)
+    {
+        result = (qreal)data.k*( (qreal)1 - (qreal)1/((qreal)data.t1 - (qreal)data.t2)  * ((qreal)data.t1 * exp(-(qreal)timeStamp / (qreal)data.t1) - (qreal)data.t2 * exp(-(qreal)timeStamp / (qreal)data.t2)  ) ) ;
+    }
+    else
+    {   //FIXME we have to make sure that data.t1 != data.t2!
+        //FIXME have to handle data.t1 || t2 etc. = 0 cases
+        result = ((qreal)data.k / ((qreal)data.t1 - (qreal)data.t2)) * ( exp(-(qreal)timeStamp/(qreal)data.t1) - exp(-(qreal)timeStamp / (qreal)data.t2) ) ;
     }
 
     return result;
