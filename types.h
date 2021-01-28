@@ -30,11 +30,17 @@ namespace Calculation
 
     struct DataAcquired_t
     {
-        uint32_t k  = 0;
+        qreal k  = 0;
         uint32_t t1 = 0;
         uint32_t t2 = 0;
         uint32_t t3 = 0;
         uint32_t t4 = 0;
+
+        qreal minXValue = 0;
+        qreal maxXValue = 0;
+
+        qreal minYValue = 0;
+        double maxYValue = 0;
     };
 }
 

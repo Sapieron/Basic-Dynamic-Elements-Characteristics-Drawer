@@ -26,6 +26,8 @@
 #include <QtWidgets/QApplication>
 #include <QtCharts/QValueAxis>
 
+#include <algorithm>
+
 using Calculation::DataTable;
 using Calculation::DataList;
 using Calculation::Data;
@@ -64,6 +66,14 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     //create text box
     m_ui->equationPushButton->setEnabled(false);
     connectCallbackToPushButton();
+
+    //Make line editing accept only numbers
+    m_ui->kLineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t1LineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t2LineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t3LineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t4LineEdit->setValidator(new QIntValidator(0, 100, this));
+
     m_ui->t1LineEdit->setEnabled(false);
     m_ui->t2LineEdit->setEnabled(false);
     m_ui->t3LineEdit->setEnabled(false);
@@ -80,6 +90,8 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     pal.setColor(QPalette::Window, QRgb(0xf0f0f0));
     pal.setColor(QPalette::WindowText, QRgb(0x404044));
     qApp->setPalette(pal);
+
+    this->_whichMemberIsPicked = MemberType_t::Proportional;
 
     updateUI();
 }
@@ -225,37 +237,26 @@ void ThemeWidget::updateUI()
 
 void ThemeWidget::showGraphGotPressed()
 {
-    //TODO This is where we get when ,,show graph" get's pressed. Handle it, mr Pedro
-    //f.e.:
-    //auto inputFromTextBox = m_ui->equationLineEdit->text();
-    //auto data = ThemeWidget::calculateSomeStuff(inputFromTextBox);
-    //ThemeWidget::updateChart(data)
-    //That's how I suggest solving this. Single function, single responsibility.
-
-//    auto result = this->generateRandomData(this->m_listCount,
-//                                         this->m_valueMax,
-//                                         this->m_valueCount);
-//    auto data = getData();
-
-    Calculation::DataAcquired_t data;
-    data.k  = m_ui->kLineEdit->text().toInt();
-    data.t1 = m_ui->t1LineEdit->text().toInt();
-    data.t2 = m_ui->t2LineEdit->text().toInt();
-    data.t3 = m_ui->t3LineEdit->text().toInt();
-    data.t4 = m_ui->t4LineEdit->text().toInt();
+    _data.k  = m_ui->kLineEdit->text().toInt();
+    _data.t1 = m_ui->t1LineEdit->text().toInt();
+    _data.t2 = m_ui->t2LineEdit->text().toInt();
+    _data.t3 = m_ui->t3LineEdit->text().toInt();
+    _data.t4 = m_ui->t4LineEdit->text().toInt();
 
     auto response = static_cast<Calculation::ResponseType_t>(
                 m_ui->signalTypeComboBox->itemData(m_ui->signalTypeComboBox->currentIndex()).toInt());
-    auto member = static_cast<Calculation::MemberType_t>(
-                m_ui->memberTypeComboBox->itemData(m_ui->memberTypeComboBox->currentIndex()).toInt());
-    auto result = this->calculate(data, response, member);
-//    auto result = this->generateRandomData(3,10,7); //PEDRO: for test purposes
+    auto result = this->calculate(_data, response);
+
+    //FIXME make it call ,,setBorderValues()" from here
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue);
+    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue);
+
     this->updateChart(result);
 }
 
 void ThemeWidget::updateChart(DataTable dataTable)
 {
-    this->main_chart->setTitle("Spline chart");    //TODO Pedro, you can set whatever name you want based on what equation we get
+    this->main_chart->setTitle("Spline chart");
     this->main_chart->removeAllSeries();
     QString name("Series ");
     int nameIndex = 0;
@@ -421,28 +422,29 @@ void ThemeWidget::memberChangedCallback(int index)
 }
 
 //TODO this function should be moved to calculation.cpp
-DataTable ThemeWidget::calculate(Calculation::DataAcquired_t data,
-                                              Calculation::ResponseType_t response,
-                                              Calculation::MemberType_t   member)
+DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data,
+                                              Calculation::ResponseType_t response)
 {
     DataTable result;
     DataList dataList;
 
-    //TODO: PAWEL - please add rest of the functions
-
     switch(this->_whichMemberIsPicked)
     {
     case MemberType_t::Proportional:
-        //TODO LINE GRAPH
+        result = this->proportionalCalculation(data, response);
         break;
     case MemberType_t::InertionFirstOrder:
         result = this->inertionFirstOrderCalculation(data, response);
         break;
     case MemberType_t::InertionSecondOrder:
-    {
         result = this->inertionSecondOrderCalculation(data, response);
         break;
-    }
+    case MemberType_t::InertionThirdOrder:
+        result = this->inertionSecondOrderCalculation(data, response);
+        break;
+    case MemberType_t::InertionFourthOrder:
+        result = this->inertionSecondOrderCalculation(data, response);
+        break;
     default:
         break;
     }
@@ -451,7 +453,7 @@ DataTable ThemeWidget::calculate(Calculation::DataAcquired_t data,
 }
 
 
-DataTable ThemeWidget::proportionalCalculation(Calculation::DataAcquired_t data,
+DataTable ThemeWidget::proportionalCalculation(Calculation::DataAcquired_t& data,
                                                Calculation::ResponseType_t response)
 {
     //TODO: PAWEL
@@ -462,35 +464,55 @@ DataTable ThemeWidget::proportionalCalculation(Calculation::DataAcquired_t data,
     {
         qreal yValue(0);
         for (int t(0); t < m_valueCount; t++) {
-            yValue = (qreal) t;
+            yValue = data.k + (qreal)t * (qreal)0.0001;
             QPointF value((qreal) t, yValue);
             QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
             dataList << Data(value, label);
         }
         result << dataList;
     }
-}
 
-DataTable ThemeWidget::inertionFirstOrderCalculation(Calculation::DataAcquired_t data,
-                                                     Calculation::ResponseType_t response)
-{
-    //this is the only one that works properly
-    DataTable result;
-    DataList  dataList;
-    {
-        qreal yValue(0);
-        for (int t(0); t < m_valueCount; t++) {
-            yValue = (qreal) data.k * ((1 - exp(-qreal(t)/qreal(data.t1))))*qreal(1);
-            QPointF value((qreal) t, yValue);
-            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
-            dataList << Data(value, label);
-        }
-        result << dataList;
-    }
+    //FIXME make it call get rid of it, it needs to be called ,,setBorderValues(auto& reference)"
+//    data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
+//    data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
+//    data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
+//    data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
+
     return result;
 }
 
-DataTable ThemeWidget::inertionSecondOrderCalculation(Calculation::DataAcquired_t data,
+DataTable ThemeWidget::inertionFirstOrderCalculation(Calculation::DataAcquired_t& data,
+                                                     Calculation::ResponseType_t response)
+{
+    DataTable result;
+    DataList  dataList;
+
+    std::vector<qreal> xValVector;
+    std::vector<qreal> yValVector;
+    {
+        qreal yValue(0);
+        for (int t(-10); t < m_valueCount; t++) {
+//            yValue = data.k * ((1 - exp(-qreal(t)/qreal(data.t1))))*qreal(1);
+            yValue = getFirstOrderValue(data, t, response);
+            QPointF value((qreal) t, yValue);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
+            dataList << Data(value, label);
+            xValVector.push_back(t);
+            yValVector.push_back(yValue);
+        }
+        result << dataList;
+    }
+
+    //TODO refactor
+    data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
+    data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
+    data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
+    data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
+
+    return result;
+}
+
+DataTable ThemeWidget::inertionSecondOrderCalculation(Calculation::DataAcquired_t& data,
                                                      Calculation::ResponseType_t response)
 {
     //this one is based on first order but it does not work
@@ -500,12 +522,31 @@ DataTable ThemeWidget::inertionSecondOrderCalculation(Calculation::DataAcquired_
     {
         qreal yValue(0);
         for (int t(0); t < m_valueCount; t++) {
-            yValue = (qreal) data.k * (1 - (data.t1/(data.t1-data.t2))*exp(-qreal(t)/qreal(data.t1)) + (data.t2/(data.t1-data.t2))*exp(-qreal(t)/qreal(data.t2)))*qreal(1);
+            yValue = data.k * (1 - (data.t1/(data.t1-data.t2))*exp(-qreal(t)/qreal(data.t1)) + (data.t2/(data.t1-data.t2))*exp(-qreal(t)/qreal(data.t2)))*qreal(1);
             QPointF value((qreal) t, yValue);
             QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
             dataList << Data(value, label);
         }
         result << dataList;
     }
+    return result;
+}
+
+
+qreal ThemeWidget::getFirstOrderValue(Calculation::DataAcquired_t& data,
+                         int timeStamp,
+                         Calculation::ResponseType_t response) //TODO get rid of parameter reponse, it can be class-related like member type
+{
+    qreal result;
+
+    if(response == Calculation::ResponseType_t::Step)
+    {
+        result = data.k * (1 - exp(-qreal(timeStamp)/qreal(data.t1)));
+    }
+    else
+    {
+        result = data.k / qreal(data.t1) * exp(-(qreal)timeStamp/(qreal)data.t1);
+    }
+
     return result;
 }
