@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8)
 
 set(CMAKE_C_COMPILER_WORKS 1)
 set(CMAKE_CXX_COMPILER_WORKS 1)
@@ -30,11 +30,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Charts LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts LinguistTools REQUIRED)
 
-set(TS_FILES Drawer_pl_PL.ts)
+set(TS_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Drawer_PL.ts
+)
 
 
 
-add_executable(Drawer
+# generate qm files
+qt5_add_translation(QM_FILES ${TS_FILES})
+
+
+add_executable(${PROJECT_NAME}
     main.cpp
     themewidget.cpp
     themewidget.h
@@ -42,7 +48,7 @@ add_executable(Drawer
     calculation.cpp
     themewidget.ui
     types.h
-    ${TS_FILES}
+    ${QM_FILES}
 )
 
 
@@ -51,5 +57,6 @@ target_link_libraries(Drawer
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Charts
 )
+
 
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
