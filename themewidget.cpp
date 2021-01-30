@@ -26,7 +26,6 @@
 #include <QtWidgets/QApplication>
 #include <QtCharts/QValueAxis>
 
-#include <algorithm>
 
 using Calculation::DataTable;
 using Calculation::DataList;
@@ -127,41 +126,41 @@ DataTable ThemeWidget::generateRandomData(int listCount, int valueMax, int value
 void ThemeWidget::populateThemeBox()
 {
     // add items to theme combobox
-    m_ui->themeComboBox->addItem("Light",           QChart::ChartThemeLight);
-    m_ui->themeComboBox->addItem("Blue Cerulean",   QChart::ChartThemeBlueCerulean);
-    m_ui->themeComboBox->addItem("Dark",            QChart::ChartThemeDark);
-    m_ui->themeComboBox->addItem("Brown Sand",      QChart::ChartThemeBrownSand);
-    m_ui->themeComboBox->addItem("Blue NCS",        QChart::ChartThemeBlueNcs);
-    m_ui->themeComboBox->addItem("High Contrast",   QChart::ChartThemeHighContrast);
-    m_ui->themeComboBox->addItem("Blue Icy",        QChart::ChartThemeBlueIcy);
-    m_ui->themeComboBox->addItem("Qt",              QChart::ChartThemeQt);
+    m_ui->themeComboBox->addItem(tr("Light"),           QChart::ChartThemeLight);
+    m_ui->themeComboBox->addItem(tr("Blue Cerulean"),   QChart::ChartThemeBlueCerulean);
+    m_ui->themeComboBox->addItem(tr("Dark"),            QChart::ChartThemeDark);
+    m_ui->themeComboBox->addItem(tr("Brown Sand"),      QChart::ChartThemeBrownSand);
+    m_ui->themeComboBox->addItem(tr("Blue NCS"),        QChart::ChartThemeBlueNcs);
+    m_ui->themeComboBox->addItem(tr("High Contrast"),   QChart::ChartThemeHighContrast);
+    m_ui->themeComboBox->addItem(tr("Blue Icy"),        QChart::ChartThemeBlueIcy);
+    m_ui->themeComboBox->addItem(tr("Qt"),              QChart::ChartThemeQt);
 }
 
 void ThemeWidget::populateResponseTypeBox()
 {
     using Calculation::ResponseType_t;
 
-    m_ui->signalTypeComboBox->addItem("Step",    ResponseType_t::Step);
-    m_ui->signalTypeComboBox->addItem("Impulse", ResponseType_t::Impulse);
+    m_ui->signalTypeComboBox->addItem(tr("Step"),    ResponseType_t::Step);
+    m_ui->signalTypeComboBox->addItem(tr("Impulse"), ResponseType_t::Impulse);
 }
 
 void ThemeWidget::populateMemberTypeBox()
 {
     using Calculation::MemberType_t;
 
-    m_ui->memberTypeComboBox->addItem("Proportional",           MemberType_t::Proportional);
-    m_ui->memberTypeComboBox->addItem("Inertion First Order",   MemberType_t::InertionFirstOrder);
-    m_ui->memberTypeComboBox->addItem("Inertion Second Order",  MemberType_t::InertionFourthOrder);
-    m_ui->memberTypeComboBox->addItem("Inertion Third Order",   MemberType_t::InertionThirdOrder);
-    m_ui->memberTypeComboBox->addItem("Inertion Fourth Order",  MemberType_t::InertionFourthOrder);
-    m_ui->memberTypeComboBox->addItem("Integration",            MemberType_t::Integration);
-    m_ui->memberTypeComboBox->addItem("Differentiation",        MemberType_t::Differentiation);
+    m_ui->memberTypeComboBox->addItem(tr("Proportional"),           MemberType_t::Proportional);
+    m_ui->memberTypeComboBox->addItem(tr("Inertion First Order"),   MemberType_t::InertionFirstOrder);
+    m_ui->memberTypeComboBox->addItem(tr("Inertion Second Order"),  MemberType_t::InertionFourthOrder);
+    m_ui->memberTypeComboBox->addItem(tr("Inertion Third Order"),   MemberType_t::InertionThirdOrder);
+    m_ui->memberTypeComboBox->addItem(tr("Inertion Fourth Order"),  MemberType_t::InertionFourthOrder);
+    m_ui->memberTypeComboBox->addItem(tr("Integration"),            MemberType_t::Integration);
+    m_ui->memberTypeComboBox->addItem(tr("Differentiation"),        MemberType_t::Differentiation);
 }
 
 QChart *ThemeWidget::createSplineChart() const
 {
-    this->main_chart->setTitle("ChartNameBasedOnTypeEntered"); //TODO add it
-    QString name("Equation: ");
+    this->main_chart->setTitle(tr("ChartNameBasedOnTypeEntered")); //TODO add it
+    QString name(tr("Equation: ")); //TODO make it automatic
     int nameIndex = 0;
     for (const DataList &list : m_dataTable) {
         QSplineSeries *series = new QSplineSeries(this->main_chart);
@@ -256,9 +255,9 @@ void ThemeWidget::showGraphGotPressed()
 
 void ThemeWidget::updateChart(DataTable dataTable)
 {
-    this->main_chart->setTitle("Spline chart");
+    this->main_chart->setTitle(tr("Spline chart")); //TODO that name can be taken from &data
     this->main_chart->removeAllSeries();
-    QString name("Series ");
+    QString name(tr("Series "));
     int nameIndex = 0;
     for (const DataList &list : dataTable) {
         QSplineSeries *series = new QSplineSeries(this->main_chart);
