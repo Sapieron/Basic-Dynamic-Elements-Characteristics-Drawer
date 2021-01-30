@@ -5,7 +5,7 @@
 #include <QtWidgets/QWidget>
 #include <QtCharts/QChartGlobal>
 #include "types.h"
-
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -65,20 +65,32 @@ private:
 
     Calculation::DataTable calculate(Calculation::DataAcquired_t& data);
 
-    Calculation::DataTable proportionalCalculation(Calculation::DataAcquired_t& data);
-    Calculation::DataTable inertionFirstOrderCalculation(Calculation::DataAcquired_t& data);
-    Calculation::DataTable inertionSecondOrderCalculation(Calculation::DataAcquired_t& data);
+    template <typename Calculation::MemberType_t>
+    qreal getValueOfOperation(Calculation::DataAcquired_t& data,
+                                          int timeStamp);
 
     void setBorderValues(Calculation::DataAcquired_t& data,
                          std::vector<qreal> xValVector,
                          std::vector<qreal> yValVector);
 
-    qreal getInertionFirstOrderValue(Calculation::DataAcquired_t& data,
-                                     int timeStamp);
-    qreal getInertionSecondOrderValue(Calculation::DataAcquired_t& data,
-                                      int timeStamp);
-    qreal getProportional(Calculation::DataAcquired_t& data,
-                                                   int timeStamp);  //FIXME these 3 functions are temporary
 };
+
+template <>
+qreal ThemeWidget::getValueOfOperation<Calculation::MemberType_t::InertionFirstOrder>(Calculation::DataAcquired_t& data,
+                                                                                      int timeStamp)
+{
+    qreal result;
+
+    if(this->_whichResponseIsPicked == Calculation::ResponseType_t::Step)
+    {
+        result = data.k * (1 - exp(-qreal(timeStamp)/qreal(data.t1)));
+    }
+    else
+    {
+        result = data.k / qreal(data.t1) * exp(-(qreal)timeStamp/(qreal)data.t1);
+    }
+
+    return result;
+}
 
 #endif /* THEMEWIDGET_H */
