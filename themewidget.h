@@ -4,7 +4,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtCharts/QChartGlobal>
-#include "types.h"
+#include "calculation.hpp"
 #include <cmath>
 
 QT_BEGIN_NAMESPACE
@@ -61,36 +61,15 @@ private:
     Calculation::MemberType_t   _whichMemberIsPicked;
     Calculation::ResponseType_t _whichResponseIsPicked;
     Calculation::DataTable m_dataTable;
+    Calculation::Calculator _calculator;
     Ui_ThemeWidgetForm *m_ui;
 
     Calculation::DataTable calculate(Calculation::DataAcquired_t& data);
-
-    template <typename Calculation::MemberType_t>
-    qreal getValueOfOperation(Calculation::DataAcquired_t& data,
-                                          int timeStamp);
 
     void setBorderValues(Calculation::DataAcquired_t& data,
                          std::vector<qreal> xValVector,
                          std::vector<qreal> yValVector);
 
 };
-
-template <>
-qreal ThemeWidget::getValueOfOperation<Calculation::MemberType_t::InertionFirstOrder>(Calculation::DataAcquired_t& data,
-                                                                                      int timeStamp)
-{
-    qreal result;
-
-    if(this->_whichResponseIsPicked == Calculation::ResponseType_t::Step)
-    {
-        result = data.k * (1 - exp(-qreal(timeStamp)/qreal(data.t1)));
-    }
-    else
-    {
-        result = data.k / qreal(data.t1) * exp(-(qreal)timeStamp/(qreal)data.t1);
-    }
-
-    return result;
-}
 
 #endif /* THEMEWIDGET_H */

@@ -38,8 +38,8 @@ add_executable(Drawer
     main.cpp
     themewidget.cpp
     themewidget.h
-#    calculations.hpp
-#    calculations.cpp
+    calculation.hpp
+    calculation.cpp
     themewidget.ui
     types.h
     ${TS_FILES}
