@@ -26,25 +26,28 @@
 #include <QtWidgets/QApplication>
 #include <QtCharts/QValueAxis>
 
-using Drawer::DataTable;
-using Drawer::DataList;
-using Drawer::Data;
+
+using Calculation::DataTable;
+using Calculation::DataList;
+using Calculation::Data;
+using Calculation::MemberType_t;
+using Calculation::ResponseType_t;
 
 ThemeWidget::ThemeWidget(QWidget *parent) :
     QWidget(parent),
     m_listCount(1),
     m_valueMax(10),
-    m_valueCount(7),
+    m_valueCount(10),
     main_chart(new QChart()),
-    m_dataTable(generateRandomData(m_listCount, 0, 0)),
+    _whichMemberIsPicked(MemberType_t::Proportional),
+    _whichResponseIsPicked(ResponseType_t::Step),
+    m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME it's probably not needed
     m_ui(new Ui_ThemeWidgetForm)
 {
     m_ui->setupUi(this);
     populateThemeBox();
     populateResponseTypeBox();
     populateMemberTypeBox();
-
-    //create charts
 
     QChartView *chartView;
 
@@ -62,6 +65,14 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     //create text box
     m_ui->equationPushButton->setEnabled(false);
     connectCallbackToPushButton();
+
+    //Make line editing accept only numbers
+    m_ui->kLineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t1LineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t2LineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t3LineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t4LineEdit->setValidator(new QIntValidator(0, 100, this));
+
     m_ui->t1LineEdit->setEnabled(false);
     m_ui->t2LineEdit->setEnabled(false);
     m_ui->t3LineEdit->setEnabled(false);
@@ -72,6 +83,10 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
             this,
             SLOT(memberChangedCallback(int)));
 
+    connect(m_ui->signalTypeComboBox,
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(responseChangedCallback(int)));
 
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
@@ -111,42 +126,41 @@ DataTable ThemeWidget::generateRandomData(int listCount, int valueMax, int value
 void ThemeWidget::populateThemeBox()
 {
     // add items to theme combobox
-    m_ui->themeComboBox->addItem("Light",           QChart::ChartThemeLight);
-    m_ui->themeComboBox->addItem("Blue Cerulean",   QChart::ChartThemeBlueCerulean);
-    m_ui->themeComboBox->addItem("Dark",            QChart::ChartThemeDark);
-    m_ui->themeComboBox->addItem("Brown Sand",      QChart::ChartThemeBrownSand);
-    m_ui->themeComboBox->addItem("Blue NCS",        QChart::ChartThemeBlueNcs);
-    m_ui->themeComboBox->addItem("High Contrast",   QChart::ChartThemeHighContrast);
-    m_ui->themeComboBox->addItem("Blue Icy",        QChart::ChartThemeBlueIcy);
-    m_ui->themeComboBox->addItem("Qt",              QChart::ChartThemeQt);
+    m_ui->themeComboBox->addItem(tr("Light"),           QChart::ChartThemeLight);
+    m_ui->themeComboBox->addItem(tr("Blue Cerulean"),   QChart::ChartThemeBlueCerulean);
+    m_ui->themeComboBox->addItem(tr("Dark"),            QChart::ChartThemeDark);
+    m_ui->themeComboBox->addItem(tr("Brown Sand"),      QChart::ChartThemeBrownSand);
+    m_ui->themeComboBox->addItem(tr("Blue NCS"),        QChart::ChartThemeBlueNcs);
+    m_ui->themeComboBox->addItem(tr("High Contrast"),   QChart::ChartThemeHighContrast);
+    m_ui->themeComboBox->addItem(tr("Blue Icy"),        QChart::ChartThemeBlueIcy);
+    m_ui->themeComboBox->addItem(tr("Qt"),              QChart::ChartThemeQt);
 }
 
 void ThemeWidget::populateResponseTypeBox()
 {
-    using Drawer::ResponseType_t;
+    using Calculation::ResponseType_t;
 
-    m_ui->signalTypeComboBox->addItem("Step",    ResponseType_t::Step);
-    m_ui->signalTypeComboBox->addItem("Impulse", ResponseType_t::Impulse);
+    m_ui->signalTypeComboBox->addItem(tr("Step"),    ResponseType_t::Step);
+    m_ui->signalTypeComboBox->addItem(tr("Impulse"), ResponseType_t::Impulse);
 }
 
 void ThemeWidget::populateMemberTypeBox()
 {
-    using Drawer::MemberType_t;
+    using Calculation::MemberType_t;
 
-    m_ui->memberTypeComboBox->addItem("Proportional",           MemberType_t::Proportional);
-    m_ui->memberTypeComboBox->addItem("Inertion First Order",   MemberType_t::InertionFirstOrder);
-    m_ui->memberTypeComboBox->addItem("Inertion Second Order",  MemberType_t::InertionFourthOrder);
-    m_ui->memberTypeComboBox->addItem("Inertion Third Order",   MemberType_t::InertionThirdOrder);
-    m_ui->memberTypeComboBox->addItem("Inertion Fourth Order",  MemberType_t::InertionFourthOrder);
-    m_ui->memberTypeComboBox->addItem("Integration",            MemberType_t::Integration);
-    m_ui->memberTypeComboBox->addItem("Differentiation",        MemberType_t::Differentiation);
+    m_ui->memberTypeComboBox->addItem(tr("Proportional"),           MemberType_t::Proportional);
+    m_ui->memberTypeComboBox->addItem(tr("Inertion First Order"),   MemberType_t::InertionFirstOrder);
+    m_ui->memberTypeComboBox->addItem(tr("Inertion Second Order"),  MemberType_t::InertionFourthOrder);
+    m_ui->memberTypeComboBox->addItem(tr("Inertion Third Order"),   MemberType_t::InertionThirdOrder);
+    m_ui->memberTypeComboBox->addItem(tr("Inertion Fourth Order"),  MemberType_t::InertionFourthOrder);
+    m_ui->memberTypeComboBox->addItem(tr("Integration"),            MemberType_t::Integration);
+    m_ui->memberTypeComboBox->addItem(tr("Differentiation"),        MemberType_t::Differentiation);
 }
 
 QChart *ThemeWidget::createSplineChart() const
 {
-//    QChart *chart = new QChart();
-    this->main_chart->setTitle("ChartNameBasedOnTypeEntered"); //TODO add it
-    QString name("Equation: ");
+    this->main_chart->setTitle(tr("ChartNameBasedOnTypeEntered")); //TODO add it
+    QString name(tr("Equation: ")); //TODO make it automatic
     int nameIndex = 0;
     for (const DataList &list : m_dataTable) {
         QSplineSeries *series = new QSplineSeries(this->main_chart);
@@ -224,24 +238,26 @@ void ThemeWidget::updateUI()
 
 void ThemeWidget::showGraphGotPressed()
 {
-    //TODO This is where we get when ,,show graph" get's pressed. Handle it, mr Pedro
-    //f.e.:
-    //auto inputFromTextBox = m_ui->equationLineEdit->text();
-    //auto data = ThemeWidget::calculateSomeStuff(inputFromTextBox);
-    //ThemeWidget::updateChart(data)
-    //That's how I suggest solving this. Single function, single responsibility.
+    _data.k  = m_ui->kLineEdit->text().toInt();
+    _data.t1 = m_ui->t1LineEdit->text().toInt();
+    _data.t2 = m_ui->t2LineEdit->text().toInt();
+    _data.t3 = m_ui->t3LineEdit->text().toInt();
+    _data.t4 = m_ui->t4LineEdit->text().toInt();
 
-    auto data = this->generateRandomData(this->m_listCount,
-                                         this->m_valueMax,
-                                         this->m_valueCount);
-    this->updateChart(data);
+    auto result = this->calculate(_data);
+
+    //FIXME make it call ,,setBorderValues()" from here
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue * 1.2);
+    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue * 1.2);
+
+    this->updateChart(result);
 }
 
 void ThemeWidget::updateChart(DataTable dataTable)
 {
-    this->main_chart->setTitle("Spline chart");    //TODO Pedro, you can set whatever name you want based on what equation we get
+    this->main_chart->setTitle(tr("Spline chart")); //TODO that name can be taken from &data
     this->main_chart->removeAllSeries();
-    QString name("Series ");
+    QString name(tr("Series "));
     int nameIndex = 0;
     for (const DataList &list : dataTable) {
         QSplineSeries *series = new QSplineSeries(this->main_chart);
@@ -260,7 +276,7 @@ void ThemeWidget::enableShowGraphButton()
 
 bool ThemeWidget::isAllDataProvided()
 {
-    using Drawer::MemberType_t;
+    using Calculation::MemberType_t;
 
     bool result = false;
 
@@ -342,7 +358,7 @@ void ThemeWidget::connectCallbackToPushButton()
 
 void ThemeWidget::memberChangedCallback(int index)
 {
-    using Drawer::MemberType_t;
+    using Calculation::MemberType_t;
 
     this->_whichMemberIsPicked = static_cast<MemberType_t>(index+1);
 
@@ -403,3 +419,52 @@ void ThemeWidget::memberChangedCallback(int index)
         break;
     }
 }
+
+void ThemeWidget::responseChangedCallback(int index)
+{
+    this->_whichResponseIsPicked = static_cast<Calculation::ResponseType_t>(index+1);
+}
+
+
+//TODO this function should be moved to calculation.cpp
+DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
+{
+    DataTable result;
+    DataList dataList;
+    std::vector<qreal> xValVector;
+    std::vector<qreal> yValVector;
+
+    data.memberType = this->_whichMemberIsPicked;       //This shouldn't be here, refactor
+    data.responseType = this->_whichResponseIsPicked;
+
+    {
+        qreal yValue(0);
+        for (int t(-10); t < m_valueCount; t++) {   //TODO hardcoded temporary
+            yValue = this->_calculator.calculate(data, t);
+            QPointF value((qreal) t, yValue);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
+            dataList << Data(value, label);
+            xValVector.push_back(t);
+            yValVector.push_back(yValue);
+        }
+        result << dataList;
+    }
+
+    this->setBorderValues(data, xValVector, yValVector);
+
+    return result;
+}
+
+void ThemeWidget::setBorderValues(Calculation::DataAcquired_t& data,    //TODO move it to calculations namespace
+                                  std::vector<qreal> xValVector,
+                                  std::vector<qreal> yValVector)
+{
+
+    data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
+    data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
+    data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
+    data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
+
+    return;
+}
+
