@@ -47,6 +47,8 @@ qreal Calculator::getProportional(DataAcquired_t& data,
 {
     if(data.responseType == ResponseType_t::Impulse)
     {
+        // zostawiam 0 bo impuls Diraca = nieskonczonosc dla t=0
+        // i 0 dla jakiegokolwiek innego t
         return 0; //FIXME temp
     }
     else
@@ -67,7 +69,7 @@ qreal Calculator::getIntertionFirstOrder(DataAcquired_t& data,
         return data.k / qreal(data.t1) * exp(-(qreal)timeStamp/(qreal)data.t1);
     }else
     {
-        return data.k * (1 - exp(-qreal(timeStamp)/qreal(data.t1)));
+        return data.k * (1 - exp(-(qreal)timeStamp/(qreal)data.t1));
     }
 }
 
@@ -83,7 +85,7 @@ qreal Calculator::getIntertionSecondOrder(DataAcquired_t& data,
     }
     else
     {
-        return (qreal)data.k*( (qreal)1 - (qreal)1/((qreal)data.t1 - (qreal)data.t2)  * ((qreal)data.t1 * exp(-(qreal)timeStamp / (qreal)data.t1) - (qreal)data.t2 * exp(-(qreal)timeStamp / (qreal)data.t2)  ) ) ;
+        return (qreal)data.k*( (qreal)1 - ((qreal)data.t1/((qreal)data.t1 - (qreal)data.t2)) * exp(-(qreal)timeStamp / (qreal)data.t1) +  ((qreal)data.t2/((qreal)data.t1 - (qreal)data.t2)) * exp(-(qreal)timeStamp / (qreal)data.t2)) ;
     }
 }
 
@@ -95,11 +97,12 @@ qreal Calculator::getIntertionThirdOrder(DataAcquired_t& data,
 {
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //FIXME temp
+        return data.k - (pow((qreal)data.t1, 2)*data.k*exp(-(qreal)timeStamp/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) + (pow((qreal)data.t2, 2)*data.k*exp(-(qreal)timeStamp/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) - (pow((qreal)data.t3, 2)*data.k*exp(-(qreal)timeStamp/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3));
     }
     else
     {
-        return 0; //FIXME temp
+        return ((qreal)data.t1*(qreal)data.k*exp(-(qreal)timeStamp/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timeStamp/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timeStamp/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t1*data.k*exp(-timeStamp/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timeStamp/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timeStamp/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3));
+
     }
 }
 
@@ -111,11 +114,11 @@ qreal Calculator::getIntertionFourthOrder(DataAcquired_t& data,
 {
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0;   //FIXME temp
+        return (pow((qreal)data.t1, 2)*data.k*exp(-timeStamp/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t1 - (qreal)data.t4)) - (pow((qreal)data.t2, 2)*data.k*exp(-timeStamp/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t4)) + (pow((qreal)data.t3, 2)*data.k*exp(-timeStamp/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t3 - (qreal)data.t4)) - (pow((qreal)data.t4, 2)*data.k*exp(-timeStamp/(qreal)data.t4))/(((qreal)data.t1 - (qreal)data.t4)*((qreal)data.t2 - (qreal)data.t4)*((qreal)data.t3 - (qreal)data.t4));
     }
     else
     {
-        return 0;  //FIXME temp
+        return data.k - (pow((qreal)data.t1, 3)*data.k*exp(-timeStamp/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t1 - (qreal)data.t4)) + (pow((qreal)data.t2, 3)*data.k*exp(-timeStamp/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t4)) - (pow((qreal)data.t3, 3)*data.k*exp(-timeStamp/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t3 - (qreal)data.t4)) + (pow((qreal)data.t4, 3)*data.k*exp(-timeStamp/(qreal)data.t4))/(((qreal)data.t1 - (qreal)data.t4)*((qreal)data.t2 - (qreal)data.t4)*((qreal)data.t3 - (qreal)data.t4));
     }
 }
 
