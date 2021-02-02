@@ -4,6 +4,8 @@
 
 #include <QtWidgets/QWidget>
 #include <QtCharts/QChartGlobal>
+#include "types.h"
+
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -18,15 +20,13 @@ class QChartView;
 class QChart;
 QT_CHARTS_END_NAMESPACE
 
-typedef QPair<QPointF, QString> Data;
-typedef QList<Data> DataList;
-typedef QList<DataList> DataTable;
 
 QT_CHARTS_USE_NAMESPACE
 
 class ThemeWidget: public QWidget
 {
     Q_OBJECT
+
 public:
     explicit ThemeWidget(QWidget *parent = 0);
     ~ThemeWidget();
@@ -35,15 +35,20 @@ private Q_SLOTS:
     void updateUI();
 
 private:
-    DataTable generateRandomData(int listCount, int valueMax, int valueCount) const;
+    Drawer::DataTable generateRandomData(int listCount, int valueMax, int valueCount) const;
     void populateThemeBox();
-    void populateAnimationBox();
-    void populateLegendBox();
+    void populateResponseTypeBox();
+    void populateMemberTypeBox();
     void connectSignals();
     QChart *createSplineChart() const;
     void showGraphGotPressed();
+    void updateChart(Drawer::DataTable dataTable);
+    bool isAllDataProvided();
+    void connectCallbackToPushButton();
     void enableShowGraphButton();
-    void updateChart(DataTable dataTable);
+
+private slots:
+    void memberChangedCallback(int index);
 
 private:
     int m_listCount;
@@ -51,8 +56,9 @@ private:
     int m_valueCount;
     QList<QChartView *> m_charts;
     QChart *main_chart;
+    Drawer::MemberType_t _whichMemberIsPicked;
 
-    DataTable m_dataTable;
+    Drawer::DataTable m_dataTable;
 
     Ui_ThemeWidgetForm *m_ui;
 };
