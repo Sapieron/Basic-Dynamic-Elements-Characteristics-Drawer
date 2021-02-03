@@ -87,6 +87,14 @@
         <source>Equation: </source>
         <translation>Równanie: </translation>
     </message>
+    <message>
+        <source>Time</source>
+        <translation>Czasowa</translation>
+    </message>
+    <message>
+        <source>Amplitude-Phase</source>
+        <translation>Amplitudowo-fazowa</translation>
+    </message>
 </context>
 <context>
     <name>ThemeWidgetForm</name>
@@ -132,7 +140,11 @@
     </message>
     <message>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>Motyw:</translation>
+    </message>
+    <message>
+        <source>Characteristic:</source>
+        <translation>Charakterystyka:</translation>
     </message>
 </context>
 </TS>

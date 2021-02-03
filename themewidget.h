@@ -39,6 +39,7 @@ private:
     void populateThemeBox();
     void populateResponseTypeBox();
     void populateMemberTypeBox();
+    void populateCharacteristicTypeBox();
     void connectSignals();
     QChart *createSplineChart() const;
     void showGraphGotPressed();
@@ -50,6 +51,7 @@ private:
 private slots:
     void memberChangedCallback(int index);
     void responseChangedCallback(int index);
+    void characteristicChangedCallback(int index);
 
 private:
     int m_listCount;
@@ -58,8 +60,9 @@ private:
     Calculation::DataAcquired_t _data;
     QList<QChartView *> m_charts;
     QChart *main_chart;
-    Calculation::MemberType_t   _whichMemberIsPicked;
-    Calculation::ResponseType_t _whichResponseIsPicked;
+    Calculation::MemberType_t         _whichMemberIsPicked;
+    Calculation::ResponseType_t       _whichResponseIsPicked;
+    Calculation::CharacteristicType_t _whichCharactersiticIsPicked;
     Calculation::DataTable m_dataTable;
     Calculation::Calculator _calculator;
     Ui_ThemeWidgetForm *m_ui;

@@ -30,6 +30,7 @@
 using Calculation::DataTable;
 using Calculation::DataList;
 using Calculation::Data;
+using Calculation::CharacteristicType_t;
 using Calculation::MemberType_t;
 using Calculation::ResponseType_t;
 
@@ -41,13 +42,15 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     main_chart(new QChart()),
     _whichMemberIsPicked(MemberType_t::Proportional),
     _whichResponseIsPicked(ResponseType_t::Step),
+    _whichCharactersiticIsPicked(CharacteristicType_t::Time),
     m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME it's probably not needed
     m_ui(new Ui_ThemeWidgetForm)
 {
     m_ui->setupUi(this);
-    populateThemeBox();
-    populateResponseTypeBox();
-    populateMemberTypeBox();
+    this->populateThemeBox();
+    this->populateResponseTypeBox();
+    this->populateMemberTypeBox();
+    this->populateCharacteristicTypeBox();
 
     QChartView *chartView;
 
@@ -67,7 +70,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     connectCallbackToPushButton();
 
     //Make line editing accept only numbers
-    m_ui->kLineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->kLineEdit->setValidator(new QIntValidator(0, 100, this)); //TODO move it to separate function
     m_ui->t1LineEdit->setValidator(new QIntValidator(0, 100, this));
     m_ui->t2LineEdit->setValidator(new QIntValidator(0, 100, this));
     m_ui->t3LineEdit->setValidator(new QIntValidator(0, 100, this));
@@ -87,6 +90,11 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
             SIGNAL(currentIndexChanged(int)),
             this,
             SLOT(responseChangedCallback(int)));
+
+    connect(m_ui->characteristicComboBox,
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(characteristicChangedCallback(int)));
 
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
@@ -155,6 +163,14 @@ void ThemeWidget::populateMemberTypeBox()
     m_ui->memberTypeComboBox->addItem(tr("Inertion Fourth Order"),  MemberType_t::InertionFourthOrder);
     m_ui->memberTypeComboBox->addItem(tr("Integration"),            MemberType_t::Integration);
     m_ui->memberTypeComboBox->addItem(tr("Differentiation"),        MemberType_t::Differentiation);
+}
+
+void ThemeWidget::populateCharacteristicTypeBox()
+{
+    using Calculation::CharacteristicType_t;
+
+    m_ui->characteristicComboBox->addItem(tr("Time"),            CharacteristicType_t::Time);
+    m_ui->characteristicComboBox->addItem(tr("Amplitude-Phase"), CharacteristicType_t::AmplitudePhase);
 }
 
 QChart *ThemeWidget::createSplineChart() const
@@ -425,6 +441,10 @@ void ThemeWidget::responseChangedCallback(int index)
     this->_whichResponseIsPicked = static_cast<Calculation::ResponseType_t>(index+1);
 }
 
+void ThemeWidget::characteristicChangedCallback(int index)
+{
+    this->_whichCharactersiticIsPicked = static_cast<Calculation::CharacteristicType_t>(index+1);
+}
 
 //TODO this function should be moved to calculation.cpp
 DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)

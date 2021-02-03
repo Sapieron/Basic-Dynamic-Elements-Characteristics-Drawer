@@ -28,6 +28,12 @@ namespace Calculation
         Impulse = 0x02U
     };
 
+    enum CharacteristicType_t
+    {
+        Time = 0x01U,
+        AmplitudePhase = 0x02U
+    };
+
     struct DataAcquired_t
     {
         qreal k  = 0;
