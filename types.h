@@ -48,8 +48,9 @@ namespace Calculation
         qreal minYValue = 0;
         qreal maxYValue = 0;
 
-        MemberType_t   memberType;
-        ResponseType_t responseType;
+        MemberType_t         memberType;
+        ResponseType_t       responseType;
+        CharacteristicType_t characteristicType;
     };
 }
 

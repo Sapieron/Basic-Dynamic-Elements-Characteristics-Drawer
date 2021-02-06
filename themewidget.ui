@@ -206,7 +206,7 @@
    <sender>characteristicComboBox</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>ThemeWidgetForm</receiver>
-   <slot>update()</slot>
+   <slot>updateUI()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>82</x>

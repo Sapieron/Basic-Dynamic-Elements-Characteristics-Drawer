@@ -43,7 +43,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     _whichMemberIsPicked(MemberType_t::Proportional),
     _whichResponseIsPicked(ResponseType_t::Step),
     _whichCharactersiticIsPicked(CharacteristicType_t::Time),
-    m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME it's probably not needed
+    m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME initialize data here to 0
     m_ui(new Ui_ThemeWidgetForm)
 {
     m_ui->setupUi(this);
@@ -110,7 +110,7 @@ ThemeWidget::~ThemeWidget()
     delete m_ui;
 }
 
-DataTable ThemeWidget::generateRandomData(int listCount, int valueMax, int valueCount) const
+DataTable ThemeWidget::generateRandomData(int listCount, int valueMax, int valueCount) const    //FIXME it's not needed, m_data should be set to 0
 {
     DataTable dataTable;
 
@@ -262,9 +262,8 @@ void ThemeWidget::showGraphGotPressed()
 
     auto result = this->calculate(_data);
 
-    //FIXME make it call ,,setBorderValues()" from here
-    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue * 1.2);
-    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue * 1.2);
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue);   //FIXME this range is only reasonable for time graph
+    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue);
 
     this->updateChart(result);
 }
@@ -450,41 +449,13 @@ void ThemeWidget::characteristicChangedCallback(int index)
 DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
 {
     DataTable result;
-    DataList dataList;
-    std::vector<qreal> xValVector;
-    std::vector<qreal> yValVector;
 
-    data.memberType = this->_whichMemberIsPicked;       //This shouldn't be here, refactor
+    data.memberType = this->_whichMemberIsPicked;
     data.responseType = this->_whichResponseIsPicked;
+    data.characteristicType = this->_whichCharactersiticIsPicked;
 
-    {
-        qreal yValue(0);
-        for (int t(-10); t < m_valueCount; t++) {   //TODO hardcoded temporary
-            yValue = this->_calculator.calculate(data, t);
-            QPointF value((qreal) t, yValue);
-            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
-            dataList << Data(value, label);
-            xValVector.push_back(t);
-            yValVector.push_back(yValue);
-        }
-        result << dataList;
-    }
-
-    this->setBorderValues(data, xValVector, yValVector);
+    QPair<int, int> span(-10, 10); //TODO temporary, pass data from slider when added
+    result = this->_calculator.calculate(data, span);   //TODO Maybe make it rather a static class?
 
     return result;
 }
-
-void ThemeWidget::setBorderValues(Calculation::DataAcquired_t& data,    //TODO move it to calculations namespace
-                                  std::vector<qreal> xValVector,
-                                  std::vector<qreal> yValVector)
-{
-
-    data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
-    data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
-    data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
-    data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
-
-    return;
-}
-

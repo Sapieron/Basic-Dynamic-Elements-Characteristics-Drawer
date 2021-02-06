@@ -45,6 +45,9 @@ add_executable(${PROJECT_NAME}
     themewidget.cpp
     themewidget.h
     calculation.hpp
+    timeCharts.hpp
+    timeCharts.cpp
+    ICalculator.hpp
     calculation.cpp
     themewidget.ui
     types.h
