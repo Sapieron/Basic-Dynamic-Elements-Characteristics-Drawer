@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "timeCharts.hpp"
+#include "amplitudePhaseCharts.hpp"
 
 
 namespace Calculation
@@ -16,17 +17,13 @@ namespace Calculation
     class Calculator
     {
       public:
-//        Calculator(ICalculator& timeChartCalculation,
-//                   ICalculator& amplitudePhaseChartCalculation);
         Calculator() = default;
 
         DataTable calculate(DataAcquired_t& data, QPair<int, int> span);
 
       private:
-//        ICalculator& _timeChartCalculation;
-//        ICalculator& _amplitudePhaseChartCalculation;
-        TimeChartCalculation _timeChartCalculation;
-
+        AmplitudePhaseCalculation _amplitudePhaseChartCalculation;
+        TimeChartCalculation      _timeChartCalculation;
     };
 }
 

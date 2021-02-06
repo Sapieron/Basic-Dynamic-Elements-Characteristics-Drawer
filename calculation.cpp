@@ -5,8 +5,6 @@
 
 using Calculation::Calculator;
 using Calculation::CharacteristicType_t;
-using Calculation::MemberType_t;
-using Calculation::ResponseType_t;
 using Calculation::DataAcquired_t;
 using Calculation::DataTable;
 
@@ -24,7 +22,7 @@ DataTable Calculator::calculate(DataAcquired_t& data, QPair<int, int> span)
         break;
 
     case CharacteristicType_t::AmplitudePhase:
-//        result = this->_amplitudePhaseChartCalculation.calculate(data, span);
+        result = this->_amplitudePhaseChartCalculation.calculate(data, span);
         break;
 
     default:

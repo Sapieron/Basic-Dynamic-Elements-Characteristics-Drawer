@@ -47,6 +47,8 @@ add_executable(${PROJECT_NAME}
     calculation.hpp
     timeCharts.hpp
     timeCharts.cpp
+    amplitudePhaseCharts.hpp
+    amplitudePhaseCharts.cpp
     ICalculator.hpp
     calculation.cpp
     themewidget.ui
