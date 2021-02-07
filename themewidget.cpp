@@ -268,17 +268,18 @@ void ThemeWidget::showGraphGotPressed()
 
 void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineData" is a better name?
 {
-    //TODO it's very very bad to check that way
-    if( (main_chart->chartType() == QChart::ChartTypeCartesian) &&
-        (_whichCharactersiticIsPicked == Calculation::CharacteristicType_t::AmplitudePhase) )
-    {
-        this->switchChartType();
-    }
-    else if((main_chart->chartType() == QChart::ChartTypePolar) &&
-            (_whichCharactersiticIsPicked == Calculation::CharacteristicType_t::Time) )
-    {
-        this->switchChartType();
-    }
+        //FIXME we may not need to draw with polar chart, but I leave it for now
+//    //TODO it's very very bad to check that way
+//    if( (main_chart->chartType() == QChart::ChartTypeCartesian) &&
+//        (_whichCharactersiticIsPicked == Calculation::CharacteristicType_t::AmplitudePhase) )
+//    {
+//        this->switchChartType();
+//    }
+//    else if((main_chart->chartType() == QChart::ChartTypePolar) &&
+//            (_whichCharactersiticIsPicked == Calculation::CharacteristicType_t::Time) )
+//    {
+//        this->switchChartType();
+//    }
 
 
     this->main_chart->setTitle(tr("Spline chart")); //TODO that name can be taken from &data
@@ -294,11 +295,9 @@ void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineD
         this->main_chart->addSeries(series);
     }
 
-
-
 //    //FIXME it's not correct for all cases
-//    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue);   //FIXME this range is only reasonable for time graph
-//    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue);
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(_data.minXValue, _data.maxXValue);   //FIXME this range is only reasonable for time graph
+    this->main_chart->axes(Qt::Vertical).first()->setRange(_data.minYValue, _data.maxYValue);
 }
 
 void ThemeWidget::enableShowGraphButton()
@@ -523,7 +522,7 @@ DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
     data.responseType = this->_whichResponseIsPicked;
     data.characteristicType = this->_whichCharactersiticIsPicked;
 
-    QPair<int, int> span(-10, 10); //TODO temporary, pass data from slider when added
+    QPair<int, int> span(0, 100); //TODO temporary, pass data from slider when added
     result = this->_calculator.calculate(data, span);   //TODO Maybe make it rather a static class?
 
     return result;

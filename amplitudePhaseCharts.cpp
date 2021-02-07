@@ -19,14 +19,12 @@ DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, 
     std::vector<qreal> yValVector;
 
     {
-        qreal yValue(0);
-        for (qreal angle(0); angle < 360; angle+=(qreal)(0.01)) {   //FIXME temporary, will be calculated differently
-            yValue = this->getValueInAnglePoint(data, angle);
-            QPointF value( angle, yValue);
-            QString label = "Slice " + QString::number(0) + ":" + QString::number(angle);
+        for (qreal omega(0); omega < 100; omega+=0.001) {   //just calculate very big omega
+            QPointF value = this->getValueInOmegaPoint(data, omega);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(omega);
             dataList << Data(value, label);
-            xValVector.push_back(angle);
-            yValVector.push_back(yValue);
+            xValVector.push_back(value.x());
+            yValVector.push_back(value.y());
         }
         result << dataList;
     }
@@ -40,10 +38,10 @@ DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, 
  *                                   Private
 \*******************************************************************************/
 
-qreal AmplitudePhaseCalculation::getValueInAnglePoint(DataAcquired_t& data,
-                                                     qreal anglePoint)
+QPointF AmplitudePhaseCalculation::getValueInOmegaPoint(DataAcquired_t& data,
+                                                      qreal anglePoint)
 {
-    qreal result;
+    QPointF result;
 
     switch(data.memberType)
     {
@@ -70,7 +68,8 @@ qreal AmplitudePhaseCalculation::getValueInAnglePoint(DataAcquired_t& data,
         break;
 
     default:
-        result = 0;
+        result.setX(0);
+        result.setY(0);
         break;
     }
 
@@ -94,112 +93,151 @@ void AmplitudePhaseCalculation::setBorderValues(Calculation::DataAcquired_t& dat
 /*******************************************************************************\
  *                                Proportional
 \*******************************************************************************/
-qreal AmplitudePhaseCalculation::getProportional(DataAcquired_t& data,
-                                                 qreal anglePoint)
+QPointF AmplitudePhaseCalculation::getProportional(DataAcquired_t& data,
+                                                   qreal omega)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //FIXME temp
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
     else
     {
-        return 0; //FIXME temp
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
 
+    return result;
 }
 
 /*******************************************************************************\
  *                            Inertion First Order
 \*******************************************************************************/
-qreal AmplitudePhaseCalculation::getIntertionFirstOrder(DataAcquired_t& data,
-                                                        qreal anglePoint)
+QPointF AmplitudePhaseCalculation::getIntertionFirstOrder(DataAcquired_t& data,
+                                                          qreal omega)
 {
+    QPointF result;
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return data.k / qreal(data.t1) * exp(-(qreal)anglePoint/(qreal)data.t1); //TODO temporary, it's here just to see if anything gets calculated
+        result.setX( data.k / ( pow((qreal)data.t1, 2) * pow(omega, 2) + (qreal)1 ) );
+        result.setY( (-data.k * (qreal)data.t1 * omega)/( pow((qreal)data.t1, 2) * pow(omega, 2) + 1 ) );
     }else
     {
-        return 0; //TODO add this
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                            Inertion Second Order
 \*******************************************************************************/
-qreal AmplitudePhaseCalculation::getIntertionSecondOrder(DataAcquired_t& data,
-                                                         qreal anglePoint)
+QPointF AmplitudePhaseCalculation::getIntertionSecondOrder(DataAcquired_t& data,
+                                                           qreal omega)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //TODO add this
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
     else
     {
-        return 0; //TODO add this
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                            Inertion Third Order
 \*******************************************************************************/
-qreal AmplitudePhaseCalculation::getIntertionThirdOrder(DataAcquired_t& data,
-                                                        qreal anglePoint)
+QPointF AmplitudePhaseCalculation::getIntertionThirdOrder(DataAcquired_t& data,
+                                                          qreal omega)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0;   //TODO add this
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
     else
     {
-        return 0;  //TODO add this
-
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                            Inertion Fourth Order
 \*******************************************************************************/
-qreal AmplitudePhaseCalculation::getIntertionFourthOrder(DataAcquired_t& data,
-                                                         qreal timePoint)
+QPointF AmplitudePhaseCalculation::getIntertionFourthOrder(DataAcquired_t& data,
+                                                           qreal omega)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //TODO add this
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
     else
     {
-        return 0; //TODO add this
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                              Differentiation
 \*******************************************************************************/
-qreal AmplitudePhaseCalculation::getDifferentiation(DataAcquired_t& data,
-                                                    qreal timePoint)
+QPointF AmplitudePhaseCalculation::getDifferentiation(DataAcquired_t& data,
+                                                      qreal omega)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //FIXME temp
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
     else
     {
-        return 0; //FIXME temp
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                                Integration
 \*******************************************************************************/
-qreal AmplitudePhaseCalculation::getIntegration(DataAcquired_t& data,
-                                                qreal timePoint)
+QPointF AmplitudePhaseCalculation::getIntegration(DataAcquired_t& data,
+                                                  qreal omega)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //FIXME temp
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
     else
     {
-        return 0; //FIXME temp
+        result.setX(0); //FIXME temp
+        result.setY(0); //FIXME temp
     }
+
+    return result;
 }

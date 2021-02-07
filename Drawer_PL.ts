@@ -109,12 +109,12 @@
         <translation>Równanie: </translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="284"/>
+        <location filename="themewidget.cpp" line="285"/>
         <source>Spline chart</source>
         <translation>Wykres spline</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="286"/>
+        <location filename="themewidget.cpp" line="287"/>
         <source>Series </source>
         <translation>Seria </translation>
     </message>

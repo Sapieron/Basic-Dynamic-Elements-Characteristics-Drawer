@@ -27,74 +27,74 @@ namespace Calculation
         /**
          * @brief getPoint Get value in angle
          * @param data
-         * @param anglePoint
+         * @param omega
          * @return
          */
-        qreal getValueInAnglePoint(DataAcquired_t& data,
-                                   qreal anglePoint);
+        QPointF getValueInOmegaPoint(DataAcquired_t& data,
+                                     qreal omega);
 
         /**
          * @brief getProportional calculates data in angle related on data provided
          * @param data
-         * @param anglePoint
+         * @param omega
          * @return computed value
          */
-        qreal getProportional(DataAcquired_t& data,
-                              qreal anglePoint);
+        QPointF getProportional(DataAcquired_t& data,
+                                qreal omega);
 
         /**
          * @brief getIntertionFirstOrder calculates data in angle point related on data provided
          * @param data
-         * @param anglePoint
+         * @param omega
          * @return computed value
          */
-        qreal getIntertionFirstOrder(DataAcquired_t& data,
-                                     qreal anglePoint);
+        QPointF getIntertionFirstOrder(DataAcquired_t& data,
+                                       qreal omega);
 
         /**
          * @brief getIntertionSecondOrder calculates data in angle point related on data provided
          * @param data
-         * @param anglePoint
+         * @param omega
          * @return computed value
          */
-        qreal getIntertionSecondOrder(DataAcquired_t& data,
-                                      qreal anglePoint);
+        QPointF getIntertionSecondOrder(DataAcquired_t& data,
+                                        qreal omega);
 
         /**
          * @brief getIntertionThirdOrder calculates data in angle point related on data provided
          * @param data
-         * @param anglePoint
+         * @param omega
          * @return computed value
          */
-        qreal getIntertionThirdOrder(DataAcquired_t& data,
-                                     qreal timeStamp);
+        QPointF getIntertionThirdOrder(DataAcquired_t& data,
+                                       qreal omega);
 
         /**
          * @brief getIntertionFourthOrder calculates data in angle point related on data provided
          * @param data
-         * @param anglePoint
+         * @param omega
          * @return computed value
          */
-        qreal getIntertionFourthOrder(DataAcquired_t& data,
-                                      qreal anglePoint);
+        QPointF getIntertionFourthOrder(DataAcquired_t& data,
+                                        qreal omega);
 
         /**
          * @brief getDifferentiation calculates data in angle point related on data provided
          * @param data
-         * @param anglePoint
+         * @param omega
          * @return computed value
          */
-        qreal getDifferentiation(DataAcquired_t& data,
-                                 qreal anglePoint);
+        QPointF getDifferentiation(DataAcquired_t& data,
+                                   qreal omega);
 
         /**
          * @brief getIntegration calculates data in angle point related on data provided
          * @param data
-         * @param anglePoint
+         * @param omega
          * @return computed value
          */
-        qreal getIntegration(DataAcquired_t& data,
-                             qreal anglePoint);
+        QPointF getIntegration(DataAcquired_t& data,
+                               qreal omega);
     };
 }
 
