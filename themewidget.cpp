@@ -25,6 +25,7 @@
 #include <QtCharts/QBarCategoryAxis>
 #include <QtWidgets/QApplication>
 #include <QtCharts/QValueAxis>
+#include <QtCharts/QPolarChart>
 
 
 using Calculation::DataTable;
@@ -33,6 +34,8 @@ using Calculation::Data;
 using Calculation::CharacteristicType_t;
 using Calculation::MemberType_t;
 using Calculation::ResponseType_t;
+
+QT_CHARTS_USE_NAMESPACE
 
 ThemeWidget::ThemeWidget(QWidget *parent) :
     QWidget(parent),
@@ -52,11 +55,9 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     this->populateMemberTypeBox();
     this->populateCharacteristicTypeBox();
 
-    QChartView *chartView;
-
-    chartView = new QChartView(createSplineChart());
-    m_ui->gridLayout->addWidget(chartView, 1, 0);
-    m_charts << chartView;
+    _chartView = new QChartView(createSplineChart());
+    m_ui->gridLayout->addWidget(_chartView, 1, 0);
+    m_charts << _chartView;
 
     //create button
     m_ui->equationPushButton->setDefault(false);
@@ -173,7 +174,7 @@ void ThemeWidget::populateCharacteristicTypeBox()
     m_ui->characteristicComboBox->addItem(tr("Amplitude-Phase"), CharacteristicType_t::AmplitudePhase);
 }
 
-QChart *ThemeWidget::createSplineChart() const
+QChart *ThemeWidget::createSplineChart() const  //FIXME it's probably not needed
 {
     this->main_chart->setTitle(tr("ChartNameBasedOnTypeEntered")); //TODO add it
     QString name(tr("Equation: ")); //TODO make it automatic
@@ -262,14 +263,24 @@ void ThemeWidget::showGraphGotPressed()
 
     auto result = this->calculate(_data);
 
-    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue);   //FIXME this range is only reasonable for time graph
-    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue);
-
     this->updateChart(result);
 }
 
-void ThemeWidget::updateChart(DataTable dataTable)
+void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineData" is a better name?
 {
+    //TODO it's very very bad to check that way
+    if( (main_chart->chartType() == QChart::ChartTypeCartesian) &&
+        (_whichCharactersiticIsPicked == Calculation::CharacteristicType_t::AmplitudePhase) )
+    {
+        this->switchChartType();
+    }
+    else if((main_chart->chartType() == QChart::ChartTypePolar) &&
+            (_whichCharactersiticIsPicked == Calculation::CharacteristicType_t::Time) )
+    {
+        this->switchChartType();
+    }
+
+
     this->main_chart->setTitle(tr("Spline chart")); //TODO that name can be taken from &data
     this->main_chart->removeAllSeries();
     QString name(tr("Series "));
@@ -282,6 +293,12 @@ void ThemeWidget::updateChart(DataTable dataTable)
         nameIndex++;
         this->main_chart->addSeries(series);
     }
+
+
+
+//    //FIXME it's not correct for all cases
+//    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue);   //FIXME this range is only reasonable for time graph
+//    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue);
 }
 
 void ThemeWidget::enableShowGraphButton()
@@ -444,6 +461,58 @@ void ThemeWidget::characteristicChangedCallback(int index)
 {
     this->_whichCharactersiticIsPicked = static_cast<Calculation::CharacteristicType_t>(index+1);
 }
+
+void ThemeWidget::switchChartType()
+{
+    QChart *newChart;
+    QChart *oldChart = this->main_chart;
+
+    if(oldChart->chartType() == QChart::ChartTypeCartesian )
+    {
+        newChart = new QPolarChart();
+    }
+    else
+    {
+        newChart = new QChart();
+    }
+
+    // Move series and axes from old chart to new one
+    const QList<QAbstractSeries *> seriesList = oldChart->series();
+    const QList<QAbstractAxis *> axisList = oldChart->axes();
+    QList<QPair<qreal, qreal> > axisRanges;
+
+    for (QAbstractAxis *axis : axisList) {
+        QValueAxis *valueAxis = static_cast<QValueAxis *>(axis);
+        axisRanges.append(QPair<qreal, qreal>(valueAxis->min(), valueAxis->max()));
+    }
+
+    for (QAbstractSeries *series : seriesList)
+        oldChart->removeSeries(series);
+
+    for (QAbstractAxis *axis : axisList) {
+        oldChart->removeAxis(axis);
+        newChart->addAxis(axis, axis->alignment());
+    }
+
+    for (QAbstractSeries *series : seriesList) {
+        newChart->addSeries(series);
+        for (QAbstractAxis *axis : axisList)
+            series->attachAxis(axis);
+    }
+
+    int count = 0;
+    for (QAbstractAxis *axis : axisList) {
+        axis->setRange(axisRanges[count].first, axisRanges[count].second);
+        count++;
+    }
+
+    newChart->setTitle(oldChart->title());
+
+    this->main_chart = newChart;
+    this->_chartView->setChart(this->main_chart);
+    delete oldChart;
+}
+
 
 //TODO this function should be moved to calculation.cpp
 DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)

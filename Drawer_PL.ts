@@ -4,117 +4,117 @@
 <context>
     <name>ThemeWidget</name>
     <message>
-        <location filename="themewidget.cpp" line="137"/>
+        <location filename="themewidget.cpp" line="138"/>
         <source>Light</source>
         <translation>Jasny</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="138"/>
+        <location filename="themewidget.cpp" line="139"/>
         <source>Blue Cerulean</source>
         <translation>Niebieski Cerulean</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="139"/>
+        <location filename="themewidget.cpp" line="140"/>
         <source>Dark</source>
         <translation>Ciemny</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="140"/>
+        <location filename="themewidget.cpp" line="141"/>
         <source>Brown Sand</source>
         <translation>Brązowy piasek</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="141"/>
+        <location filename="themewidget.cpp" line="142"/>
         <source>Blue NCS</source>
         <translation>Niebieski NCS</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="142"/>
+        <location filename="themewidget.cpp" line="143"/>
         <source>High Contrast</source>
         <translation>Wysoki kontrast</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="143"/>
+        <location filename="themewidget.cpp" line="144"/>
         <source>Blue Icy</source>
         <translation>Niebieski lodowaty</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="144"/>
+        <location filename="themewidget.cpp" line="145"/>
         <source>Qt</source>
         <translation>Qt</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="151"/>
+        <location filename="themewidget.cpp" line="152"/>
         <source>Step</source>
         <translation>Skokowy</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="152"/>
+        <location filename="themewidget.cpp" line="153"/>
         <source>Impulse</source>
         <translation>Impulsowy</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="159"/>
+        <location filename="themewidget.cpp" line="160"/>
         <source>Proportional</source>
         <translation>Proporcjonalny</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="160"/>
+        <location filename="themewidget.cpp" line="161"/>
         <source>Inertion First Order</source>
         <translation>Inercyjny pierwszego rzędu</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="161"/>
+        <location filename="themewidget.cpp" line="162"/>
         <source>Inertion Second Order</source>
         <translation>Inercyjny drugiego rzędu</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="162"/>
+        <location filename="themewidget.cpp" line="163"/>
         <source>Inertion Third Order</source>
         <translation>Inercyjny trzeciego rzędu</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="163"/>
+        <location filename="themewidget.cpp" line="164"/>
         <source>Inertion Fourth Order</source>
         <translation>Inercyjny czwartego rzędu</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="164"/>
+        <location filename="themewidget.cpp" line="165"/>
         <source>Integration</source>
         <translation>Całkujący</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="165"/>
+        <location filename="themewidget.cpp" line="166"/>
         <source>Differentiation</source>
         <translation>Różniczkujący</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="172"/>
+        <location filename="themewidget.cpp" line="173"/>
         <source>Time</source>
         <translation>Czasowa</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="173"/>
+        <location filename="themewidget.cpp" line="174"/>
         <source>Amplitude-Phase</source>
         <translation>Amplitudowo-fazowa</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="178"/>
+        <location filename="themewidget.cpp" line="179"/>
         <source>ChartNameBasedOnTypeEntered</source>
         <translation>Wykres</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="179"/>
+        <location filename="themewidget.cpp" line="180"/>
         <source>Equation: </source>
         <translation>Równanie: </translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="273"/>
+        <location filename="themewidget.cpp" line="284"/>
         <source>Spline chart</source>
         <translation>Wykres spline</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="275"/>
+        <location filename="themewidget.cpp" line="286"/>
         <source>Series </source>
         <translation>Seria </translation>
     </message>

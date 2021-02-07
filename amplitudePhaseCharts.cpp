@@ -116,7 +116,7 @@ qreal AmplitudePhaseCalculation::getIntertionFirstOrder(DataAcquired_t& data,
 {
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //TODO add this
+        return data.k / qreal(data.t1) * exp(-(qreal)anglePoint/(qreal)data.t1); //TODO temporary, it's here just to see if anything gets calculated
     }else
     {
         return 0; //TODO add this

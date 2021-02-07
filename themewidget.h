@@ -47,6 +47,7 @@ private:
     bool isAllDataProvided();
     void connectCallbackToPushButton();
     void enableShowGraphButton();
+    void switchChartType();
 
 private slots:
     void memberChangedCallback(int index);
@@ -66,6 +67,7 @@ private:
     Calculation::DataTable m_dataTable;
     Calculation::Calculator _calculator;
     Ui_ThemeWidgetForm *m_ui;
+    QChartView *_chartView;
 
     Calculation::DataTable calculate(Calculation::DataAcquired_t& data);
 
