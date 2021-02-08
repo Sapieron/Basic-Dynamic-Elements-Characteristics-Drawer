@@ -109,34 +109,34 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="278"/>
+        <location filename="themewidget.cpp" line="277"/>
         <source>Spline chart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="280"/>
+        <location filename="themewidget.cpp" line="279"/>
         <source>Function </source>
         <translation>Funkcja </translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="203"/>
-        <location filename="themewidget.cpp" line="468"/>
+        <location filename="themewidget.cpp" line="201"/>
+        <location filename="themewidget.cpp" line="489"/>
         <source>t[s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="204"/>
-        <location filename="themewidget.cpp" line="469"/>
+        <location filename="themewidget.cpp" line="202"/>
+        <location filename="themewidget.cpp" line="490"/>
         <source>h(t)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="473"/>
+        <location filename="themewidget.cpp" line="494"/>
         <source>Re</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="474"/>
+        <location filename="themewidget.cpp" line="495"/>
         <source>Im</source>
         <translation type="unfinished"></translation>
     </message>
@@ -149,52 +149,57 @@
         <translation>Rysownik</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="35"/>
+        <location filename="themewidget.ui" line="153"/>
         <source>T4:</source>
         <translation>T4:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="55"/>
+        <location filename="themewidget.ui" line="163"/>
         <source>Theme:</source>
         <translation>Motyw:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="65"/>
+        <location filename="themewidget.ui" line="180"/>
+        <source>Td:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="109"/>
         <source>T3:</source>
         <translation>T3:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="92"/>
+        <location filename="themewidget.ui" line="119"/>
         <source>Show graph</source>
         <translation>Pokaż wykres</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="102"/>
+        <location filename="themewidget.ui" line="42"/>
         <source>T1:</source>
         <translation>T1:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="109"/>
+        <location filename="themewidget.ui" line="146"/>
         <source>Member type:</source>
         <translation>Rodzaj członu:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="136"/>
+        <location filename="themewidget.ui" line="95"/>
         <source>k:</source>
         <translation>k:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="143"/>
+        <location filename="themewidget.ui" line="102"/>
         <source>T2:</source>
         <translation>T2:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="150"/>
+        <location filename="themewidget.ui" line="126"/>
         <source>Signal type:</source>
         <translation>Rodzaj wymuszenia:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="163"/>
+        <location filename="themewidget.ui" line="72"/>
         <source>Characteristic:</source>
         <translation>Charakterystyka:</translation>
     </message>

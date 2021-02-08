@@ -80,11 +80,34 @@ void TimeChartCalculation::setBorderValues(Calculation::DataAcquired_t& data,
                                   std::vector<qreal> xValVector,
                                   std::vector<qreal> yValVector)
 {
-
     data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
     data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
     data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
     data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
+
+    //TODO add when we know how to calculate other elements
+//    switch(data.memberType)
+//    {
+//    case MemberType_t::InertionFirstOrder:
+//    case MemberType_t::InertionSecondOrder:
+//    case MemberType_t::InertionThirdOrder:
+//    case MemberType_t::InertionFourthOrder:
+//        data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
+//        data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
+//        data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
+//        data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
+//        break;
+
+//    case MemberType_t::Proportional:
+//        data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
+//        data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
+//        data.minYValue = data.k - 1;
+//        data.maxYValue = data.k + 1;
+//        break;
+
+//    default:
+//        break;
+//    }
 
     return;
 }
@@ -103,7 +126,7 @@ qreal TimeChartCalculation::getProportional(DataAcquired_t& data,
     }
     else
     {
-        return 0; //FIXME temp
+        return (qreal)data.k;
     }
 
 }
@@ -196,10 +219,10 @@ qreal TimeChartCalculation::getIntegration(DataAcquired_t& data,
 {
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //FIXME temp
+        return (qreal)data.k;
     }
     else
     {
-        return 0; //FIXME temp
+        return (qreal)data.k * (qreal)timePoint;
     }
 }

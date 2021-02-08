@@ -98,7 +98,7 @@ QPointF AmplitudePhaseCalculation::getProportional(DataAcquired_t& data,
 {
     QPointF result;
 
-    result.setX(0); //FIXME temp
+    result.setX(data.k); //FIXME temp
     result.setY(0); //FIXME temp
 
     return result;
@@ -232,8 +232,8 @@ QPointF AmplitudePhaseCalculation::getIntegration(DataAcquired_t& data,
 {
     QPointF result;
 
-    result.setX(0); //FIXME temp
-    result.setY(0); //FIXME temp
+    result.setX(0);
+    result.setY( (qreal)data.td * omega );
 
     return result;
 }

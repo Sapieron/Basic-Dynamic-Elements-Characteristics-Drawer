@@ -81,6 +81,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_ui->t2LineEdit->setEnabled(false);
     m_ui->t3LineEdit->setEnabled(false);
     m_ui->t4LineEdit->setEnabled(false);
+    m_ui->tDlineEdit->setEnabled(false);
 
     connect(m_ui->memberTypeComboBox,
             SIGNAL(currentIndexChanged(int)),
@@ -264,6 +265,7 @@ void ThemeWidget::showGraphGotPressed()
     _data.t2 = m_ui->t2LineEdit->text().toInt();
     _data.t3 = m_ui->t3LineEdit->text().toInt();
     _data.t4 = m_ui->t4LineEdit->text().toInt();
+    _data.td = m_ui->tDlineEdit->text().toInt();
 
     auto result = this->calculate(_data);
 
@@ -386,17 +388,18 @@ void ThemeWidget::memberChangedCallback(int index)
     switch(this->_whichMemberIsPicked)
     {
     case MemberType_t::Proportional:
-    case MemberType_t::Integration:
     case MemberType_t::Differentiation:
         m_ui->t1LineEdit->setEnabled(false);
         m_ui->t2LineEdit->setEnabled(false);
         m_ui->t3LineEdit->setEnabled(false);
         m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->t1LineEdit->clear();
         m_ui->t2LineEdit->clear();
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
         break;
 
     case MemberType_t::InertionFirstOrder:
@@ -404,10 +407,12 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(false);
         m_ui->t3LineEdit->setEnabled(false);
         m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->t2LineEdit->clear();
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
         break;
 
     case MemberType_t::InertionSecondOrder:
@@ -415,9 +420,11 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(true);
         m_ui->t3LineEdit->setEnabled(false);
         m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
         break;
 
     case MemberType_t::InertionThirdOrder:
@@ -425,8 +432,10 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(true);
         m_ui->t3LineEdit->setEnabled(true);
         m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
         break;
 
     case MemberType_t::InertionFourthOrder:
@@ -434,6 +443,22 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(true);
         m_ui->t3LineEdit->setEnabled(true);
         m_ui->t4LineEdit->setEnabled(true);
+        m_ui->tDlineEdit->setEnabled(false);
+
+        m_ui->tDlineEdit->clear();
+        break;
+
+    case MemberType_t::Integration:
+        m_ui->t1LineEdit->setEnabled(false);
+        m_ui->t2LineEdit->setEnabled(false);
+        m_ui->t3LineEdit->setEnabled(false);
+        m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(true);
+
+        m_ui->t1LineEdit->clear();
+        m_ui->t2LineEdit->clear();
+        m_ui->t3LineEdit->clear();
+        m_ui->t4LineEdit->clear();
         break;
 
     default:

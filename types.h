@@ -41,6 +41,7 @@ namespace Calculation
         uint32_t t2 = 0;
         uint32_t t3 = 0;
         uint32_t t4 = 0;
+        uint32_t td = 0;
 
         qreal minXValue = 0;
         qreal maxXValue = 0;
