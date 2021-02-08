@@ -98,16 +98,8 @@ QPointF AmplitudePhaseCalculation::getProportional(DataAcquired_t& data,
 {
     QPointF result;
 
-    if(data.responseType == ResponseType_t::Impulse)
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
-    else
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
+    result.setX(0); //FIXME temp
+    result.setY(0); //FIXME temp
 
     return result;
 }
@@ -119,15 +111,9 @@ QPointF AmplitudePhaseCalculation::getIntertionFirstOrder(DataAcquired_t& data,
                                                           qreal omega)
 {
     QPointF result;
-    if(data.responseType == ResponseType_t::Impulse)
-    {
-        result.setX( data.k / ( pow((qreal)data.t1, 2) * pow(omega, 2) + (qreal)1 ) );
-        result.setY( (-data.k * (qreal)data.t1 * omega)/( pow((qreal)data.t1, 2) * pow(omega, 2) + 1 ) );
-    }else
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
+
+    result.setX( data.k / ( pow((qreal)data.t1, 2) * pow(omega, 2) + (qreal)1 ) );
+    result.setY( (-data.k * (qreal)data.t1 * omega)/( pow((qreal)data.t1, 2) * pow(omega, 2) + 1 ) );
 
     return result;
 }
@@ -140,16 +126,11 @@ QPointF AmplitudePhaseCalculation::getIntertionSecondOrder(DataAcquired_t& data,
 {
     QPointF result;
 
-    if(data.responseType == ResponseType_t::Impulse)
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
-    else
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
+    result.setX( data.k * ( (qreal)1 - pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2 ) /
+                 ( (qreal)1 + pow(( omega * (qreal)data.t1 ), 2) + pow(( omega * (qreal)data.t2 ), 2) + pow( pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2, 2) ) );
+    result.setY( -data.k * omega * ( (qreal)data.t1 + (qreal)data.t2 ) /
+                 ( (qreal)1 + pow(( omega * (qreal)data.t1 ), 2) + pow(( omega * (qreal)data.t2 ), 2) + pow( pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2, 2) ) );
+
 
     return result;
 }
@@ -162,16 +143,26 @@ QPointF AmplitudePhaseCalculation::getIntertionThirdOrder(DataAcquired_t& data,
 {
     QPointF result;
 
-    if(data.responseType == ResponseType_t::Impulse)
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
-    else
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
+    result.setX(
+    data.k * ( ( (qreal)1 - pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2 ) -
+    (pow(omega, 2) * (qreal)data.t1 * (qreal)data.t3) -
+    (pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2) )
+    /
+    ( ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t1, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t2, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t3, 2) ) )
+    );
+
+    result.setY(
+    data.k * ( (-omega * (qreal)data.t3) -
+    (omega * (qreal)data.t1) -
+    (omega * (qreal)data.t2) +
+    ( pow(omega,3) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t3) )
+    /
+    ( ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t1, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t2, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t3, 2) ) )
+    );
 
     return result;
 }
@@ -184,16 +175,37 @@ QPointF AmplitudePhaseCalculation::getIntertionFourthOrder(DataAcquired_t& data,
 {
     QPointF result;
 
-    if(data.responseType == ResponseType_t::Impulse)
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
-    else
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
+    result.setX(
+    data.k * ( ( (qreal)1 - pow(omega, 2) * (qreal)data.t3 * (qreal)data.t4 ) -
+    (pow(omega, 2) * (qreal)data.t1 * (qreal)data.t4) -
+    (pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2) -
+    (pow(omega, 2) * (qreal)data.t2 * (qreal)data.t4) -
+    (pow(omega, 2) * (qreal)data.t2 * (qreal)data.t3) +
+    (pow(omega, 4) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t3 * (qreal)data.t4 )
+    )
+    /
+    ( ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t1, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t2, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t3, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t4, 2) ) )
+    );
+
+    result.setY(
+     data.k * ( (-omega * (qreal)data.t4) -
+    (omega * (qreal)data.t3) -
+    (omega * (qreal)data.t1) +
+    ( pow(omega,3) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t4) -
+    (omega * (qreal)data.t2) +
+    (pow(omega, 3) * (qreal)data.t2 * (qreal)data.t3 * (qreal)data.t4) +
+    (pow(omega, 3) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t4) +
+    (pow(omega, 3) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t3)
+    )
+    /
+    ( ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t1, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t2, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t3, 2) ) *
+    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t4, 2) ) )
+    );
 
     return result;
 }
@@ -206,16 +218,8 @@ QPointF AmplitudePhaseCalculation::getDifferentiation(DataAcquired_t& data,
 {
     QPointF result;
 
-    if(data.responseType == ResponseType_t::Impulse)
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
-    else
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
+    result.setX(0); //FIXME temp
+    result.setY(0); //FIXME temp
 
     return result;
 }
@@ -228,16 +232,8 @@ QPointF AmplitudePhaseCalculation::getIntegration(DataAcquired_t& data,
 {
     QPointF result;
 
-    if(data.responseType == ResponseType_t::Impulse)
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
-    else
-    {
-        result.setX(0); //FIXME temp
-        result.setY(0); //FIXME temp
-    }
+    result.setX(0); //FIXME temp
+    result.setY(0); //FIXME temp
 
     return result;
 }

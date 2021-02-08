@@ -47,7 +47,6 @@ private:
     bool isAllDataProvided();
     void connectCallbackToPushButton();
     void enableShowGraphButton();
-    void switchChartType();
 
 private slots:
     void memberChangedCallback(int index);

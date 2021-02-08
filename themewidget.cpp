@@ -189,13 +189,17 @@ QChart *ThemeWidget::createSplineChart() const  //FIXME it's probably not needed
     }
 
     this->main_chart->createDefaultAxes();
-    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, m_valueMax);
-    this->main_chart->axes(Qt::Vertical).first()->setRange(0, m_valueCount);
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(-1, 1);
+    this->main_chart->axes(Qt::Vertical).first()->setRange(-1, 1);
 
     // Add space to label to add space between labels and axis
     QValueAxis *axisY = qobject_cast<QValueAxis*>(this->main_chart->axes(Qt::Vertical).first());
     Q_ASSERT(axisY);
-    axisY->setLabelFormat("%.1f  ");
+    axisY->setLabelFormat("%.3f  ");
+
+    this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
+    this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
+
     return this->main_chart;
 }
 
@@ -268,23 +272,9 @@ void ThemeWidget::showGraphGotPressed()
 
 void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineData" is a better name?
 {
-        //FIXME we may not need to draw with polar chart, but I leave it for now
-//    //TODO it's very very bad to check that way
-//    if( (main_chart->chartType() == QChart::ChartTypeCartesian) &&
-//        (_whichCharactersiticIsPicked == Calculation::CharacteristicType_t::AmplitudePhase) )
-//    {
-//        this->switchChartType();
-//    }
-//    else if((main_chart->chartType() == QChart::ChartTypePolar) &&
-//            (_whichCharactersiticIsPicked == Calculation::CharacteristicType_t::Time) )
-//    {
-//        this->switchChartType();
-//    }
-
-
     this->main_chart->setTitle(tr("Spline chart")); //TODO that name can be taken from &data
     this->main_chart->removeAllSeries();
-    QString name(tr("Series "));
+    QString name(tr("Function "));
     int nameIndex = 0;
     for (const DataList &list : dataTable) {
         QSplineSeries *series = new QSplineSeries(this->main_chart);
@@ -292,11 +282,11 @@ void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineD
             series->append(data.first);
         series->setName(name + QString::number(nameIndex));
         nameIndex++;
+
         this->main_chart->addSeries(series);
     }
 
-//    //FIXME it's not correct for all cases
-    this->main_chart->axes(Qt::Horizontal).first()->setRange(_data.minXValue, _data.maxXValue);   //FIXME this range is only reasonable for time graph
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(_data.minXValue, _data.maxXValue);
     this->main_chart->axes(Qt::Vertical).first()->setRange(_data.minYValue, _data.maxYValue);
 }
 
@@ -459,59 +449,27 @@ void ThemeWidget::responseChangedCallback(int index)
 void ThemeWidget::characteristicChangedCallback(int index)
 {
     this->_whichCharactersiticIsPicked = static_cast<Calculation::CharacteristicType_t>(index+1);
-}
 
-void ThemeWidget::switchChartType()
-{
-    QChart *newChart;
-    QChart *oldChart = this->main_chart;
-
-    if(oldChart->chartType() == QChart::ChartTypeCartesian )
+    if(_whichCharactersiticIsPicked == Calculation::AmplitudePhase)
     {
-        newChart = new QPolarChart();
+        m_ui->signalTypeComboBox->setEnabled(false);
     }
     else
     {
-        newChart = new QChart();
+        m_ui->signalTypeComboBox->setEnabled(true);
     }
 
-    // Move series and axes from old chart to new one
-    const QList<QAbstractSeries *> seriesList = oldChart->series();
-    const QList<QAbstractAxis *> axisList = oldChart->axes();
-    QList<QPair<qreal, qreal> > axisRanges;
-
-    for (QAbstractAxis *axis : axisList) {
-        QValueAxis *valueAxis = static_cast<QValueAxis *>(axis);
-        axisRanges.append(QPair<qreal, qreal>(valueAxis->min(), valueAxis->max()));
+    if(this->_whichCharactersiticIsPicked == CharacteristicType_t::Time)
+    {
+        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
+        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
     }
-
-    for (QAbstractSeries *series : seriesList)
-        oldChart->removeSeries(series);
-
-    for (QAbstractAxis *axis : axisList) {
-        oldChart->removeAxis(axis);
-        newChart->addAxis(axis, axis->alignment());
+    else if(this->_whichCharactersiticIsPicked == CharacteristicType_t::AmplitudePhase)
+    {
+        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("Re"));
+        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("Im"));
     }
-
-    for (QAbstractSeries *series : seriesList) {
-        newChart->addSeries(series);
-        for (QAbstractAxis *axis : axisList)
-            series->attachAxis(axis);
-    }
-
-    int count = 0;
-    for (QAbstractAxis *axis : axisList) {
-        axis->setRange(axisRanges[count].first, axisRanges[count].second);
-        count++;
-    }
-
-    newChart->setTitle(oldChart->title());
-
-    this->main_chart = newChart;
-    this->_chartView->setChart(this->main_chart);
-    delete oldChart;
 }
-
 
 //TODO this function should be moved to calculation.cpp
 DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
