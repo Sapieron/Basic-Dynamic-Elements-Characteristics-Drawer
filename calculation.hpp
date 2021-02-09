@@ -2,84 +2,28 @@
 #define CALCULATION_HPP
 
 #include "types.h"
+#include <vector>
+
+#include "timeCharts.hpp"
+#include "amplitudePhaseCharts.hpp"
+
 
 namespace Calculation
 {
+    using Data = QPair<QPointF, QString>;
+    using DataList = QList<Data>;
+    using DataTable = QList<DataList>;
+
     class Calculator
     {
       public:
-        /**
-         * @brief calculate handles calculation of data based on member type set in data reference
-         * @param data
-         * @param timeStamp
-         * @return
-         */
-        qreal calculate(DataAcquired_t& data,
-                        int timeStamp);
+        Calculator() = default;
+
+        DataTable calculate(DataAcquired_t& data, QPair<int, int> span);
 
       private:
-        /**
-         * @brief getProportional calculates data at time point related on data provided
-         * @param data
-         * @param timeStamp
-         * @return computed value
-         */
-        qreal getProportional(DataAcquired_t& data,
-                              int timeStamp);
-
-        /**
-         * @brief getIntertionFirstOrder calculates data at time point related on data provided
-         * @param data
-         * @param timeStamp
-         * @return
-         */
-        qreal getIntertionFirstOrder(DataAcquired_t& data,
-                                     int timeStamp);
-
-        /**
-         * @brief getIntertionSecondOrder calculates data at time point related on data provided
-         * @param data
-         * @param timeStamp
-         * @return
-         */
-        qreal getIntertionSecondOrder(DataAcquired_t& data,
-                                      int timeStamp);
-
-        /**
-         * @brief getIntertionThirdOrder calculates data at time point related on data provided
-         * @param data
-         * @param timeStamp
-         * @return
-         */
-        qreal getIntertionThirdOrder(DataAcquired_t& data,
-                                     int timeStamp);
-
-        /**
-         * @brief getIntertionFourthOrder calculates data at time point related on data provided
-         * @param data
-         * @param timeStamp
-         * @return
-         */
-        qreal getIntertionFourthOrder(DataAcquired_t& data,
-                                      int timeStamp);
-
-        /**
-         * @brief getDifferentiation calculates data at time point related on data provided
-         * @param data
-         * @param timeStamp
-         * @return
-         */
-        qreal getDifferentiation(DataAcquired_t& data,
-                                 int timeStamp);
-
-        /**
-         * @brief getIntegration calculates data at time point related on data provided
-         * @param data
-         * @param timeStamp
-         * @return
-         */
-        qreal getIntegration(DataAcquired_t& data,
-                             int timeStamp);
+        AmplitudePhaseCalculation _amplitudePhaseChartCalculation;
+        TimeChartCalculation      _timeChartCalculation;
     };
 }
 

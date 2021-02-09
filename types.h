@@ -28,6 +28,12 @@ namespace Calculation
         Impulse = 0x02U
     };
 
+    enum CharacteristicType_t
+    {
+        Time = 0x01U,
+        AmplitudePhase = 0x02U
+    };
+
     struct DataAcquired_t
     {
         qreal k  = 0;
@@ -35,6 +41,7 @@ namespace Calculation
         uint32_t t2 = 0;
         uint32_t t3 = 0;
         uint32_t t4 = 0;
+        uint32_t td = 0;
 
         qreal minXValue = 0;
         qreal maxXValue = 0;
@@ -42,8 +49,9 @@ namespace Calculation
         qreal minYValue = 0;
         qreal maxYValue = 0;
 
-        MemberType_t   memberType;
-        ResponseType_t responseType;
+        MemberType_t         memberType;
+        ResponseType_t       responseType;
+        CharacteristicType_t characteristicType;
     };
 }
 

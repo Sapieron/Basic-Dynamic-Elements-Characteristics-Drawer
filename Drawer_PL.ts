@@ -4,135 +4,204 @@
 <context>
     <name>ThemeWidget</name>
     <message>
+        <location filename="themewidget.cpp" line="139"/>
         <source>Light</source>
         <translation>Jasny</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="140"/>
         <source>Blue Cerulean</source>
-        <translation>Niebieski cerulean</translation>
+        <translation>Niebieski Cerulean</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="141"/>
         <source>Dark</source>
         <translation>Ciemny</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="142"/>
         <source>Brown Sand</source>
-        <translation>Piaskowy brąz</translation>
+        <translation>Brązowopiaskowy</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="143"/>
         <source>Blue NCS</source>
-        <translation>Naturalny niebieski</translation>
+        <translation>Blue NCS</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="144"/>
         <source>High Contrast</source>
         <translation>Wysoki kontrast</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="145"/>
         <source>Blue Icy</source>
-        <translation>Niebieski lodowaty</translation>
+        <translation>Lodowy niebieski</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="146"/>
         <source>Qt</source>
-        <translation>QT</translation>
+        <translation>Qt</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="153"/>
         <source>Step</source>
-        <translation>Skok jednostkowy</translation>
+        <translation>Skokowy</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="154"/>
         <source>Impulse</source>
-        <translation>Impuls Diraca</translation>
+        <translation>Impulsowy</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="161"/>
         <source>Proportional</source>
         <translation>Proporcjonalny</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="162"/>
         <source>Inertion First Order</source>
         <translation>Inercyjny pierwszego rzędu</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="163"/>
         <source>Inertion Second Order</source>
         <translation>Inercyjny drugiego rzędu</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="164"/>
         <source>Inertion Third Order</source>
         <translation>Inercyjny trzeciego rzędu</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="165"/>
         <source>Inertion Fourth Order</source>
         <translation>Inercyjny czwartego rzędu</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="166"/>
         <source>Integration</source>
         <translation>Całkujący</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="167"/>
         <source>Differentiation</source>
         <translation>Różniczkujący</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="174"/>
+        <source>Time</source>
+        <translation>Czasowy</translation>
+    </message>
+    <message>
+        <location filename="themewidget.cpp" line="175"/>
+        <source>Amplitude-Phase</source>
+        <translation>Amplitudowo-fazowy</translation>
+    </message>
+    <message>
+        <location filename="themewidget.cpp" line="180"/>
         <source>ChartNameBasedOnTypeEntered</source>
-        <translation>Rodzaj wykresu na podstawie podanego typu</translation>
-    </message>
-    <message>
-        <source>Series </source>
-        <translation>Przebieg </translation>
-    </message>
-    <message>
-        <source>Spline chart</source>
         <translation>Wykres</translation>
     </message>
     <message>
+        <location filename="themewidget.cpp" line="181"/>
         <source>Equation: </source>
         <translation>Równanie: </translation>
+    </message>
+    <message>
+        <location filename="themewidget.cpp" line="277"/>
+        <source>Spline chart</source>
+        <translation>Wykres tworzony metodą spline</translation>
+    </message>
+    <message>
+        <location filename="themewidget.cpp" line="279"/>
+        <source>Function </source>
+        <translation>Funkcja </translation>
+    </message>
+    <message>
+        <location filename="themewidget.cpp" line="201"/>
+        <location filename="themewidget.cpp" line="489"/>
+        <source>t[s]</source>
+        <translation>t[s]</translation>
+    </message>
+    <message>
+        <location filename="themewidget.cpp" line="202"/>
+        <location filename="themewidget.cpp" line="490"/>
+        <source>h(t)</source>
+        <translation>h(t)</translation>
+    </message>
+    <message>
+        <location filename="themewidget.cpp" line="494"/>
+        <source>Re</source>
+        <translation>Re</translation>
+    </message>
+    <message>
+        <location filename="themewidget.cpp" line="495"/>
+        <source>Im</source>
+        <translation>Im</translation>
     </message>
 </context>
 <context>
     <name>ThemeWidgetForm</name>
     <message>
+        <location filename="themewidget.ui" line="14"/>
         <source>ThemeWidget</source>
-        <translation>Rysownik przebiegów elementów dynamicznych</translation>
+        <translation>Rysownik</translation>
     </message>
     <message>
-        <source>Signal type:</source>
-        <translation>Rodzaj wymuszenia:</translation>
-    </message>
-    <message>
-        <source>Member type:</source>
-        <translation>Rodzaj członu:</translation>
-    </message>
-    <message>
-        <source>Show graph</source>
-        <translation>Pokaż wykres</translation>
-    </message>
-    <message>
-        <source>Theme</source>
-        <translation type="vanished">Motyw:</translation>
-    </message>
-    <message>
-        <source>k:</source>
-        <translation>k:</translation>
-    </message>
-    <message>
-        <source>T1:</source>
-        <translation>T1:</translation>
-    </message>
-    <message>
-        <source>T2:</source>
-        <translation>T2:</translation>
-    </message>
-    <message>
-        <source>T3:</source>
-        <translation>T3:</translation>
-    </message>
-    <message>
+        <location filename="themewidget.ui" line="153"/>
         <source>T4:</source>
         <translation>T4:</translation>
     </message>
     <message>
+        <location filename="themewidget.ui" line="163"/>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>Motyw:</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="180"/>
+        <source>Td:</source>
+        <translation>Td:</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="109"/>
+        <source>T3:</source>
+        <translation>T3:</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="119"/>
+        <source>Show graph</source>
+        <translation>Pokaż wykres</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="42"/>
+        <source>T1:</source>
+        <translation>T1:</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="146"/>
+        <source>Member type:</source>
+        <translation>Rodzaj członu:</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="95"/>
+        <source>k:</source>
+        <translation>k:</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="102"/>
+        <source>T2:</source>
+        <translation>T2:</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="126"/>
+        <source>Signal type:</source>
+        <translation>Rodzaj wymuszenia:</translation>
+    </message>
+    <message>
+        <location filename="themewidget.ui" line="72"/>
+        <source>Characteristic:</source>
+        <translation>Charakterystyka:</translation>
     </message>
 </context>
 </TS>

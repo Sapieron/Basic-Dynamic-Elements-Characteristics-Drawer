@@ -25,13 +25,17 @@
 #include <QtCharts/QBarCategoryAxis>
 #include <QtWidgets/QApplication>
 #include <QtCharts/QValueAxis>
+#include <QtCharts/QPolarChart>
 
 
 using Calculation::DataTable;
 using Calculation::DataList;
 using Calculation::Data;
+using Calculation::CharacteristicType_t;
 using Calculation::MemberType_t;
 using Calculation::ResponseType_t;
+
+QT_CHARTS_USE_NAMESPACE
 
 ThemeWidget::ThemeWidget(QWidget *parent) :
     QWidget(parent),
@@ -41,19 +45,19 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     main_chart(new QChart()),
     _whichMemberIsPicked(MemberType_t::Proportional),
     _whichResponseIsPicked(ResponseType_t::Step),
-    m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME it's probably not needed
+    _whichCharactersiticIsPicked(CharacteristicType_t::Time),
+    m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME initialize data here to 0
     m_ui(new Ui_ThemeWidgetForm)
 {
     m_ui->setupUi(this);
-    populateThemeBox();
-    populateResponseTypeBox();
-    populateMemberTypeBox();
+    this->populateThemeBox();
+    this->populateResponseTypeBox();
+    this->populateMemberTypeBox();
+    this->populateCharacteristicTypeBox();
 
-    QChartView *chartView;
-
-    chartView = new QChartView(createSplineChart());
-    m_ui->gridLayout->addWidget(chartView, 1, 0);
-    m_charts << chartView;
+    _chartView = new QChartView(createSplineChart());
+    m_ui->gridLayout->addWidget(_chartView, 1, 0);
+    m_charts << _chartView;
 
     //create button
     m_ui->equationPushButton->setDefault(false);
@@ -67,7 +71,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     connectCallbackToPushButton();
 
     //Make line editing accept only numbers
-    m_ui->kLineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->kLineEdit->setValidator(new QIntValidator(0, 100, this)); //TODO move it to separate function
     m_ui->t1LineEdit->setValidator(new QIntValidator(0, 100, this));
     m_ui->t2LineEdit->setValidator(new QIntValidator(0, 100, this));
     m_ui->t3LineEdit->setValidator(new QIntValidator(0, 100, this));
@@ -77,6 +81,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_ui->t2LineEdit->setEnabled(false);
     m_ui->t3LineEdit->setEnabled(false);
     m_ui->t4LineEdit->setEnabled(false);
+    m_ui->tDlineEdit->setEnabled(false);
 
     connect(m_ui->memberTypeComboBox,
             SIGNAL(currentIndexChanged(int)),
@@ -87,6 +92,11 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
             SIGNAL(currentIndexChanged(int)),
             this,
             SLOT(responseChangedCallback(int)));
+
+    connect(m_ui->characteristicComboBox,
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(characteristicChangedCallback(int)));
 
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
@@ -102,7 +112,7 @@ ThemeWidget::~ThemeWidget()
     delete m_ui;
 }
 
-DataTable ThemeWidget::generateRandomData(int listCount, int valueMax, int valueCount) const
+DataTable ThemeWidget::generateRandomData(int listCount, int valueMax, int valueCount) const    //FIXME it's not needed, m_data should be set to 0
 {
     DataTable dataTable;
 
@@ -157,7 +167,15 @@ void ThemeWidget::populateMemberTypeBox()
     m_ui->memberTypeComboBox->addItem(tr("Differentiation"),        MemberType_t::Differentiation);
 }
 
-QChart *ThemeWidget::createSplineChart() const
+void ThemeWidget::populateCharacteristicTypeBox()
+{
+    using Calculation::CharacteristicType_t;
+
+    m_ui->characteristicComboBox->addItem(tr("Time"),            CharacteristicType_t::Time);
+    m_ui->characteristicComboBox->addItem(tr("Amplitude-Phase"), CharacteristicType_t::AmplitudePhase);
+}
+
+QChart *ThemeWidget::createSplineChart() const  //FIXME it's probably not needed
 {
     this->main_chart->setTitle(tr("ChartNameBasedOnTypeEntered")); //TODO add it
     QString name(tr("Equation: ")); //TODO make it automatic
@@ -172,13 +190,17 @@ QChart *ThemeWidget::createSplineChart() const
     }
 
     this->main_chart->createDefaultAxes();
-    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, m_valueMax);
-    this->main_chart->axes(Qt::Vertical).first()->setRange(0, m_valueCount);
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(-1, 1);
+    this->main_chart->axes(Qt::Vertical).first()->setRange(-1, 1);
 
     // Add space to label to add space between labels and axis
     QValueAxis *axisY = qobject_cast<QValueAxis*>(this->main_chart->axes(Qt::Vertical).first());
     Q_ASSERT(axisY);
-    axisY->setLabelFormat("%.1f  ");
+    axisY->setLabelFormat("%.3f  ");
+
+    this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
+    this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
+
     return this->main_chart;
 }
 
@@ -243,21 +265,18 @@ void ThemeWidget::showGraphGotPressed()
     _data.t2 = m_ui->t2LineEdit->text().toInt();
     _data.t3 = m_ui->t3LineEdit->text().toInt();
     _data.t4 = m_ui->t4LineEdit->text().toInt();
+    _data.td = m_ui->tDlineEdit->text().toInt();
 
     auto result = this->calculate(_data);
-
-    //FIXME make it call ,,setBorderValues()" from here
-    this->main_chart->axes(Qt::Horizontal).first()->setRange(0, _data.maxXValue * 1.2);
-    this->main_chart->axes(Qt::Vertical).first()->setRange(0, _data.maxYValue * 1.2);
 
     this->updateChart(result);
 }
 
-void ThemeWidget::updateChart(DataTable dataTable)
+void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineData" is a better name?
 {
     this->main_chart->setTitle(tr("Spline chart")); //TODO that name can be taken from &data
     this->main_chart->removeAllSeries();
-    QString name(tr("Series "));
+    QString name(tr("Function "));
     int nameIndex = 0;
     for (const DataList &list : dataTable) {
         QSplineSeries *series = new QSplineSeries(this->main_chart);
@@ -265,8 +284,12 @@ void ThemeWidget::updateChart(DataTable dataTable)
             series->append(data.first);
         series->setName(name + QString::number(nameIndex));
         nameIndex++;
+
         this->main_chart->addSeries(series);
     }
+
+    this->main_chart->axes(Qt::Horizontal).first()->setRange(_data.minXValue, _data.maxXValue);
+    this->main_chart->axes(Qt::Vertical).first()->setRange(_data.minYValue, _data.maxYValue);
 }
 
 void ThemeWidget::enableShowGraphButton()
@@ -365,17 +388,18 @@ void ThemeWidget::memberChangedCallback(int index)
     switch(this->_whichMemberIsPicked)
     {
     case MemberType_t::Proportional:
-    case MemberType_t::Integration:
     case MemberType_t::Differentiation:
         m_ui->t1LineEdit->setEnabled(false);
         m_ui->t2LineEdit->setEnabled(false);
         m_ui->t3LineEdit->setEnabled(false);
         m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->t1LineEdit->clear();
         m_ui->t2LineEdit->clear();
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
         break;
 
     case MemberType_t::InertionFirstOrder:
@@ -383,10 +407,12 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(false);
         m_ui->t3LineEdit->setEnabled(false);
         m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->t2LineEdit->clear();
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
         break;
 
     case MemberType_t::InertionSecondOrder:
@@ -394,9 +420,11 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(true);
         m_ui->t3LineEdit->setEnabled(false);
         m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
         break;
 
     case MemberType_t::InertionThirdOrder:
@@ -404,8 +432,10 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(true);
         m_ui->t3LineEdit->setEnabled(true);
         m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
         break;
 
     case MemberType_t::InertionFourthOrder:
@@ -413,6 +443,22 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(true);
         m_ui->t3LineEdit->setEnabled(true);
         m_ui->t4LineEdit->setEnabled(true);
+        m_ui->tDlineEdit->setEnabled(false);
+
+        m_ui->tDlineEdit->clear();
+        break;
+
+    case MemberType_t::Integration:
+        m_ui->t1LineEdit->setEnabled(false);
+        m_ui->t2LineEdit->setEnabled(false);
+        m_ui->t3LineEdit->setEnabled(false);
+        m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(true);
+
+        m_ui->t1LineEdit->clear();
+        m_ui->t2LineEdit->clear();
+        m_ui->t3LineEdit->clear();
+        m_ui->t4LineEdit->clear();
         break;
 
     default:
@@ -425,46 +471,42 @@ void ThemeWidget::responseChangedCallback(int index)
     this->_whichResponseIsPicked = static_cast<Calculation::ResponseType_t>(index+1);
 }
 
+void ThemeWidget::characteristicChangedCallback(int index)
+{
+    this->_whichCharactersiticIsPicked = static_cast<Calculation::CharacteristicType_t>(index+1);
+
+    if(_whichCharactersiticIsPicked == Calculation::AmplitudePhase)
+    {
+        m_ui->signalTypeComboBox->setEnabled(false);
+    }
+    else
+    {
+        m_ui->signalTypeComboBox->setEnabled(true);
+    }
+
+    if(this->_whichCharactersiticIsPicked == CharacteristicType_t::Time)
+    {
+        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
+        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
+    }
+    else if(this->_whichCharactersiticIsPicked == CharacteristicType_t::AmplitudePhase)
+    {
+        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("Re"));
+        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("Im"));
+    }
+}
 
 //TODO this function should be moved to calculation.cpp
 DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
 {
     DataTable result;
-    DataList dataList;
-    std::vector<qreal> xValVector;
-    std::vector<qreal> yValVector;
 
-    data.memberType = this->_whichMemberIsPicked;       //This shouldn't be here, refactor
+    data.memberType = this->_whichMemberIsPicked;
     data.responseType = this->_whichResponseIsPicked;
+    data.characteristicType = this->_whichCharactersiticIsPicked;
 
-    {
-        qreal yValue(0);
-        for (int t(-10); t < m_valueCount; t++) {   //TODO hardcoded temporary
-            yValue = this->_calculator.calculate(data, t);
-            QPointF value((qreal) t, yValue);
-            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
-            dataList << Data(value, label);
-            xValVector.push_back(t);
-            yValVector.push_back(yValue);
-        }
-        result << dataList;
-    }
-
-    this->setBorderValues(data, xValVector, yValVector);
+    QPair<int, int> span(0, 100); //TODO temporary, pass data from slider when added
+    result = this->_calculator.calculate(data, span);   //TODO Maybe make it rather a static class?
 
     return result;
 }
-
-void ThemeWidget::setBorderValues(Calculation::DataAcquired_t& data,    //TODO move it to calculations namespace
-                                  std::vector<qreal> xValVector,
-                                  std::vector<qreal> yValVector)
-{
-
-    data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
-    data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
-    data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
-    data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
-
-    return;
-}
-
