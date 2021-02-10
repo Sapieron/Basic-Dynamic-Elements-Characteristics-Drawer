@@ -37,11 +37,11 @@ namespace Calculation
     struct DataAcquired_t
     {
         qreal k  = 0;
-        uint32_t t1 = 0;
-        uint32_t t2 = 0;
-        uint32_t t3 = 0;
-        uint32_t t4 = 0;
-        uint32_t td = 0;
+        qreal t1 = 0;
+        qreal t2 = 0;
+        qreal t3 = 0;
+        qreal t4 = 0;
+        qreal td = 0;
 
         MemberType_t         memberType;
         ResponseType_t       responseType;

@@ -75,11 +75,11 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     connectCallbackToPushButton();
 
     //Make line editing accept only numbers
-    m_ui->kLineEdit->setValidator(new QIntValidator(0, 100, this)); //TODO move it to separate function
-    m_ui->t1LineEdit->setValidator(new QIntValidator(0, 100, this));    //TODO make these accept qreal values
-    m_ui->t2LineEdit->setValidator(new QIntValidator(0, 100, this));
-    m_ui->t3LineEdit->setValidator(new QIntValidator(0, 100, this));
-    m_ui->t4LineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->kLineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this)); //TODO move it to separate function
+    m_ui->t1LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
+    m_ui->t2LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
+    m_ui->t3LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
+    m_ui->t4LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
 
     m_ui->t1LineEdit->setEnabled(false);
     m_ui->t2LineEdit->setEnabled(false);
@@ -264,12 +264,12 @@ void ThemeWidget::updateUI()
 
 void ThemeWidget::showGraphGotPressed()
 {
-    _data.k  = m_ui->kLineEdit->text().toInt();
-    _data.t1 = m_ui->t1LineEdit->text().toInt();
-    _data.t2 = m_ui->t2LineEdit->text().toInt();
-    _data.t3 = m_ui->t3LineEdit->text().toInt();
-    _data.t4 = m_ui->t4LineEdit->text().toInt();
-    _data.td = m_ui->tDlineEdit->text().toInt();
+    _data.k  = m_ui->kLineEdit->text().toDouble();
+    _data.t1 = m_ui->t1LineEdit->text().toDouble();
+    _data.t2 = m_ui->t2LineEdit->text().toDouble();
+    _data.t3 = m_ui->t3LineEdit->text().toDouble();
+    _data.t4 = m_ui->t4LineEdit->text().toDouble();
+    _data.td = m_ui->tDlineEdit->text().toDouble();
 
     auto result = this->calculate(_data);
 
@@ -292,9 +292,6 @@ void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineD
         this->main_chart->addSeries(series);
         this->main_chart->createDefaultAxes();
     }
-
-//    this->main_chart->axes(Qt::Horizontal).first()->setRange(_data.minXValue, _data.maxXValue);   //FIXME We won't need a lot of functions then
-//    this->main_chart->axes(Qt::Vertical).first()->setRange(_data.minYValue, _data.maxYValue);
 }
 
 void ThemeWidget::enableShowGraphButton()
