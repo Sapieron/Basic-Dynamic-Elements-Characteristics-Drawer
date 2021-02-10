@@ -43,12 +43,6 @@ namespace Calculation
         uint32_t t4 = 0;
         uint32_t td = 0;
 
-        qreal minXValue = 0;
-        qreal maxXValue = 0;
-
-        qreal minYValue = 0;
-        qreal maxYValue = 0;
-
         MemberType_t         memberType;
         ResponseType_t       responseType;
         CharacteristicType_t characteristicType;

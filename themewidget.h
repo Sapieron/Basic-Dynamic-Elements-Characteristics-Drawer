@@ -69,11 +69,6 @@ private:
     QChartView *_chartView;
 
     Calculation::DataTable calculate(Calculation::DataAcquired_t& data);
-
-    void setBorderValues(Calculation::DataAcquired_t& data,
-                         std::vector<qreal> xValVector,
-                         std::vector<qreal> yValVector);
-
 };
 
 #endif /* THEMEWIDGET_H */

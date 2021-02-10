@@ -15,16 +15,6 @@ namespace Calculation
 
       private:
         /**
-         * @brief setBorderValues sets border values of x and y
-         * @param data
-         * @param xValVector
-         * @param yValVector
-         */
-        void setBorderValues(Calculation::DataAcquired_t& data,
-                             std::vector<qreal> xValVector,
-                             std::vector<qreal> yValVector);
-
-        /**
          * @brief getPoint Returns time point
          * @param data
          * @param timeStamp

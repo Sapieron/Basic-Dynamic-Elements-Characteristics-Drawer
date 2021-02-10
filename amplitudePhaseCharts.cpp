@@ -29,8 +29,6 @@ DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, 
         result << dataList;
     }
 
-    this->setBorderValues(data, xValVector, yValVector);
-
     return result;
 }
 
@@ -74,20 +72,6 @@ QPointF AmplitudePhaseCalculation::getValueInOmegaPoint(DataAcquired_t& data,
     }
 
     return result;
-}
-
-
-void AmplitudePhaseCalculation::setBorderValues(Calculation::DataAcquired_t& data,
-                                                std::vector<qreal> xValVector,
-                                                std::vector<qreal> yValVector)
-{
-
-    data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
-    data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
-    data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
-    data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
-
-    return;
 }
 
 /*******************************************************************************\
