@@ -170,12 +170,11 @@ qreal TimeChartCalculation::getIntertionThirdOrder(DataAcquired_t& data,
 {
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return data.k - (pow((qreal)data.t1, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) + (pow((qreal)data.t2, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) - (pow((qreal)data.t3, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3));
+        return ((qreal)data.t1*(qreal)data.k*exp(-(qreal)timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t1*data.k*exp(-timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3));
     }
     else
     {
-        return ((qreal)data.t1*(qreal)data.k*exp(-(qreal)timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t1*data.k*exp(-timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3));
-
+        return data.k - (pow((qreal)data.t1, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) + (pow((qreal)data.t2, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) - (pow((qreal)data.t3, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3));
     }
 }
 

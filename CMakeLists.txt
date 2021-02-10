@@ -47,8 +47,10 @@ add_executable(${PROJECT_NAME}
     calculation.hpp
     timeCharts.hpp
     timeCharts.cpp
-    amplitudePhaseCharts.hpp
+    amplitudePhaseCharts.hpp    #TODO Move to calculation/
     amplitudePhaseCharts.cpp
+    chartFormatter.hpp  #FIXME use CMake like it's intended to, clean this mess
+    chartFormatter.cpp  #TODO Move to utils/
     ICalculator.hpp
     calculation.cpp
     themewidget.ui

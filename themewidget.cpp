@@ -1,5 +1,6 @@
 #include "themewidget.h"
 #include "ui_themewidget.h"
+#include <chartFormatter.hpp>
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QPieSeries>
@@ -55,7 +56,10 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     this->populateMemberTypeBox();
     this->populateCharacteristicTypeBox();
 
-    _chartView = new QChartView(createSplineChart());
+//    _chartView = new QChartView_scaledAxis(); //TODO Didn't work and program works extremely slow, as it anaylyzes all series all the time - can be optimizied easly
+    _chartView = new QChartView();
+    _chartView->setChart(createSplineChart());
+
     m_ui->gridLayout->addWidget(_chartView, 1, 0);
     m_charts << _chartView;
 
@@ -72,7 +76,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
 
     //Make line editing accept only numbers
     m_ui->kLineEdit->setValidator(new QIntValidator(0, 100, this)); //TODO move it to separate function
-    m_ui->t1LineEdit->setValidator(new QIntValidator(0, 100, this));
+    m_ui->t1LineEdit->setValidator(new QIntValidator(0, 100, this));    //TODO make these accept qreal values
     m_ui->t2LineEdit->setValidator(new QIntValidator(0, 100, this));
     m_ui->t3LineEdit->setValidator(new QIntValidator(0, 100, this));
     m_ui->t4LineEdit->setValidator(new QIntValidator(0, 100, this));
