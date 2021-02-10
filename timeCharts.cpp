@@ -19,8 +19,7 @@ DataTable TimeChartCalculation::calculate(DataAcquired_t& data, QPair<int, int> 
         {
             qreal yValue(0);
             for (qreal t(timeSpan.first); t < timeSpan.second; t+=(qreal)(0.01)) {
-                yValue = this->getValueinTimePoint(data, t);
-                QPointF value( t, yValue);
+                QPointF value = this->getValueinTimePoint(data, t);
                 QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
                 dataList << Data(value, label);
                 xValVector.push_back(t);
@@ -36,10 +35,10 @@ DataTable TimeChartCalculation::calculate(DataAcquired_t& data, QPair<int, int> 
  *                                   Private
 \*******************************************************************************/
 
-qreal TimeChartCalculation::getValueinTimePoint(DataAcquired_t& data,
+QPointF TimeChartCalculation::getValueinTimePoint(DataAcquired_t& data,
                                                 qreal timePoint)
 {
-    qreal result;
+    QPointF result;
 
     switch(data.memberType)
     {
@@ -66,7 +65,6 @@ qreal TimeChartCalculation::getValueinTimePoint(DataAcquired_t& data,
         break;
 
     default:
-        result = 0;
         break;
     }
 
@@ -76,114 +74,172 @@ qreal TimeChartCalculation::getValueinTimePoint(DataAcquired_t& data,
 /*******************************************************************************\
  *                                Proportional
 \*******************************************************************************/
-qreal TimeChartCalculation::getProportional(DataAcquired_t& data,
+QPointF TimeChartCalculation::getProportional(DataAcquired_t& data,
                                             qreal timePoint)
 {
-    Q_UNUSED(timePoint);
+    QPointF result;
 
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return 0; //FIXME shouldn't show anything
+        result.setX(0);
+        result.setY(0);
     }
     else
     {
-        return (qreal)data.k;
+        result.setX(timePoint);
+        result.setY(data.k);
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                            Inertion First Order
 \*******************************************************************************/
-qreal TimeChartCalculation::getIntertionFirstOrder(DataAcquired_t& data,
+QPointF TimeChartCalculation::getIntertionFirstOrder(DataAcquired_t& data,
                                                    qreal timePoint)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return data.k / qreal(data.t1) * exp(-(qreal)timePoint/(qreal)data.t1);
+        result.setX(timePoint);
+        result.setY( data.k / qreal(data.t1) * exp(-(qreal)timePoint/(qreal)data.t1) );
     }else
     {
-        return data.k * (1 - exp(-(qreal)timePoint/(qreal)data.t1));
+        result.setX(timePoint);
+        result.setY( data.k * (1 - exp(-(qreal)timePoint/(qreal)data.t1)) );
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                            Inertion Second Order
 \*******************************************************************************/
-qreal TimeChartCalculation::getIntertionSecondOrder(DataAcquired_t& data,
+QPointF TimeChartCalculation::getIntertionSecondOrder(DataAcquired_t& data,
                                                     qreal timePoint)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return ((qreal)data.k / ((qreal)data.t1 - (qreal)data.t2)) * ( exp(-(qreal)timePoint/(qreal)data.t1) - exp(-(qreal)timePoint / (qreal)data.t2) ) ;
+        result.setX(timePoint);
+        result.setY( ((qreal)data.k / ((qreal)data.t1 - (qreal)data.t2)) *
+                     ( exp(-(qreal)timePoint/(qreal)data.t1) - exp(-(qreal)timePoint / (qreal)data.t2) ) );
     }
     else
     {
-        return (qreal)data.k*( (qreal)1 - ((qreal)data.t1/((qreal)data.t1 - (qreal)data.t2)) * exp(-(qreal)timePoint / (qreal)data.t1) +  ((qreal)data.t2/((qreal)data.t1 - (qreal)data.t2)) * exp(-(qreal)timePoint / (qreal)data.t2)) ;
+        result.setX(timePoint);
+        result.setY( (qreal)data.k*( (qreal)1 - ((qreal)data.t1/((qreal)data.t1 - (qreal)data.t2)) *
+                                     exp(-(qreal)timePoint / (qreal)data.t1) +  ((qreal)data.t2/((qreal)data.t1 - (qreal)data.t2)) *
+                                     exp(-(qreal)timePoint / (qreal)data.t2)) );
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                            Inertion Third Order
 \*******************************************************************************/
-qreal TimeChartCalculation::getIntertionThirdOrder(DataAcquired_t& data,
+QPointF TimeChartCalculation::getIntertionThirdOrder(DataAcquired_t& data,
                                                    qreal timePoint)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return ((qreal)data.t1*(qreal)data.k*exp(-(qreal)timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t1*data.k*exp(-timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3));
+        result.setX(timePoint);
+        result.setY( ((qreal)data.t1*(qreal)data.k*exp(-(qreal)timePoint/(qreal)data.t1))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timePoint/(qreal)data.t2))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timePoint/(qreal)data.t3))/
+                     (((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t1*data.k*exp(-timePoint/(qreal)data.t1))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) - ((qreal)data.t2*data.k*exp(-timePoint/(qreal)data.t2))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) + ((qreal)data.t3*data.k*exp(-timePoint/(qreal)data.t3))/
+                     (((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)) );
     }
     else
     {
-        return data.k - (pow((qreal)data.t1, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) + (pow((qreal)data.t2, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) - (pow((qreal)data.t3, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3));
+        result.setX(timePoint);
+        result.setY( data.k - (pow((qreal)data.t1, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t1))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)) +
+                     (pow((qreal)data.t2, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t2))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)) -
+                     (pow((qreal)data.t3, 2)*data.k*exp(-(qreal)timePoint/(qreal)data.t3))/
+                     (((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)) );
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                            Inertion Fourth Order
 \*******************************************************************************/
-qreal TimeChartCalculation::getIntertionFourthOrder(DataAcquired_t& data,
+QPointF TimeChartCalculation::getIntertionFourthOrder(DataAcquired_t& data,
                                                     qreal timePoint)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return (pow((qreal)data.t1, 2)*data.k*exp(-timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t1 - (qreal)data.t4)) - (pow((qreal)data.t2, 2)*data.k*exp(-timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t4)) + (pow((qreal)data.t3, 2)*data.k*exp(-timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t3 - (qreal)data.t4)) - (pow((qreal)data.t4, 2)*data.k*exp(-timePoint/(qreal)data.t4))/(((qreal)data.t1 - (qreal)data.t4)*((qreal)data.t2 - (qreal)data.t4)*((qreal)data.t3 - (qreal)data.t4));
+        result.setX(timePoint);
+        result.setY( (pow((qreal)data.t1, 2)*data.k*exp(-timePoint/(qreal)data.t1))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t1 - (qreal)data.t4)) -
+                     (pow((qreal)data.t2, 2)*data.k*exp(-timePoint/(qreal)data.t2))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t4)) +
+                     (pow((qreal)data.t3, 2)*data.k*exp(-timePoint/(qreal)data.t3))/
+                     (((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t3 - (qreal)data.t4)) -
+                     (pow((qreal)data.t4, 2)*data.k*exp(-timePoint/(qreal)data.t4))/
+                     (((qreal)data.t1 - (qreal)data.t4)*((qreal)data.t2 - (qreal)data.t4)*((qreal)data.t3 - (qreal)data.t4)) );
     }
     else
     {
-        return data.k - (pow((qreal)data.t1, 3)*data.k*exp(-timePoint/(qreal)data.t1))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t1 - (qreal)data.t4)) + (pow((qreal)data.t2, 3)*data.k*exp(-timePoint/(qreal)data.t2))/(((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t4)) - (pow((qreal)data.t3, 3)*data.k*exp(-timePoint/(qreal)data.t3))/(((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t3 - (qreal)data.t4)) + (pow((qreal)data.t4, 3)*data.k*exp(-timePoint/(qreal)data.t4))/(((qreal)data.t1 - (qreal)data.t4)*((qreal)data.t2 - (qreal)data.t4)*((qreal)data.t3 - (qreal)data.t4));
+        result.setX(timePoint);
+        result.setY( data.k - (pow((qreal)data.t1, 3)*data.k*exp(-timePoint/(qreal)data.t1))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t1 - (qreal)data.t4)) +
+                     (pow((qreal)data.t2, 3)*data.k*exp(-timePoint/(qreal)data.t2))/
+                     (((qreal)data.t1 - (qreal)data.t2)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t4)) -
+                     (pow((qreal)data.t3, 3)*data.k*exp(-timePoint/(qreal)data.t3))/
+                     (((qreal)data.t1 - (qreal)data.t3)*((qreal)data.t2 - (qreal)data.t3)*((qreal)data.t3 - (qreal)data.t4)) +
+                     (pow((qreal)data.t4, 3)*data.k*exp(-timePoint/(qreal)data.t4))/
+                     (((qreal)data.t1 - (qreal)data.t4)*((qreal)data.t2 - (qreal)data.t4)*((qreal)data.t3 - (qreal)data.t4)) );
     }
+
+    return result;
 }
 
 /*******************************************************************************\
  *                              Differentiation
 \*******************************************************************************/
-qreal TimeChartCalculation::getDifferentiation(DataAcquired_t& data,
+QPointF TimeChartCalculation::getDifferentiation(DataAcquired_t& data,
                                                qreal timePoint)
 {
+    Q_UNUSED(data);
     Q_UNUSED(timePoint);
 
-    if(data.responseType == ResponseType_t::Impulse)
-    {
-        return 0; //FIXME shouldn't show anything
-    }
-    else
-    {
-        return 0; //FIXME shouldn't show anything
-    }
+    QPointF result(0, 0);
+
+    return result;
 }
 
 /*******************************************************************************\
  *                                Integration
 \*******************************************************************************/
-qreal TimeChartCalculation::getIntegration(DataAcquired_t& data,
-                                           qreal timePoint)
+QPointF TimeChartCalculation::getIntegration(DataAcquired_t& data,
+                                             qreal timePoint)
 {
+    QPointF result;
+
     if(data.responseType == ResponseType_t::Impulse)
     {
-        return (qreal)data.k;
+        result.setX(timePoint);
+        result.setY( (qreal)data.k );
     }
     else
     {
-        return (qreal)data.k * (qreal)timePoint;
+        result.setX(timePoint);
+        result.setY( (qreal)data.k * (qreal)timePoint );
     }
+
+    return result;
 }

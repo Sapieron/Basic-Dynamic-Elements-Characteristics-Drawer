@@ -20,8 +20,8 @@ namespace Calculation
          * @param timeStamp
          * @return
          */
-        qreal getValueinTimePoint(DataAcquired_t& data,
-                                   qreal timeStamp);
+        QPointF getValueinTimePoint(DataAcquired_t& data,
+                                    qreal timeStamp);
 
         /**
          * @brief getProportional calculates data at time point related on data provided
@@ -29,8 +29,8 @@ namespace Calculation
          * @param timeStamp
          * @return computed value
          */
-        qreal getProportional(DataAcquired_t& data,
-                              qreal timeStamp);
+        QPointF getProportional(DataAcquired_t& data,
+                                qreal timeStamp);
 
         /**
          * @brief getIntertionFirstOrder calculates data at time point related on data provided
@@ -38,8 +38,8 @@ namespace Calculation
          * @param timeStamp
          * @return
          */
-        qreal getIntertionFirstOrder(DataAcquired_t& data,
-                                     qreal timeStamp);
+        QPointF getIntertionFirstOrder(DataAcquired_t& data,
+                                       qreal timeStamp);
 
         /**
          * @brief getIntertionSecondOrder calculates data at time point related on data provided
@@ -47,8 +47,8 @@ namespace Calculation
          * @param timeStamp
          * @return
          */
-        qreal getIntertionSecondOrder(DataAcquired_t& data,
-                                      qreal timeStamp);
+        QPointF getIntertionSecondOrder(DataAcquired_t& data,
+                                        qreal timeStamp);
 
         /**
          * @brief getIntertionThirdOrder calculates data at time point related on data provided
@@ -56,8 +56,8 @@ namespace Calculation
          * @param timeStamp
          * @return
          */
-        qreal getIntertionThirdOrder(DataAcquired_t& data,
-                                     qreal timeStamp);
+        QPointF getIntertionThirdOrder(DataAcquired_t& data,
+                                       qreal timeStamp);
 
         /**
          * @brief getIntertionFourthOrder calculates data at time point related on data provided
@@ -65,8 +65,8 @@ namespace Calculation
          * @param timeStamp
          * @return
          */
-        qreal getIntertionFourthOrder(DataAcquired_t& data,
-                                      qreal timeStamp);
+        QPointF getIntertionFourthOrder(DataAcquired_t& data,
+                                        qreal timeStamp);
 
         /**
          * @brief getDifferentiation calculates data at time point related on data provided
@@ -74,8 +74,8 @@ namespace Calculation
          * @param timeStamp
          * @return
          */
-        qreal getDifferentiation(DataAcquired_t& data,
-                                 qreal timeStamp);
+        QPointF getDifferentiation(DataAcquired_t& data,
+                                   qreal timeStamp);
 
         /**
          * @brief getIntegration calculates data at time point related on data provided
@@ -83,8 +83,8 @@ namespace Calculation
          * @param timeStamp
          * @return
          */
-        qreal getIntegration(DataAcquired_t& data,
-                             qreal timeStamp);
+        QPointF getIntegration(DataAcquired_t& data,
+                               qreal timeStamp);
     };
 }
 
