@@ -290,10 +290,11 @@ void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineD
         nameIndex++;
 
         this->main_chart->addSeries(series);
+        this->main_chart->createDefaultAxes();
     }
 
-    this->main_chart->axes(Qt::Horizontal).first()->setRange(_data.minXValue, _data.maxXValue);
-    this->main_chart->axes(Qt::Vertical).first()->setRange(_data.minYValue, _data.maxYValue);
+//    this->main_chart->axes(Qt::Horizontal).first()->setRange(_data.minXValue, _data.maxXValue);   //FIXME We won't need a lot of functions then
+//    this->main_chart->axes(Qt::Vertical).first()->setRange(_data.minYValue, _data.maxYValue);
 }
 
 void ThemeWidget::enableShowGraphButton()

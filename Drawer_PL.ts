@@ -110,13 +110,13 @@
     </message>
     <message>
         <location filename="themewidget.cpp" line="205"/>
-        <location filename="themewidget.cpp" line="493"/>
+        <location filename="themewidget.cpp" line="494"/>
         <source>t[s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="themewidget.cpp" line="206"/>
-        <location filename="themewidget.cpp" line="494"/>
+        <location filename="themewidget.cpp" line="495"/>
         <source>h(t)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -131,12 +131,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="498"/>
+        <location filename="themewidget.cpp" line="499"/>
         <source>Re</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="499"/>
+        <location filename="themewidget.cpp" line="500"/>
         <source>Im</source>
         <translation type="unfinished"></translation>
     </message>

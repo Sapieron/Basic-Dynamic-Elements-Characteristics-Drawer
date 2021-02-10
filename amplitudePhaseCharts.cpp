@@ -96,10 +96,13 @@ void AmplitudePhaseCalculation::setBorderValues(Calculation::DataAcquired_t& dat
 QPointF AmplitudePhaseCalculation::getProportional(DataAcquired_t& data,
                                                    qreal omega)
 {
+    //To avoid ,,unused" warnings
+    Q_UNUSED(omega);
+
     QPointF result;
 
-    result.setX(data.k); //FIXME temp
-    result.setY(0); //FIXME temp
+    result.setX(data.k);
+    result.setY(0);
 
     return result;
 }
@@ -216,10 +219,14 @@ QPointF AmplitudePhaseCalculation::getIntertionFourthOrder(DataAcquired_t& data,
 QPointF AmplitudePhaseCalculation::getDifferentiation(DataAcquired_t& data,
                                                       qreal omega)
 {
+    //To avoid unused warnings
+    Q_UNUSED(data);
+    Q_UNUSED(omega);
+
     QPointF result;
 
-    result.setX(0); //FIXME temp
-    result.setY(0); //FIXME temp
+    result.setX(0);
+    result.setY(0);
 
     return result;
 }
