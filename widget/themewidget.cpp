@@ -1,6 +1,6 @@
 #include "themewidget.h"
 #include "ui_themewidget.h"
-#include <chartFormatter.hpp>
+#include <utils/chartFormatter.hpp>
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QPieSeries>

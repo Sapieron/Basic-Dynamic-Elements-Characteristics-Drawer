@@ -4,7 +4,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtCharts/QChartGlobal>
-#include "calculation.hpp"
+#include "calculation/calculation.hpp"
 #include <cmath>
 
 QT_BEGIN_NAMESPACE

@@ -1,4 +1,4 @@
-#include "themewidget.h"
+#include "widget/themewidget.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QTranslator>

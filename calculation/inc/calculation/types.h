@@ -3,7 +3,7 @@
 
 #include "qpoint.h"
 #include "qstring.h"
-#include "qpair.h"
+#include <QPair>
 
 namespace Calculation
 {
