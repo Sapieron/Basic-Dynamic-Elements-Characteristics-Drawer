@@ -4,8 +4,8 @@
 #include "types.h"
 #include <vector>
 
-#include "timeCharts.hpp"
-#include "amplitudePhaseCharts.hpp"
+#include "timeCalc.hpp"
+#include "ampPhaseCalc.hpp"
 
 
 namespace Calculation

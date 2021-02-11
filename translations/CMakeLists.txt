@@ -1,0 +1,3 @@
+set(TS_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Drawer_PL.ts
+)

@@ -3,7 +3,7 @@
 
 #include "qpoint.h"
 #include "qstring.h"
-#include "qpair.h"
+#include <QPair>
 
 namespace Calculation
 {
@@ -37,17 +37,11 @@ namespace Calculation
     struct DataAcquired_t
     {
         qreal k  = 0;
-        uint32_t t1 = 0;
-        uint32_t t2 = 0;
-        uint32_t t3 = 0;
-        uint32_t t4 = 0;
-        uint32_t td = 0;
-
-        qreal minXValue = 0;
-        qreal maxXValue = 0;
-
-        qreal minYValue = 0;
-        qreal maxYValue = 0;
+        qreal t1 = 0;
+        qreal t2 = 0;
+        qreal t3 = 0;
+        qreal t4 = 0;
+        qreal td = 0;
 
         MemberType_t         memberType;
         ResponseType_t       responseType;

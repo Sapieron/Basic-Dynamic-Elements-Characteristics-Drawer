@@ -30,35 +30,24 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Charts LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts LinguistTools REQUIRED)
 
-set(TS_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/Drawer_PL.ts
-)
-
-
+add_subdirectory(calculation)
+add_subdirectory(widget)
+add_subdirectory(translations)
+add_subdirectory(utils)
 
 # generate qm files
 qt5_add_translation(QM_FILES ${TS_FILES})
 
-
 add_executable(${PROJECT_NAME}
     main.cpp
-    themewidget.cpp
-    themewidget.h
-    calculation.hpp
-    timeCharts.hpp
-    timeCharts.cpp
-    amplitudePhaseCharts.hpp
-    amplitudePhaseCharts.cpp
-    ICalculator.hpp
-    calculation.cpp
-    themewidget.ui
-    types.h
     ${QM_FILES}
 )
 
 
 target_link_libraries(Drawer
     PRIVATE
+    calculation
+    widget
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Charts
 )

@@ -1,4 +1,4 @@
-#include "amplitudePhaseCharts.hpp"
+#include "ampPhaseCalc.hpp"
 #include <cmath>
 #include <qlist.h>
 
@@ -28,8 +28,6 @@ DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, 
         }
         result << dataList;
     }
-
-    this->setBorderValues(data, xValVector, yValVector);
 
     return result;
 }
@@ -76,30 +74,19 @@ QPointF AmplitudePhaseCalculation::getValueInOmegaPoint(DataAcquired_t& data,
     return result;
 }
 
-
-void AmplitudePhaseCalculation::setBorderValues(Calculation::DataAcquired_t& data,
-                                                std::vector<qreal> xValVector,
-                                                std::vector<qreal> yValVector)
-{
-
-    data.minXValue = *std::min_element(xValVector.begin(), xValVector.end());
-    data.maxXValue = *std::max_element(xValVector.begin(), xValVector.end());
-    data.minYValue = *std::min_element(yValVector.begin(), yValVector.end());
-    data.maxYValue = *std::max_element(yValVector.begin(), yValVector.end());
-
-    return;
-}
-
 /*******************************************************************************\
  *                                Proportional
 \*******************************************************************************/
 QPointF AmplitudePhaseCalculation::getProportional(DataAcquired_t& data,
                                                    qreal omega)
 {
+    //To avoid ,,unused" warnings
+    Q_UNUSED(omega);
+
     QPointF result;
 
-    result.setX(data.k); //FIXME temp
-    result.setY(0); //FIXME temp
+    result.setX(data.k);
+    result.setY(0);
 
     return result;
 }
@@ -112,8 +99,8 @@ QPointF AmplitudePhaseCalculation::getIntertionFirstOrder(DataAcquired_t& data,
 {
     QPointF result;
 
-    result.setX( data.k / ( pow((qreal)data.t1, 2) * pow(omega, 2) + (qreal)1 ) );
-    result.setY( (-data.k * (qreal)data.t1 * omega)/( pow((qreal)data.t1, 2) * pow(omega, 2) + 1 ) );
+    result.setX( data.k / ( pow(data.t1, (qreal)2) * pow(omega, (qreal)2) + (qreal)1 ) );
+    result.setY( (-data.k * data.t1 * omega)/( pow(data.t1, (qreal)2) * pow(omega, (qreal)2) + (qreal)1 ) );
 
     return result;
 }
@@ -126,10 +113,14 @@ QPointF AmplitudePhaseCalculation::getIntertionSecondOrder(DataAcquired_t& data,
 {
     QPointF result;
 
-    result.setX( data.k * ( (qreal)1 - pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2 ) /
-                 ( (qreal)1 + pow(( omega * (qreal)data.t1 ), 2) + pow(( omega * (qreal)data.t2 ), 2) + pow( pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2, 2) ) );
-    result.setY( -data.k * omega * ( (qreal)data.t1 + (qreal)data.t2 ) /
-                 ( (qreal)1 + pow(( omega * (qreal)data.t1 ), 2) + pow(( omega * (qreal)data.t2 ), 2) + pow( pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2, 2) ) );
+    result.setX( data.k * ( (qreal)1 - pow(omega, (qreal)2) * data.t1 * data.t2 ) /
+                 ( (qreal)1 + pow(( omega * data.t1 ), (qreal)2) +
+                   pow(( omega * data.t2 ), (qreal)2) +
+                   pow( pow(omega, (qreal)2) * data.t1 * data.t2, (qreal)2) ) );
+    result.setY( -data.k * omega * ( data.t1 + data.t2 ) /
+                 ( (qreal)1 + pow(( omega * data.t1 ), (qreal)2)
+                   + pow(( omega * data.t2 ), (qreal)2) +
+                   pow( pow(omega, (qreal)2) * data.t1 * data.t2, (qreal)2) ) );
 
 
     return result;
@@ -144,25 +135,24 @@ QPointF AmplitudePhaseCalculation::getIntertionThirdOrder(DataAcquired_t& data,
     QPointF result;
 
     result.setX(
-    data.k * ( ( (qreal)1 - pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2 ) -
-    (pow(omega, 2) * (qreal)data.t1 * (qreal)data.t3) -
-    (pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2) )
-    /
-    ( ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t1, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t2, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t3, 2) ) )
-    );
+                data.k * ( ( (qreal)1 - pow(omega, (qreal)2) * data.t1 * data.t2 ) -
+                           (pow(omega, (qreal)2) * data.t1 * data.t3) -
+                           (pow(omega, (qreal)2) * data.t1 * data.t2) )
+                /
+                ( ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t1, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t2, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t3, (qreal)2) ) )
+                );
 
     result.setY(
-    data.k * ( (-omega * (qreal)data.t3) -
-    (omega * (qreal)data.t1) -
-    (omega * (qreal)data.t2) +
-    ( pow(omega,3) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t3) )
-    /
-    ( ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t1, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t2, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t3, 2) ) )
-    );
+                data.k * ( (-omega * data.t3) -
+                           (omega * data.t1) -
+                           (omega * data.t2) +
+                           ( pow(omega, (qreal)3) * data.t1 * data.t2 * data.t3) ) /
+                ( ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t1, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t2, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t3, (qreal)2) ) )
+                );
 
     return result;
 }
@@ -176,36 +166,36 @@ QPointF AmplitudePhaseCalculation::getIntertionFourthOrder(DataAcquired_t& data,
     QPointF result;
 
     result.setX(
-    data.k * ( ( (qreal)1 - pow(omega, 2) * (qreal)data.t3 * (qreal)data.t4 ) -
-    (pow(omega, 2) * (qreal)data.t1 * (qreal)data.t4) -
-    (pow(omega, 2) * (qreal)data.t1 * (qreal)data.t2) -
-    (pow(omega, 2) * (qreal)data.t2 * (qreal)data.t4) -
-    (pow(omega, 2) * (qreal)data.t2 * (qreal)data.t3) +
-    (pow(omega, 4) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t3 * (qreal)data.t4 )
-    )
-    /
-    ( ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t1, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t2, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t3, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t4, 2) ) )
-    );
+                data.k * ( ( (qreal)1 - pow(omega, (qreal)2) * data.t3 * data.t4 ) -
+                           (pow(omega, (qreal)2) * data.t1 * data.t4) -
+                           (pow(omega, (qreal)2) * data.t1 * data.t2) -
+                           (pow(omega, (qreal)2) * data.t2 * data.t4) -
+                           (pow(omega, (qreal)2) * data.t2 * data.t3) +
+                           (pow(omega, (qreal)4) * data.t1 * data.t2 * data.t3 * data.t4 )
+                           )
+                /
+                ( ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t1, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t2, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t3, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t4, (qreal)2) ) )
+                );
 
     result.setY(
-     data.k * ( (-omega * (qreal)data.t4) -
-    (omega * (qreal)data.t3) -
-    (omega * (qreal)data.t1) +
-    ( pow(omega,3) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t4) -
-    (omega * (qreal)data.t2) +
-    (pow(omega, 3) * (qreal)data.t2 * (qreal)data.t3 * (qreal)data.t4) +
-    (pow(omega, 3) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t4) +
-    (pow(omega, 3) * (qreal)data.t1 * (qreal)data.t2 * (qreal)data.t3)
-    )
-    /
-    ( ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t1, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t2, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t3, 2) ) *
-    ( (qreal)1 + pow(omega, 2) * pow((qreal)data.t4, 2) ) )
-    );
+                data.k * ( (-omega * data.t4) -
+                           (omega * data.t3) -
+                           (omega * data.t1) +
+                           ( pow(omega, (qreal)3) * data.t1 * data.t2 * data.t4) -
+                           (omega * data.t2) +
+                           (pow(omega, (qreal)3) * data.t2 * data.t3 * data.t4) +
+                           (pow(omega, (qreal)3) * data.t1 * data.t2 * data.t4) +
+                           (pow(omega, (qreal)3) * data.t1 * data.t2 * data.t3)
+                           )
+                /
+                ( ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t1, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t2, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t3, (qreal)2) ) *
+                  ( (qreal)1 + pow(omega, (qreal)2) * pow(data.t4, (qreal)2) ) )
+                );
 
     return result;
 }
@@ -216,10 +206,14 @@ QPointF AmplitudePhaseCalculation::getIntertionFourthOrder(DataAcquired_t& data,
 QPointF AmplitudePhaseCalculation::getDifferentiation(DataAcquired_t& data,
                                                       qreal omega)
 {
+    //To avoid unused warnings
+    Q_UNUSED(data);
+    Q_UNUSED(omega);
+
     QPointF result;
 
-    result.setX(0); //FIXME temp
-    result.setY(0); //FIXME temp
+    result.setX(0);
+    result.setY(0);
 
     return result;
 }
