@@ -4,6 +4,7 @@ set(SOURCES
     calculation.cpp
     timeCalc.cpp
     ampPhaseCalc.cpp
+    pidCalc.cpp
 )
 
 add_library(${NAME} STATIC ${SOURCES})

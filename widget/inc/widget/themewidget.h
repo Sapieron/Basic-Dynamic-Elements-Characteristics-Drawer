@@ -69,6 +69,9 @@ private:
     QChartView *_chartView;
 
     Calculation::DataTable calculate(Calculation::DataAcquired_t& data);
+    void setVisibilityOfWidgetFields(Calculation::CharacteristicType_t characteristicType);
+    bool isAllDataProvided_TimePhaseAmplitude();
+    bool isAllDataProvided_PID();
 };
 
 #endif /* THEMEWIDGET_H */
