@@ -15,16 +15,15 @@ DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, 
 
     DataTable result;
     DataList dataList;
-    std::vector<qreal> xValVector;
-    std::vector<qreal> yValVector;
+
+    qreal samplingFrequency = 0.001;
 
     {
-        for (qreal omega(0); omega < 100; omega+=0.001) {   //just calculate very big omega
+        //just calculate very big omega
+        for (qreal omega(samplingFrequency); omega < 100; omega += samplingFrequency) {
             QPointF value = this->getValueInOmegaPoint(data, omega);
             QString label = "Slice " + QString::number(0) + ":" + QString::number(omega);
             dataList << Data(value, label);
-            xValVector.push_back(value.x());
-            yValVector.push_back(value.y());
         }
         result << dataList;
     }

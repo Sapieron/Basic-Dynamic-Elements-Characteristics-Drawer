@@ -52,6 +52,8 @@ namespace Calculation
         qreal target     = 0;
         qreal startPoint = 0;
 
+        int maxT = 0;
+
         MemberType_t         memberType;
         ResponseType_t       responseType;
         CharacteristicType_t characteristicType;
