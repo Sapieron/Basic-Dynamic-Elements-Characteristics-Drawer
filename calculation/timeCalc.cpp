@@ -13,20 +13,16 @@ DataTable TimeChartCalculation::calculate(DataAcquired_t& data, QPair<int, int> 
 {
         DataTable result;
         DataList dataList;
-        std::vector<qreal> xValVector;
-        std::vector<qreal> yValVector;
 
-        {
-            qreal yValue(0);
-            for (qreal t(timeSpan.first); t < timeSpan.second; t+=(qreal)(0.01)) {
-                QPointF value = this->getValueinTimePoint(data, t);
-                QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
-                dataList << Data(value, label);
-                xValVector.push_back(t);
-                yValVector.push_back(yValue);
-            }
-            result << dataList;
+        qreal samplingFrequency = 0.1;
+
+        for (qreal t(timeSpan.first); t < timeSpan.second; t += samplingFrequency) {
+            QPointF value = this->getValueinTimePoint(data, t);
+            QString label = "Slice " + QString::number(0) + ":" + QString::number(t);
+            dataList << Data(value, label);
         }
+        result << dataList;
+
 
         return result;
 }

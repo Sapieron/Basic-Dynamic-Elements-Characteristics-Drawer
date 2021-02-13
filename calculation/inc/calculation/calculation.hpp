@@ -6,6 +6,7 @@
 
 #include "timeCalc.hpp"
 #include "ampPhaseCalc.hpp"
+#include "pidCalc.hpp"
 
 
 namespace Calculation
@@ -24,6 +25,7 @@ namespace Calculation
       private:
         AmplitudePhaseCalculation _amplitudePhaseChartCalculation;
         TimeChartCalculation      _timeChartCalculation;
+        PIDCalculation            _pidCalculation;
     };
 }
 

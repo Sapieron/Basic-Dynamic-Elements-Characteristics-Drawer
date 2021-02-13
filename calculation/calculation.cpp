@@ -25,6 +25,10 @@ DataTable Calculator::calculate(DataAcquired_t& data, QPair<int, int> span)
         result = this->_amplitudePhaseChartCalculation.calculate(data, span);
         break;
 
+    case CharacteristicType_t::PID:
+        result = this->_pidCalculation.calculate(data, span);
+        break;
+
     default:
         break;
     }

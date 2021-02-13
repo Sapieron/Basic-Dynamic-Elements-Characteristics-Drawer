@@ -81,11 +81,35 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_ui->t3LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
     m_ui->t4LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
 
+    m_ui->kpLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
+    m_ui->kiLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
+    m_ui->kdLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
+    m_ui->dtLineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
+    m_ui->targetLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
+    m_ui->startLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
+    m_ui->maxTLineEdit->setValidator(new QIntValidator(0, 100, this));
+
     m_ui->t1LineEdit->setEnabled(false);
     m_ui->t2LineEdit->setEnabled(false);
     m_ui->t3LineEdit->setEnabled(false);
     m_ui->t4LineEdit->setEnabled(false);
     m_ui->tDlineEdit->setEnabled(false);
+
+    m_ui->kpLineEdit->setVisible(false);
+    m_ui->kiLineEdit->setVisible(false);
+    m_ui->kdLineEdit->setVisible(false);
+    m_ui->dtLineEdit->setVisible(false);
+    m_ui->targetLineEdit->setVisible(false);
+    m_ui->startLineEdit->setVisible(false);
+
+    m_ui->kpLabel->setVisible(false);
+    m_ui->kiLabel->setVisible(false);
+    m_ui->kdLabel->setVisible(false);
+    m_ui->dtLabel->setVisible(false);
+    m_ui->targetLabel->setVisible(false);
+    m_ui->startLabel->setVisible(false);
+
+    m_ui->maxTLineEdit->setText("100");
 
     connect(m_ui->memberTypeComboBox,
             SIGNAL(currentIndexChanged(int)),
@@ -177,6 +201,7 @@ void ThemeWidget::populateCharacteristicTypeBox()
 
     m_ui->characteristicComboBox->addItem(tr("Time"),            CharacteristicType_t::Time);
     m_ui->characteristicComboBox->addItem(tr("Amplitude-Phase"), CharacteristicType_t::AmplitudePhase);
+    m_ui->characteristicComboBox->addItem(tr("PID"),             CharacteristicType_t::PID);
 }
 
 QChart *ThemeWidget::createSplineChart() const  //FIXME it's probably not needed
@@ -271,6 +296,15 @@ void ThemeWidget::showGraphGotPressed()
     _data.t4 = m_ui->t4LineEdit->text().toDouble();
     _data.td = m_ui->tDlineEdit->text().toDouble();
 
+    _data.kp         = m_ui->kpLineEdit->text().toDouble();
+    _data.ki         = m_ui->kiLineEdit->text().toDouble();
+    _data.kd         = m_ui->kdLineEdit->text().toDouble();
+    _data.dt         = m_ui->dtLineEdit->text().toDouble();
+    _data.target     = m_ui->targetLineEdit->text().toDouble();
+    _data.startPoint = m_ui->startLineEdit->text().toDouble();
+
+    _data.maxT       = m_ui->maxTLineEdit->text().toInt();
+
     auto result = this->calculate(_data);
 
     this->updateChart(result);
@@ -301,6 +335,25 @@ void ThemeWidget::enableShowGraphButton()
 
 bool ThemeWidget::isAllDataProvided()
 {
+    bool result;
+
+    switch(_whichCharactersiticIsPicked)
+    {
+    case CharacteristicType_t::Time:
+    case CharacteristicType_t::AmplitudePhase:
+        result = this->isAllDataProvided_TimePhaseAmplitude();
+        break;
+
+    case CharacteristicType_t::PID:
+        result = this->isAllDataProvided_PID();
+        break;
+    }
+
+    return result;
+}
+
+bool ThemeWidget::isAllDataProvided_TimePhaseAmplitude()
+{
     using Calculation::MemberType_t;
 
     bool result = false;
@@ -308,22 +361,26 @@ bool ThemeWidget::isAllDataProvided()
     switch(this->_whichMemberIsPicked)
     {
     case MemberType_t::Proportional:
-        result = ! this->m_ui->kLineEdit->text().isEmpty();
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
+                     this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
     case MemberType_t::InertionFirstOrder:
         result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
-                     this->m_ui->t1LineEdit->text().isEmpty() );
+                     this->m_ui->t1LineEdit->text().isEmpty() ||
+                     this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
     case MemberType_t::InertionSecondOrder:
         result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
                      this->m_ui->t1LineEdit->text().isEmpty() ||
-                     this->m_ui->t2LineEdit->text().isEmpty() );
+                     this->m_ui->t2LineEdit->text().isEmpty() ||
+                     this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
     case MemberType_t::InertionThirdOrder:
         result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
                      this->m_ui->t1LineEdit->text().isEmpty() ||
                      this->m_ui->t2LineEdit->text().isEmpty() ||
-                     this->m_ui->t3LineEdit->text().isEmpty() );
+                     this->m_ui->t3LineEdit->text().isEmpty() ||
+                     this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
     case MemberType_t::InertionFourthOrder:
 
@@ -331,13 +388,16 @@ bool ThemeWidget::isAllDataProvided()
                      this->m_ui->t1LineEdit->text().isEmpty() ||
                      this->m_ui->t2LineEdit->text().isEmpty() ||
                      this->m_ui->t3LineEdit->text().isEmpty() ||
-                     this->m_ui->t4LineEdit->text().isEmpty() );
+                     this->m_ui->t4LineEdit->text().isEmpty() ||
+                     this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
     case MemberType_t::Integration:
-        result = ! ( this->m_ui->kLineEdit->text().isEmpty() );
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
+                     this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
     case MemberType_t::Differentiation:
-        result = ! ( this->m_ui->kLineEdit->text().isEmpty() );
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
+                     this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
 
     default:
@@ -345,6 +405,17 @@ bool ThemeWidget::isAllDataProvided()
     }
 
     return result;
+}
+
+bool ThemeWidget::isAllDataProvided_PID()
+{
+    return !( this->m_ui->kpLineEdit->text().isEmpty()    ||
+              this->m_ui->kiLineEdit->text().isEmpty()    ||
+              this->m_ui->kdLineEdit->text().isEmpty()    ||
+              this->m_ui->dtLineEdit->text().isEmpty()    ||
+              this->m_ui->startLineEdit->text().isEmpty() ||
+              this->m_ui->targetLineEdit->text().isEmpty()||
+              this->m_ui->maxTLineEdit->text().isEmpty()  );
 }
 
 void ThemeWidget::connectCallbackToPushButton()
@@ -374,17 +445,204 @@ void ThemeWidget::connectCallbackToPushButton()
             this,
             &ThemeWidget::enableShowGraphButton);
 
+    connect(m_ui->tDlineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
 
-    connect(m_ui->memberTypeComboBox,
+
+    connect(m_ui->kpLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->kiLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->kdLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->dtLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->targetLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+    connect(m_ui->startLineEdit,
+            &QLineEdit::textChanged,
+            this,
+            &ThemeWidget::enableShowGraphButton);
+
+
+    connect(m_ui->memberTypeComboBox,       //FIXME will it work with ,,||" ?
             &QComboBox::currentTextChanged,
             this,
             &ThemeWidget::enableShowGraphButton);
 }
 
+void ThemeWidget::responseChangedCallback(int index)
+{
+    this->_whichResponseIsPicked = static_cast<Calculation::ResponseType_t>(index+1);
+}
+
+void ThemeWidget::characteristicChangedCallback(int index)
+{
+    this->_whichCharactersiticIsPicked = static_cast<Calculation::CharacteristicType_t>(index+1);
+
+    switch(_whichCharactersiticIsPicked)
+    {
+    case CharacteristicType_t::Time:
+        m_ui->memberTypeComboBox->setEnabled(true);
+        m_ui->signalTypeComboBox->setEnabled(true);
+        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
+        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
+        m_ui->maxTLineEdit->setText("100");
+        break;
+
+    case CharacteristicType_t::AmplitudePhase:
+        m_ui->memberTypeComboBox->setEnabled(true);
+        m_ui->signalTypeComboBox->setEnabled(false);
+        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("Re"));
+        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("Im"));
+        break;
+
+    case CharacteristicType_t::PID:
+        m_ui->memberTypeComboBox->setEnabled(false);
+        m_ui->signalTypeComboBox->setEnabled(false);
+        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
+        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
+        m_ui->maxTLineEdit->setText("100");
+        break;
+
+    default:
+        break;
+    }
+
+    this->setVisibilityOfWidgetFields(_whichCharactersiticIsPicked);
+
+    return;
+}
+
+void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristicType)
+{
+    switch(characteristicType)
+    {
+    case CharacteristicType_t::Time:
+        m_ui->kLineEdit->setVisible(true);
+        m_ui->t1LineEdit->setVisible(true);
+        m_ui->t2LineEdit->setVisible(true);
+        m_ui->t3LineEdit->setVisible(true);
+        m_ui->t4LineEdit->setVisible(true);
+        m_ui->tDlineEdit->setVisible(true);
+
+        m_ui->kpLineEdit->setVisible(false);
+        m_ui->kiLineEdit->setVisible(false);
+        m_ui->kdLineEdit->setVisible(false);
+        m_ui->dtLineEdit->setVisible(false);
+        m_ui->targetLineEdit->setVisible(false);
+        m_ui->startLineEdit->setVisible(false);
+
+        m_ui->kLabel->setVisible(true);
+        m_ui->t1Label->setVisible(true);
+        m_ui->t2Label->setVisible(true);
+        m_ui->t3Label->setVisible(true);
+        m_ui->t4Label->setVisible(true);
+        m_ui->tDlabel ->setVisible(true);
+
+        m_ui->kpLabel->setVisible(false);
+        m_ui->kiLabel->setVisible(false);
+        m_ui->kdLabel->setVisible(false);
+        m_ui->dtLabel->setVisible(false);
+        m_ui->targetLabel->setVisible(false);
+        m_ui->startLabel->setVisible(false);
+
+        m_ui->maxTLineEdit->setVisible(true);
+        m_ui->maxTLabel->setVisible(true);
+        break;
+
+    case CharacteristicType_t::AmplitudePhase:
+        m_ui->kLineEdit->setVisible(true);
+        m_ui->t1LineEdit->setVisible(true);
+        m_ui->t2LineEdit->setVisible(true);
+        m_ui->t3LineEdit->setVisible(true);
+        m_ui->t4LineEdit->setVisible(true);
+        m_ui->tDlineEdit->setVisible(true);
+
+        m_ui->kpLineEdit->setVisible(false);
+        m_ui->kiLineEdit->setVisible(false);
+        m_ui->kdLineEdit->setVisible(false);
+        m_ui->dtLineEdit->setVisible(false);
+        m_ui->targetLineEdit->setVisible(false);
+        m_ui->startLineEdit->setVisible(false);
+
+        m_ui->kLabel->setVisible(true);
+        m_ui->t1Label->setVisible(true);
+        m_ui->t2Label->setVisible(true);
+        m_ui->t3Label->setVisible(true);
+        m_ui->t4Label->setVisible(true);
+        m_ui->tDlabel ->setVisible(true);
+
+        m_ui->kpLabel->setVisible(false);
+        m_ui->kiLabel->setVisible(false);
+        m_ui->kdLabel->setVisible(false);
+        m_ui->dtLabel->setVisible(false);
+        m_ui->targetLabel->setVisible(false);
+        m_ui->startLabel->setVisible(false);
+
+        m_ui->maxTLineEdit->setVisible(false);
+        m_ui->maxTLabel->setVisible(false);
+        break;
+
+    case CharacteristicType_t::PID:
+        m_ui->kLineEdit->setVisible(false);
+        m_ui->t1LineEdit->setVisible(false);
+        m_ui->t2LineEdit->setVisible(false);
+        m_ui->t3LineEdit->setVisible(false);
+        m_ui->t4LineEdit->setVisible(false);
+        m_ui->tDlineEdit->setVisible(false);
+
+        m_ui->kpLineEdit->setVisible(true);
+        m_ui->kiLineEdit->setVisible(true);
+        m_ui->kdLineEdit->setVisible(true);
+        m_ui->dtLineEdit->setVisible(true);
+        m_ui->targetLineEdit->setVisible(true);
+        m_ui->startLineEdit->setVisible(true);
+
+        m_ui->kLabel->setVisible(false);
+        m_ui->t1Label->setVisible(false);
+        m_ui->t2Label->setVisible(false);
+        m_ui->t3Label->setVisible(false);
+        m_ui->t4Label->setVisible(false);
+        m_ui->tDlabel ->setVisible(false);
+
+        m_ui->kpLabel->setVisible(true);
+        m_ui->kiLabel->setVisible(true);
+        m_ui->kdLabel->setVisible(true);
+        m_ui->dtLabel->setVisible(true);
+        m_ui->targetLabel->setVisible(true);
+        m_ui->startLabel->setVisible(true);
+
+        m_ui->maxTLineEdit->setVisible(true);
+        m_ui->maxTLabel->setVisible(true);
+        break;
+
+    default:
+        break;
+    }
+
+    return;
+}
+
 void ThemeWidget::memberChangedCallback(int index)
 {
-    using Calculation::MemberType_t;
-
     this->_whichMemberIsPicked = static_cast<MemberType_t>(index+1);
 
     switch(this->_whichMemberIsPicked)
@@ -466,36 +724,7 @@ void ThemeWidget::memberChangedCallback(int index)
     default:
         break;
     }
-}
 
-void ThemeWidget::responseChangedCallback(int index)
-{
-    this->_whichResponseIsPicked = static_cast<Calculation::ResponseType_t>(index+1);
-}
-
-void ThemeWidget::characteristicChangedCallback(int index)
-{
-    this->_whichCharactersiticIsPicked = static_cast<Calculation::CharacteristicType_t>(index+1);
-
-    if(_whichCharactersiticIsPicked == Calculation::AmplitudePhase)
-    {
-        m_ui->signalTypeComboBox->setEnabled(false);
-    }
-    else
-    {
-        m_ui->signalTypeComboBox->setEnabled(true);
-    }
-
-    if(this->_whichCharactersiticIsPicked == CharacteristicType_t::Time)
-    {
-        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
-        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
-    }
-    else if(this->_whichCharactersiticIsPicked == CharacteristicType_t::AmplitudePhase)
-    {
-        this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("Re"));
-        this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("Im"));
-    }
 }
 
 //TODO this function should be moved to calculation.cpp
@@ -506,8 +735,8 @@ DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
     data.memberType = this->_whichMemberIsPicked;
     data.responseType = this->_whichResponseIsPicked;
     data.characteristicType = this->_whichCharactersiticIsPicked;
-
-    QPair<int, int> span(0, 100); //TODO temporary, pass data from slider when added
+//    maxTime = m_ui->line
+    QPair<int, int> span(0, _data.maxT);
     result = this->_calculator.calculate(data, span);   //TODO Maybe make it rather a static class?
 
     return result;

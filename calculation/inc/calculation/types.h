@@ -30,8 +30,9 @@ namespace Calculation
 
     enum CharacteristicType_t
     {
-        Time = 0x01U,
-        AmplitudePhase = 0x02U
+        Time           = 0x01U,
+        AmplitudePhase = 0x02U,
+        PID            = 0x03U
     };
 
     struct DataAcquired_t
@@ -41,7 +42,17 @@ namespace Calculation
         qreal t2 = 0;
         qreal t3 = 0;
         qreal t4 = 0;
+
         qreal td = 0;
+
+        qreal kp         = 0;
+        qreal ki         = 0;
+        qreal kd         = 0;
+        qreal dt         = 0;
+        qreal target     = 0;
+        qreal startPoint = 0;
+
+        int maxT = 0;
 
         MemberType_t         memberType;
         ResponseType_t       responseType;
