@@ -115,6 +115,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
 
     m_ui->maxTLineEdit->setText("100");
 
+
     connect(m_ui->memberTypeComboBox,
             SIGNAL(currentIndexChanged(int)),
             this,
@@ -332,16 +333,47 @@ void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineD
     this->main_chart->removeAllSeries();
     QString name(tr("Function "));
     int nameIndex = 0;
-    for (const DataList &list : dataTable) {
-        QSplineSeries *series = new QSplineSeries(this->main_chart);
-        for (const Data &data : list)
+//    for (const DataList &list : dataTable) {
+       { QSplineSeries *series = new QSplineSeries(this->main_chart);
+        for (const Data &data : dataTable.at(0))
             series->append(data.first);
         series->setName(name + QString::number(nameIndex));
         nameIndex++;
 
         this->main_chart->addSeries(series);
-        this->main_chart->createDefaultAxes();
-    }
+        this->main_chart->createDefaultAxes();}
+//    }
+
+    //TODO call ,,update X Y axis colorrer"
+       { QSplineSeries *series = new QSplineSeries(this->main_chart);
+        for (const Data &data : dataTable.at(1))
+            series->append(data.first);
+        nameIndex++;
+
+        QPen pen(QRgb(0x000000U));
+        pen.setWidth(2U);
+        series->setPen(pen);
+
+        this->main_chart->addSeries(series);
+        this->main_chart->createDefaultAxes();}
+//    }
+
+    { QSplineSeries *series = new QSplineSeries(this->main_chart);
+     for (const Data &data : dataTable.at(2))
+         series->append(data.first);
+     nameIndex++;
+
+     QPen pen(QRgb(0x000000U));
+     pen.setWidth(2U);
+     series->setPen(pen);
+
+     this->main_chart->addSeries(series);
+     this->main_chart->createDefaultAxes();}
+
+    main_chart->legend()->hide();
+
+    this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
+    this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
 }
 
 void ThemeWidget::enableShowGraphButton()
