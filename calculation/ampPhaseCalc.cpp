@@ -28,6 +28,8 @@ DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, 
         result << dataList;
     }
 
+    //TODO here add two data series
+
     return result;
 }
 
@@ -205,14 +207,24 @@ QPointF AmplitudePhaseCalculation::getIntertionFourthOrder(DataAcquired_t& data,
 QPointF AmplitudePhaseCalculation::getDifferentiation(DataAcquired_t& data,
                                                       qreal omega)
 {
-    //To avoid unused warnings
-    Q_UNUSED(data);
-    Q_UNUSED(omega);
-
     QPointF result;
 
-    result.setX(0);
-    result.setY(0);
+    if(data.idealRealType == IdealRealType_t::Ideal)
+    {
+        result.setX(0);
+        result.setY(0);
+    }
+    else
+    {
+        if(data.responseType == ResponseType_t::Impulse)
+        {
+            //TODO impulse
+        }
+        else
+        {
+            //TODO step
+        }
+    }
 
     return result;
 }

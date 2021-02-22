@@ -210,10 +210,24 @@ QPointF TimeChartCalculation::getIntertionFourthOrder(DataAcquired_t& data,
 QPointF TimeChartCalculation::getDifferentiation(DataAcquired_t& data,
                                                  qreal timePoint)
 {
-    Q_UNUSED(data);
-    Q_UNUSED(timePoint);
+    QPointF result;
 
-    QPointF result(0, 0);
+    if(data.idealRealType == IdealRealType_t::Ideal)
+    {
+        result.setX(0);
+        result.setY(0);
+    }
+    else
+    {
+        if(data.responseType == ResponseType_t::Impulse)
+        {
+            //TODO impulse
+        }
+        else
+        {
+            //TODO step
+        }
+    }
 
     return result;
 }

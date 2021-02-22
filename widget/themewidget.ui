@@ -22,6 +22,53 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_2">
+     <item row="3" column="9">
+      <widget class="QLineEdit" name="kiLineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="8">
+      <widget class="QLabel" name="kdLabel">
+       <property name="text">
+        <string>Kd:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="12">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="7" column="8">
+      <widget class="QLabel" name="startLabel">
+       <property name="text">
+        <string>Start:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="13">
+      <widget class="QLabel" name="themeLabel">
+       <property name="text">
+        <string>Theme:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="14">
+      <widget class="QComboBox" name="themeComboBox"/>
+     </item>
      <item row="5" column="6">
       <widget class="QLabel" name="t2Label">
        <property name="text">
@@ -29,8 +76,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="7">
-      <widget class="QLineEdit" name="kLineEdit">
+     <item row="8" column="14">
+      <widget class="QLineEdit" name="maxTLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -39,8 +86,29 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="9">
-      <widget class="QLineEdit" name="kpLineEdit">
+     <item row="1" column="6">
+      <widget class="QLabel" name="kLabel">
+       <property name="text">
+        <string>k:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="11">
+      <widget class="QPushButton" name="equationPushButton">
+       <property name="text">
+        <string>Show graph</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QLabel" name="signalTypeLabel">
+       <property name="text">
+        <string>Signal type:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="7">
+      <widget class="QLineEdit" name="t1LineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -49,8 +117,8 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="9">
-      <widget class="QLineEdit" name="kiLineEdit">
+     <item row="6" column="9">
+      <widget class="QLineEdit" name="dtLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -72,32 +140,8 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="8">
-      <widget class="QLabel" name="dtLabel">
-       <property name="text">
-        <string>dt:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="8">
-      <widget class="QLabel" name="startLabel">
-       <property name="text">
-        <string>Start:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QComboBox" name="memberTypeComboBox"/>
-     </item>
-     <item row="3" column="6">
-      <widget class="QLabel" name="t1Label">
-       <property name="text">
-        <string>T1:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="9">
-      <widget class="QLineEdit" name="kdLineEdit">
+     <item row="1" column="7">
+      <widget class="QLineEdit" name="kLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -106,35 +150,73 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="8">
-      <widget class="QLabel" name="kdLabel">
+     <item row="1" column="0">
+      <widget class="QLabel" name="characteristicLabel">
        <property name="text">
-        <string>Kd:</string>
+        <string>Characteristic:</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="8">
-      <widget class="QLabel" name="targetLabel">
-       <property name="text">
-        <string>Target:</string>
+     <item row="6" column="7">
+      <widget class="QLineEdit" name="t3LineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
       </widget>
      </item>
-     <item row="1" column="5">
-      <widget class="QComboBox" name="signalTypeComboBox"/>
-     </item>
-     <item row="1" column="13">
-      <widget class="QLabel" name="themeLabel">
+     <item row="1" column="8">
+      <widget class="QLabel" name="kpLabel">
        <property name="text">
-        <string>Theme:</string>
+        <string>Kp:</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="14">
-      <widget class="QComboBox" name="themeComboBox"/>
+     <item row="8" column="6">
+      <widget class="QLabel" name="tDlabel">
+       <property name="text">
+        <string>Td:</string>
+       </property>
+      </widget>
      </item>
-     <item row="6" column="9">
-      <widget class="QLineEdit" name="dtLineEdit">
+     <item row="1" column="3">
+      <widget class="QComboBox" name="memberTypeComboBox"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="memberTypeLabel">
+       <property name="text">
+        <string>Member type:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="8">
+      <widget class="QLabel" name="dtLabel">
+       <property name="text">
+        <string>dt:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="6">
+      <widget class="QLabel" name="t3Label">
+       <property name="text">
+        <string>T3:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="8">
+      <widget class="QLabel" name="kiLabel">
+       <property name="text">
+        <string>Ki:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="characteristicComboBox"/>
+     </item>
+     <item row="8" column="9">
+      <widget class="QLineEdit" name="targetLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -153,47 +235,23 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="8">
-      <widget class="QLabel" name="kiLabel">
+     <item row="8" column="8">
+      <widget class="QLabel" name="targetLabel">
        <property name="text">
-        <string>Ki:</string>
+        <string>Target:</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="12">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+     <item row="1" column="5">
+      <widget class="QComboBox" name="signalTypeComboBox"/>
      </item>
-     <item row="6" column="7">
-      <widget class="QLineEdit" name="t3LineEdit">
+     <item row="1" column="9">
+      <widget class="QLineEdit" name="kpLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="memberTypeLabel">
-       <property name="text">
-        <string>Member type:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="8">
-      <widget class="QLabel" name="kpLabel">
-       <property name="text">
-        <string>Kp:</string>
        </property>
       </widget>
      </item>
@@ -204,56 +262,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="6">
-      <widget class="QLabel" name="kLabel">
-       <property name="text">
-        <string>k:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="7">
-      <widget class="QLineEdit" name="t1LineEdit">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="6">
-      <widget class="QLabel" name="tDlabel">
-       <property name="text">
-        <string>Td:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QLabel" name="signalTypeLabel">
-       <property name="text">
-        <string>Signal type:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="6">
-      <widget class="QLabel" name="t3Label">
-       <property name="text">
-        <string>T3:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="characteristicLabel">
-       <property name="text">
-        <string>Characteristic:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="characteristicComboBox"/>
-     </item>
-     <item row="8" column="9">
-      <widget class="QLineEdit" name="targetLineEdit">
+     <item row="7" column="9">
+      <widget class="QLineEdit" name="startLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -272,25 +282,8 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="9">
-      <widget class="QLineEdit" name="startLineEdit">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="11">
-      <widget class="QPushButton" name="equationPushButton">
-       <property name="text">
-        <string>Show graph</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="14">
-      <widget class="QLineEdit" name="maxTLineEdit">
+     <item row="5" column="9">
+      <widget class="QLineEdit" name="kdLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -305,6 +298,16 @@
         <string>Max t:</string>
        </property>
       </widget>
+     </item>
+     <item row="3" column="6">
+      <widget class="QLabel" name="t1Label">
+       <property name="text">
+        <string>T1:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QComboBox" name="idealRealComboBox"/>
      </item>
     </layout>
    </item>
@@ -357,6 +360,22 @@
     <hint type="destinationlabel">
      <x>475</x>
      <y>385</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>idealRealComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>ThemeWidgetForm</receiver>
+   <slot>updateUI()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>272</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>691</x>
+     <y>452</y>
     </hint>
    </hints>
   </connection>

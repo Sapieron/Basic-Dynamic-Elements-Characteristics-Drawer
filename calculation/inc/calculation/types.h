@@ -28,6 +28,12 @@ namespace Calculation
         Impulse = 0x02U
     };
 
+    enum IdealRealType_t
+    {
+        Ideal = 0x00U,
+        Real  = 0x01U
+    };
+
     enum CharacteristicType_t
     {
         Time           = 0x01U,
@@ -56,6 +62,7 @@ namespace Calculation
 
         MemberType_t         memberType;
         ResponseType_t       responseType;
+        IdealRealType_t      idealRealType;
         CharacteristicType_t characteristicType;
     };
 }

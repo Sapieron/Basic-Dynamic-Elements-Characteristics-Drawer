@@ -35,6 +35,7 @@ using Calculation::Data;
 using Calculation::CharacteristicType_t;
 using Calculation::MemberType_t;
 using Calculation::ResponseType_t;
+using Calculation::IdealRealType_t;
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -55,6 +56,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     this->populateResponseTypeBox();
     this->populateMemberTypeBox();
     this->populateCharacteristicTypeBox();
+    this->populateIdealRealTypeBox();
 
 //    _chartView = new QChartView_scaledAxis(); //TODO Didn't work and program works extremely slow, as it anaylyzes all series all the time - can be optimizied easly
     _chartView = new QChartView();
@@ -73,6 +75,8 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     //create text box
     m_ui->equationPushButton->setEnabled(false);
     connectCallbackToPushButton();
+
+    m_ui->idealRealComboBox->setEnabled(false);
 
     //Make line editing accept only numbers
     m_ui->kLineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this)); //TODO move it to separate function
@@ -125,6 +129,10 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
             SIGNAL(currentIndexChanged(int)),
             this,
             SLOT(characteristicChangedCallback(int)));
+    connect(m_ui->idealRealComboBox,
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(idealRealChangedCallback(int)));
 
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
@@ -202,6 +210,14 @@ void ThemeWidget::populateCharacteristicTypeBox()
     m_ui->characteristicComboBox->addItem(tr("Time"),            CharacteristicType_t::Time);
     m_ui->characteristicComboBox->addItem(tr("Amplitude-Phase"), CharacteristicType_t::AmplitudePhase);
     m_ui->characteristicComboBox->addItem(tr("PID"),             CharacteristicType_t::PID);
+}
+
+void ThemeWidget::populateIdealRealTypeBox()
+{
+    using Calculation::IdealRealType_t;
+
+    m_ui->idealRealComboBox->addItem(tr("Ideal"), IdealRealType_t::Ideal);
+    m_ui->idealRealComboBox->addItem(tr("Real"),  IdealRealType_t::Real);
 }
 
 QChart *ThemeWidget::createSplineChart() const  //FIXME it's probably not needed
@@ -531,6 +547,11 @@ void ThemeWidget::characteristicChangedCallback(int index)
     return;
 }
 
+void ThemeWidget::idealRealChangedCallback(int index)
+{
+    this->_whichIdealRealIsPicked = static_cast<Calculation::IdealRealType_t>(index);
+}
+
 void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristicType)
 {
     switch(characteristicType)
@@ -566,6 +587,8 @@ void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristi
 
         m_ui->maxTLineEdit->setVisible(true);
         m_ui->maxTLabel->setVisible(true);
+
+        m_ui->idealRealComboBox->setVisible(true);
         break;
 
     case CharacteristicType_t::AmplitudePhase:
@@ -599,6 +622,8 @@ void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristi
 
         m_ui->maxTLineEdit->setVisible(false);
         m_ui->maxTLabel->setVisible(false);
+
+        m_ui->idealRealComboBox->setVisible(true);
         break;
 
     case CharacteristicType_t::PID:
@@ -632,6 +657,8 @@ void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristi
 
         m_ui->maxTLineEdit->setVisible(true);
         m_ui->maxTLabel->setVisible(true);
+
+        m_ui->idealRealComboBox->setVisible(false);
         break;
 
     default:
@@ -648,6 +675,20 @@ void ThemeWidget::memberChangedCallback(int index)
     switch(this->_whichMemberIsPicked)
     {
     case MemberType_t::Proportional:
+        m_ui->t1LineEdit->setEnabled(false);
+        m_ui->t2LineEdit->setEnabled(false);
+        m_ui->t3LineEdit->setEnabled(false);
+        m_ui->t4LineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(false);
+
+        m_ui->t1LineEdit->clear();
+        m_ui->t2LineEdit->clear();
+        m_ui->t3LineEdit->clear();
+        m_ui->t4LineEdit->clear();
+        m_ui->tDlineEdit->clear();
+
+        m_ui->idealRealComboBox->setEnabled(false);
+        break;
     case MemberType_t::Differentiation:
         m_ui->t1LineEdit->setEnabled(false);
         m_ui->t2LineEdit->setEnabled(false);
@@ -660,6 +701,8 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
         m_ui->tDlineEdit->clear();
+
+        m_ui->idealRealComboBox->setEnabled(true);
         break;
 
     case MemberType_t::InertionFirstOrder:
@@ -673,6 +716,8 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
         m_ui->tDlineEdit->clear();
+
+        m_ui->idealRealComboBox->setEnabled(false);
         break;
 
     case MemberType_t::InertionSecondOrder:
@@ -681,6 +726,7 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t3LineEdit->setEnabled(false);
         m_ui->t4LineEdit->setEnabled(false);
         m_ui->tDlineEdit->setEnabled(false);
+        m_ui->idealRealComboBox->setEnabled(false);
 
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
@@ -696,6 +742,8 @@ void ThemeWidget::memberChangedCallback(int index)
 
         m_ui->t4LineEdit->clear();
         m_ui->tDlineEdit->clear();
+
+        m_ui->idealRealComboBox->setEnabled(false);
         break;
 
     case MemberType_t::InertionFourthOrder:
@@ -706,6 +754,8 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->tDlineEdit->setEnabled(false);
 
         m_ui->tDlineEdit->clear();
+
+        m_ui->idealRealComboBox->setEnabled(false);
         break;
 
     case MemberType_t::Integration:
@@ -719,6 +769,8 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->clear();
         m_ui->t3LineEdit->clear();
         m_ui->t4LineEdit->clear();
+
+        m_ui->idealRealComboBox->setEnabled(false);
         break;
 
     default:
@@ -732,10 +784,11 @@ DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
 {
     DataTable result;
 
-    data.memberType = this->_whichMemberIsPicked;
-    data.responseType = this->_whichResponseIsPicked;
+    data.memberType         = this->_whichMemberIsPicked;
+    data.responseType       = this->_whichResponseIsPicked;
     data.characteristicType = this->_whichCharactersiticIsPicked;
-//    maxTime = m_ui->line
+    data.idealRealType      = this->_whichIdealRealIsPicked;
+
     QPair<int, int> span(0, _data.maxT);
     result = this->_calculator.calculate(data, span);   //TODO Maybe make it rather a static class?
 
