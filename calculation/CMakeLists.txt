@@ -1,6 +1,7 @@
 set(NAME calculation)
 
 set(SOURCES
+    ICalculator.cpp
     calculation.cpp
     timeCalc.cpp
     ampPhaseCalc.cpp

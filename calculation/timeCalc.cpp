@@ -221,11 +221,14 @@ QPointF TimeChartCalculation::getDifferentiation(DataAcquired_t& data,
     {
         if(data.responseType == ResponseType_t::Impulse)
         {
-            //TODO impulse
+            result.setX( timePoint );
+            result.setY( (data.k*exp(-timePoint/data.td))/data.td );
         }
         else
         {
-            //TODO step
+            result.setX( timePoint );
+            result.setY( (data.k * diracDelta(timePoint))/data.td -
+                         (data.k * exp(-timePoint/data.td))/pow(data.td, (qreal)2U) );
         }
     }
 

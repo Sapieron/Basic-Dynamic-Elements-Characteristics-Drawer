@@ -437,8 +437,9 @@ bool ThemeWidget::isAllDataProvided_TimePhaseAmplitude()
                      this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
     case MemberType_t::Differentiation:
-        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
-                     this->m_ui->maxTLineEdit->text().isEmpty() );
+        result = ! ( this->m_ui->kLineEdit->text().isEmpty()    ||
+                     this->m_ui->maxTLineEdit->text().isEmpty() ||
+                     this->m_ui->tDlineEdit->text().isEmpty() );
         break;
 
     default:
@@ -719,7 +720,7 @@ void ThemeWidget::memberChangedCallback(int index)
         m_ui->t2LineEdit->setEnabled(false);
         m_ui->t3LineEdit->setEnabled(false);
         m_ui->t4LineEdit->setEnabled(false);
-        m_ui->tDlineEdit->setEnabled(false);
+        m_ui->tDlineEdit->setEnabled(true);
 
         m_ui->t1LineEdit->clear();
         m_ui->t2LineEdit->clear();
