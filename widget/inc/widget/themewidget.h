@@ -44,7 +44,8 @@ private:
     void connectSignals();
     QChart *createSplineChart() const;
     void showGraphGotPressed();
-    void updateChart(Calculation::DataTable dataTable);
+    void updateSplineData(Calculation::DataTable dataTable);
+    void updateXYaxis(Calculation::DataTable dataTable);
     bool isAllDataProvided();
     void connectCallbackToPushButton();
     void enableShowGraphButton();

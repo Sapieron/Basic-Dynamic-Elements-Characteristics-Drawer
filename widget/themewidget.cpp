@@ -115,6 +115,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
 
     m_ui->maxTLineEdit->setText("100");
 
+    main_chart->legend()->hide();
 
     connect(m_ui->memberTypeComboBox,
             SIGNAL(currentIndexChanged(int)),
@@ -223,15 +224,10 @@ void ThemeWidget::populateIdealRealTypeBox()
 
 QChart *ThemeWidget::createSplineChart() const  //FIXME it's probably not needed
 {
-    this->main_chart->setTitle(tr("ChartNameBasedOnTypeEntered")); //TODO add it
-    QString name(tr("Equation: ")); //TODO make it automatic
-    int nameIndex = 0;
     for (const DataList &list : m_dataTable) {
         QSplineSeries *series = new QSplineSeries(this->main_chart);
         for (const Data &data : list)
             series->append(data.first);
-        series->setName(name + QString::number(nameIndex));
-        nameIndex++;
         this->main_chart->addSeries(series);
     }
 
@@ -295,13 +291,6 @@ void ThemeWidget::updateUI()
         }
         window()->setPalette(pal);
     }
-
-
-    for (QChartView *chartView : charts)
-    {
-        chartView->chart()->legend()->setAlignment(Qt::AlignLeft);
-        chartView->chart()->legend()->show();
-    }
 }
 
 void ThemeWidget::showGraphGotPressed()
@@ -324,56 +313,60 @@ void ThemeWidget::showGraphGotPressed()
 
     auto result = this->calculate(_data);
 
-    this->updateChart(result);
+    this->updateSplineData(result);
 }
 
-void ThemeWidget::updateChart(DataTable dataTable)  //TODO maybe ,,updateSplineData" is a better name?
+void ThemeWidget::updateSplineData(DataTable dataTable)
 {
-    this->main_chart->setTitle(tr("Spline chart")); //TODO that name can be taken from &data
     this->main_chart->removeAllSeries();
     QString name(tr("Function "));
     int nameIndex = 0;
-//    for (const DataList &list : dataTable) {
-       { QSplineSeries *series = new QSplineSeries(this->main_chart);
+
+    {
+        QSplineSeries *series = new QSplineSeries(this->main_chart);
         for (const Data &data : dataTable.at(0))
             series->append(data.first);
         series->setName(name + QString::number(nameIndex));
         nameIndex++;
 
         this->main_chart->addSeries(series);
-        this->main_chart->createDefaultAxes();}
-//    }
+        this->main_chart->createDefaultAxes();
+    }
 
-    //TODO call ,,update X Y axis colorrer"
-       { QSplineSeries *series = new QSplineSeries(this->main_chart);
-        for (const Data &data : dataTable.at(1))
-            series->append(data.first);
-        nameIndex++;
-
-        QPen pen(QRgb(0x000000U));
-        pen.setWidth(2U);
-        series->setPen(pen);
-
-        this->main_chart->addSeries(series);
-        this->main_chart->createDefaultAxes();}
-//    }
-
-    { QSplineSeries *series = new QSplineSeries(this->main_chart);
-     for (const Data &data : dataTable.at(2))
-         series->append(data.first);
-     nameIndex++;
-
-     QPen pen(QRgb(0x000000U));
-     pen.setWidth(2U);
-     series->setPen(pen);
-
-     this->main_chart->addSeries(series);
-     this->main_chart->createDefaultAxes();}
+    updateXYaxis(dataTable);
 
     main_chart->legend()->hide();
 
     this->main_chart->axes(Qt::Horizontal).first()->setTitleText(tr("t[s]"));
     this->main_chart->axes(Qt::Vertical).first()->setTitleText(tr("h(t)"));
+}
+
+
+void ThemeWidget::updateXYaxis(Calculation::DataTable dataTable)
+{
+    if( _whichCharactersiticIsPicked != CharacteristicType_t::Time)
+    {
+        for(uint32_t i = 1U; i < 3U; i++)
+        {
+            QSplineSeries *series = new QSplineSeries(this->main_chart);
+
+            for (const Data &data : dataTable.at(i))
+            {
+                series->append(data.first);
+            }
+
+            QPen pen(QRgb(0x000000U));
+            pen.setWidth(2U);
+            series->setPen(pen);
+
+            this->main_chart->addSeries(series);
+            this->main_chart->createDefaultAxes();
+        }
+    }
+    else
+    {
+        return;
+    }
 }
 
 void ThemeWidget::enableShowGraphButton()

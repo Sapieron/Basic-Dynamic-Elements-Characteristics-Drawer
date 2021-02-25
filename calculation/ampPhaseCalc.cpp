@@ -16,60 +16,19 @@ DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, 
 
     DataTable result;
     DataList dataList;
-    qreal minXValue, minYValue, maxXValue, maxYValue;
 
     qreal samplingFrequency = 0.001;
 
     {
         //just calculate very big omega
-        for (qreal omega(samplingFrequency); omega < 100; omega += samplingFrequency) {
+        for (qreal omega(samplingFrequency); omega < 100; omega += samplingFrequency)
+        {
             QPointF value = this->getValueInOmegaPoint(data, omega);
             QString label = "Slice " + QString::number(0) + ":" + QString::number(omega);
             dataList << Data(value, label);
         }
 
         result << dataList;
-
-        //TODO make it clean!
-        auto minX = std::min_element(dataList.begin(),
-                                dataList.end(),
-                                [](const Data &p1,
-                                   const Data &p2){
-            return p1.first.x() < p2.first.x();
-        });
-        minXValue = minX->first.x();
-
-        auto maxX = std::max_element(dataList.begin(),
-                                dataList.end(),
-                                [](const Data &p1,
-                                   const Data &p2){
-            return p1.first.x() < p2.first.x();
-        });
-        maxXValue = maxX->first.x();
-
-        DataList list;
-        list << Data(QPointF(minXValue, 0), "Data 0") << Data(QPointF(maxXValue, 0), "Data 1");
-        result << list;
-
-        auto minY = std::min_element(dataList.begin(),
-                                dataList.end(),
-                                [](const Data &p1,
-                                   const Data &p2){
-            return p1.first.y() < p2.first.y();
-        });
-        minYValue = minY->first.y();    //TODO this can be used as stable / unstable identifier
-
-        auto maxY = std::max_element(dataList.begin(),
-                                dataList.end(),
-                                [](const Data &p1,
-                                   const Data &p2){
-            return p1.first.y() < p2.first.y();
-        });
-        maxYValue = maxY->first.y();
-
-        DataList listy;
-        listy << Data(QPointF(0, minYValue), "Data 0") << Data(QPointF(0, maxYValue), "Data 1");
-        result << listy;
     }
 
     return result;
@@ -116,6 +75,7 @@ QPointF AmplitudePhaseCalculation::getValueInOmegaPoint(DataAcquired_t& data,
 
     return result;
 }
+
 
 /*******************************************************************************\
  *                                Proportional
