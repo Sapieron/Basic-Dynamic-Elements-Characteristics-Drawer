@@ -41,6 +41,12 @@ namespace Calculation
         PID            = 0x03U
     };
 
+    enum FeedbackType_t
+    {
+        None     = 0x00U,
+        Positive = 0x01U
+    };
+
     struct DataAcquired_t
     {
         qreal k  = 0;
@@ -50,6 +56,7 @@ namespace Calculation
         qreal t4 = 0;
 
         qreal td = 0;
+        qreal ti = 0;
 
         qreal kp         = 0;
         qreal ki         = 0;
@@ -64,6 +71,7 @@ namespace Calculation
         ResponseType_t       responseType;
         IdealRealType_t      idealRealType;
         CharacteristicType_t characteristicType;
+        FeedbackType_t       feedbackType;
     };
 }
 

@@ -81,13 +81,13 @@ QPointF PIDCalculation::getValueInTimePoint( DataAcquired_t& data,
     QPointF result;
 
     result.setX( timePoint );
-    result.setY( getPIDValue(data, timePoint) );
+    result.setY( getPIDWithFeedbackValue(data, timePoint) );
 
     return result;
 }
 
 
-qreal PIDCalculation::getPIDValue(DataAcquired_t& data,
+qreal PIDCalculation::getPIDWithFeedbackValue(DataAcquired_t& data,
                                   qreal timePoint )
 {
     Q_UNUSED(timePoint);
@@ -122,6 +122,21 @@ qreal PIDCalculation::getPIDValue(DataAcquired_t& data,
 
     _pv += result;
 
+    return result;
+}
+
+QPointF PIDCalculation::getPIDWithNoFeedbackValue(DataAcquired_t& data,
+                                                qreal timePoint)
+{
+    QPointF result(0.0, 0.0);
+//    Impulse:
+//    kp/Ti + (kp*dirac(t)*(T + Td))/T - (Td*kp*exp(-t/T))/T^2
+
+//    Step:
+//    kp + (kp*t)/Ti + (Td*kp*exp(-t/T))/T
+    result.setX(timePoint);
+    result.setY( data.kp + (data.kp * timePoint)/data.ti + (data.td * data.kp * exp(-timePoint/data.t1)/data.t1 ) );
+//1. add data.ti
     return result;
 }
 

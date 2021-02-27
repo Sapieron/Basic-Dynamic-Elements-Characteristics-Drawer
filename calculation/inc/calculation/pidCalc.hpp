@@ -45,8 +45,11 @@ namespace Calculation
         QPointF getValueInTimePoint(DataAcquired_t& data,
                                     qreal timePoint );
 
-        qreal getPIDValue(DataAcquired_t& data,
-                          qreal timePoint );
+        qreal getPIDWithFeedbackValue(DataAcquired_t& data,
+                                      qreal timePoint );
+
+        QPointF getPIDWithNoFeedbackValue(DataAcquired_t& data,
+                                          qreal timePoint);
 
         /**
          * @brief _pv - process value, contains current value of PID

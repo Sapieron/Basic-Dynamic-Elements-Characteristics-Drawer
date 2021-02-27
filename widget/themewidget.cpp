@@ -36,6 +36,7 @@ using Calculation::CharacteristicType_t;
 using Calculation::MemberType_t;
 using Calculation::ResponseType_t;
 using Calculation::IdealRealType_t;
+using Calculation::FeedbackType_t;
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -49,6 +50,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     _whichResponseIsPicked(ResponseType_t::Step),
     _whichCharactersiticIsPicked(CharacteristicType_t::Time),
     _whichIdealRealIsPicked(IdealRealType_t::Ideal),
+    _whichFeedbackIsPicked(FeedbackType_t::None),
     m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME initialize data here to 0
     m_ui(new Ui_ThemeWidgetForm)
 {
@@ -58,8 +60,8 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     this->populateMemberTypeBox();
     this->populateCharacteristicTypeBox();
     this->populateIdealRealTypeBox();
+    this->populateFeedbackTypeBox();
 
-//    _chartView = new QChartView_scaledAxis(); //TODO Didn't work and program works extremely slow, as it anaylyzes all series all the time - can be optimizied easly
     _chartView = new QChartView();
     _chartView->setChart(createSplineChart());
 
@@ -78,6 +80,8 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     connectCallbackToPushButton();
 
     m_ui->idealRealComboBox->setEnabled(false);
+    m_ui->feedbackComboBox->setVisible(false);
+    m_ui->feedbackLabel->setVisible(false);
 
     //Make line editing accept only numbers
     m_ui->kLineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this)); //TODO move it to separate function
@@ -101,10 +105,14 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_ui->targetLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
     m_ui->startLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
 
+    m_ui->tDlineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 2, this));
+    m_ui->tILineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 2, this));
+
     m_ui->t1LineEdit->setEnabled(false);
     m_ui->t2LineEdit->setEnabled(false);
     m_ui->t3LineEdit->setEnabled(false);
     m_ui->t4LineEdit->setEnabled(false);
+
     m_ui->tDlineEdit->setEnabled(false);
 
     m_ui->kpLineEdit->setVisible(false);
@@ -113,6 +121,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_ui->dtLineEdit->setVisible(false);
     m_ui->targetLineEdit->setVisible(false);
     m_ui->startLineEdit->setVisible(false);
+    m_ui->tILineEdit->setVisible(false);
 
     m_ui->kpLabel->setVisible(false);
     m_ui->kiLabel->setVisible(false);
@@ -120,6 +129,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_ui->dtLabel->setVisible(false);
     m_ui->targetLabel->setVisible(false);
     m_ui->startLabel->setVisible(false);
+    m_ui->tILabel->setVisible(false);
 
     m_ui->maxTLineEdit->setText("100");
 
@@ -143,6 +153,11 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
             SIGNAL(currentIndexChanged(int)),
             this,
             SLOT(idealRealChangedCallback(int)));
+
+    connect(m_ui->feedbackComboBox,
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(feedbackChangedCallback(int)));
 
     // Set the colors from the light theme as default ones
     QPalette pal = qApp->palette();
@@ -224,11 +239,16 @@ void ThemeWidget::populateCharacteristicTypeBox()
 
 void ThemeWidget::populateIdealRealTypeBox()
 {
-    using Calculation::IdealRealType_t;
-
     m_ui->idealRealComboBox->addItem(tr("Ideal"), IdealRealType_t::Ideal);
     m_ui->idealRealComboBox->addItem(tr("Real"),  IdealRealType_t::Real);
 }
+
+void ThemeWidget::populateFeedbackTypeBox()
+{
+    m_ui->feedbackComboBox->addItem(tr("None"),     FeedbackType_t::None);
+    m_ui->feedbackComboBox->addItem(tr("Positive"), FeedbackType_t::Positive);
+}
+
 
 QChart *ThemeWidget::createSplineChart() const  //FIXME it's probably not needed
 {
@@ -441,9 +461,6 @@ bool ThemeWidget::isAllDataProvided_TimePhaseAmplitude()
                      this->m_ui->maxTLineEdit->text().isEmpty() );
         break;
     case MemberType_t::Integration:
-        result = ! ( this->m_ui->kLineEdit->text().isEmpty()  ||
-                     this->m_ui->maxTLineEdit->text().isEmpty() );
-        break;
     case MemberType_t::Differentiation:
         result = ! ( this->m_ui->kLineEdit->text().isEmpty()    ||
                      this->m_ui->maxTLineEdit->text().isEmpty() ||
@@ -459,83 +476,75 @@ bool ThemeWidget::isAllDataProvided_TimePhaseAmplitude()
 
 bool ThemeWidget::isAllDataProvided_PID()
 {
-    return !( this->m_ui->kpLineEdit->text().isEmpty()    ||
-              this->m_ui->kiLineEdit->text().isEmpty()    ||
-              this->m_ui->kdLineEdit->text().isEmpty()    ||
-              this->m_ui->dtLineEdit->text().isEmpty()    ||
-              this->m_ui->startLineEdit->text().isEmpty() ||
-              this->m_ui->targetLineEdit->text().isEmpty()||
-              this->m_ui->maxTLineEdit->text().isEmpty()  );
+    switch(_whichFeedbackIsPicked)
+    {
+    case FeedbackType_t::None:
+        return !( this->m_ui->kpLineEdit->text().isEmpty()    ||
+                  this->m_ui->kiLineEdit->text().isEmpty()    ||
+                  this->m_ui->kdLineEdit->text().isEmpty()    ||
+                  this->m_ui->dtLineEdit->text().isEmpty()    ||
+                  this->m_ui->startLineEdit->text().isEmpty() ||
+                  this->m_ui->targetLineEdit->text().isEmpty()||
+                  this->m_ui->maxTLineEdit->text().isEmpty()  );
+        break;
+
+    case FeedbackType_t::Positive:
+        return !( this->m_ui->kpLineEdit->text().isEmpty() ||
+                  this->m_ui->t1LineEdit->text().isEmpty() ||
+                  this->m_ui->tDlineEdit->text().isEmpty() ||
+                  this->m_ui->tILineEdit->text().isEmpty()    );
+        break;
+
+    default:
+        return false;
+        break;
+    }
+
+
 }
 
 void ThemeWidget::connectCallbackToPushButton()
 {
-    connect(m_ui->kLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
+    std::list<QLineEdit *> lineEditList;
+    lineEditList = {m_ui->kLineEdit,
+                    m_ui->t1LineEdit,
+                    m_ui->t2LineEdit,
+                    m_ui->t3LineEdit,
+                    m_ui->t4LineEdit,
+                    m_ui->tDlineEdit,
+                    m_ui->kpLineEdit,
+                    m_ui->kiLineEdit,
+                    m_ui->kdLineEdit,
+                    m_ui->dtLineEdit,
+                    m_ui->targetLineEdit,
+                    m_ui->startLineEdit,
+                    m_ui->tILineEdit};
 
-    connect(m_ui->t1LineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
+    std::list<QComboBox *> comboBoxesList;
+    comboBoxesList = {m_ui->memberTypeComboBox,
+                      m_ui->feedbackComboBox,
+                      m_ui->characteristicComboBox};
 
-    connect(m_ui->t2LineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
+    std::for_each(lineEditList.begin(),
+                  lineEditList.end(),
+                  [&](QLineEdit *itr)
+                  {
+                    connect(itr,
+                            &QLineEdit::textChanged,
+                            this,
+                            &ThemeWidget::enableShowGraphButton);
+                  });
 
-    connect(m_ui->t3LineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
+    std::for_each(comboBoxesList.begin(),
+                  comboBoxesList.end(),
+                  [&](QComboBox *itr)
+                  {
+                    connect(itr,
+                            &QComboBox::currentTextChanged,
+                            this,
+                            &ThemeWidget::enableShowGraphButton);
+                  });
 
-    connect(m_ui->t4LineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
-
-    connect(m_ui->tDlineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
-
-
-    connect(m_ui->kpLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
-
-    connect(m_ui->kiLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
-
-    connect(m_ui->kdLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
-
-    connect(m_ui->dtLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
-
-    connect(m_ui->targetLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
-
-    connect(m_ui->startLineEdit,
-            &QLineEdit::textChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
-
-
-    connect(m_ui->memberTypeComboBox,       //FIXME will it work with ,,||" ?
-            &QComboBox::currentTextChanged,
-            this,
-            &ThemeWidget::enableShowGraphButton);
 }
 
 void ThemeWidget::responseChangedCallback(int index)
@@ -591,6 +600,9 @@ void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristi
     switch(characteristicType)
     {
     case CharacteristicType_t::Time:
+        m_ui->memberTypeComboBox->setVisible(true);
+        m_ui->memberTypeLabel->setVisible(true);
+
         m_ui->kLineEdit->setVisible(true);
         m_ui->t1LineEdit->setVisible(true);
         m_ui->t2LineEdit->setVisible(true);
@@ -623,9 +635,15 @@ void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristi
         m_ui->maxTLabel->setVisible(true);
 
         m_ui->idealRealComboBox->setVisible(true);
+
+        m_ui->feedbackComboBox->setVisible(false);
+        m_ui->feedbackLabel->setVisible(false);
         break;
 
     case CharacteristicType_t::AmplitudePhase:
+        m_ui->memberTypeComboBox->setVisible(true);
+        m_ui->memberTypeLabel->setVisible(true);
+
         m_ui->kLineEdit->setVisible(true);
         m_ui->t1LineEdit->setVisible(true);
         m_ui->t2LineEdit->setVisible(true);
@@ -658,9 +676,15 @@ void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristi
         m_ui->maxTLabel->setVisible(false);
 
         m_ui->idealRealComboBox->setVisible(true);
+
+        m_ui->feedbackComboBox->setVisible(false);
+        m_ui->feedbackLabel->setVisible(false);
         break;
 
     case CharacteristicType_t::PID:
+        m_ui->memberTypeComboBox->setVisible(false);
+        m_ui->memberTypeLabel->setVisible(false);
+
         m_ui->kLineEdit->setVisible(false);
         m_ui->t1LineEdit->setVisible(false);
         m_ui->t2LineEdit->setVisible(false);
@@ -693,6 +717,9 @@ void ThemeWidget::setVisibilityOfWidgetFields(CharacteristicType_t characteristi
         m_ui->maxTLabel->setVisible(true);
 
         m_ui->idealRealComboBox->setVisible(false);
+
+        m_ui->feedbackComboBox->setVisible(true);
+        m_ui->feedbackLabel->setVisible(true);
         break;
 
     default:
@@ -812,6 +839,64 @@ void ThemeWidget::memberChangedCallback(int index)
     }
 }
 
+void ThemeWidget::feedbackChangedCallback(int index)
+{
+    this->_whichFeedbackIsPicked = static_cast<FeedbackType_t>(index);
+
+    switch(_whichFeedbackIsPicked)
+    {
+    case FeedbackType_t::None:
+        m_ui->t1LineEdit->setVisible(false);
+        m_ui->tILineEdit->setVisible(false);
+        m_ui->tDlineEdit->setVisible(false);
+
+        m_ui->t1Label->setVisible(false);
+        m_ui->tILabel->setVisible(false);
+        m_ui->tDlabel->setVisible(false);
+
+        m_ui->kiLineEdit->setVisible(true);
+        m_ui->kdLineEdit->setVisible(true);
+        m_ui->dtLineEdit->setVisible(true);
+        m_ui->targetLineEdit->setVisible(true);
+        m_ui->startLineEdit->setVisible(true);
+
+        m_ui->kiLabel->setVisible(true);
+        m_ui->kdLabel->setVisible(true);
+        m_ui->dtLabel->setVisible(true);
+        m_ui->targetLabel->setVisible(true);
+        m_ui->startLabel->setVisible(true);
+        break;
+
+    case FeedbackType_t::Positive:
+        m_ui->t1LineEdit->setVisible(true);
+        m_ui->tILineEdit->setVisible(true);
+        m_ui->tDlineEdit->setVisible(true);
+
+        m_ui->t1Label->setVisible(true);
+        m_ui->tILabel->setVisible(true);
+        m_ui->tDlabel->setVisible(true);
+
+        m_ui->t1LineEdit->setEnabled(true);
+        m_ui->tDlineEdit->setEnabled(true);
+
+        m_ui->kiLineEdit->setVisible(false);
+        m_ui->kdLineEdit->setVisible(false);
+        m_ui->dtLineEdit->setVisible(false);
+        m_ui->targetLineEdit->setVisible(false);
+        m_ui->startLineEdit->setVisible(false);
+
+        m_ui->kiLabel->setVisible(false);
+        m_ui->kdLabel->setVisible(false);
+        m_ui->dtLabel->setVisible(false);
+        m_ui->targetLabel->setVisible(false);
+        m_ui->startLabel->setVisible(false);
+        break;
+
+    default:
+        break;
+    }
+}
+
 //TODO this function should be moved to calculation.cpp
 DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
 {
@@ -821,6 +906,7 @@ DataTable ThemeWidget::calculate(Calculation::DataAcquired_t& data)
     data.responseType       = this->_whichResponseIsPicked;
     data.characteristicType = this->_whichCharactersiticIsPicked;
     data.idealRealType      = this->_whichIdealRealIsPicked;
+    data.feedbackType       = this->_whichFeedbackIsPicked;
 
     QPair<int, int> span(0, _data.maxT);
     result = this->_calculator.calculate(data, span);   //TODO Maybe make it rather a static class?

@@ -6,6 +6,12 @@ set(SOURCES
     timeCalc.cpp
     ampPhaseCalc.cpp
     pidCalc.cpp
+
+    inc/${NAME}/ICalculator.hpp
+    inc/${NAME}/calculation.hpp
+    inc/${NAME}/timeCalc.hpp
+    inc/${NAME}/ampPhaseCalc.hpp
+    inc/${NAME}/pidCalc.hpp
 )
 
 add_library(${NAME} STATIC ${SOURCES})
