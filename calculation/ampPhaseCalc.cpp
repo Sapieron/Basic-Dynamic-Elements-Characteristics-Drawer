@@ -214,18 +214,12 @@ QPointF AmplitudePhaseCalculation::getDifferentiation(DataAcquired_t& data,
     if(data.idealRealType == IdealRealType_t::Ideal)
     {
         result.setX(0);
-        result.setY(0);
+        result.setY( (qreal)data.td * omega );
     }
     else
     {
-        if(data.responseType == ResponseType_t::Impulse)
-        {
-            //TODO impulse
-        }
-        else
-        {
-            //TODO step
-        }
+        result.setX( data.k / ( pow(data.td, (qreal)2) * pow(omega, (qreal)2) + (qreal)1 ) );
+        result.setY( (data.k * data.td * omega)/( pow(data.td, (qreal)2) * pow(omega, (qreal)2) + (qreal)1 ) );
     }
 
     return result;
@@ -240,7 +234,7 @@ QPointF AmplitudePhaseCalculation::getIntegration(DataAcquired_t& data,
     QPointF result;
 
     result.setX(0);
-    result.setY( (qreal)data.td * omega );
+    result.setY( -(qreal)data.td * omega );
 
     return result;
 }

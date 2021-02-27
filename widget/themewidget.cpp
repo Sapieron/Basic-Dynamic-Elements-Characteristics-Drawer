@@ -48,6 +48,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     _whichMemberIsPicked(MemberType_t::Proportional),
     _whichResponseIsPicked(ResponseType_t::Step),
     _whichCharactersiticIsPicked(CharacteristicType_t::Time),
+    _whichIdealRealIsPicked(IdealRealType_t::Ideal),
     m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME initialize data here to 0
     m_ui(new Ui_ThemeWidgetForm)
 {
