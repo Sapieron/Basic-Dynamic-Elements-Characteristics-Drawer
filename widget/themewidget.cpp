@@ -94,6 +94,13 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_ui->startLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
     m_ui->maxTLineEdit->setValidator(new QIntValidator(0, 100, this));
 
+    m_ui->kpLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
+    m_ui->kiLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
+    m_ui->kdLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
+    m_ui->dtLineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 3, this));
+    m_ui->targetLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
+    m_ui->startLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
+
     m_ui->t1LineEdit->setEnabled(false);
     m_ui->t2LineEdit->setEnabled(false);
     m_ui->t3LineEdit->setEnabled(false);
@@ -803,7 +810,6 @@ void ThemeWidget::memberChangedCallback(int index)
     default:
         break;
     }
-
 }
 
 //TODO this function should be moved to calculation.cpp
