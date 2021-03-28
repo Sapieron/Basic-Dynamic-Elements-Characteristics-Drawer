@@ -32,8 +32,11 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts LinguistTools REQUI
 
 add_subdirectory(calculation)
 add_subdirectory(widget)
-add_subdirectory(translations)
 add_subdirectory(utils)
+
+set(TS_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Drawer_PL.ts
+)
 
 # generate qm files
 qt5_add_translation(QM_FILES ${TS_FILES})

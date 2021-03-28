@@ -43,8 +43,8 @@ namespace Calculation
 
     enum FeedbackType_t
     {
-        None     = 0x00U,
-        Positive = 0x01U
+        Positive = 0x00U,
+        None     = 0x01U
     };
 
     struct DataAcquired_t

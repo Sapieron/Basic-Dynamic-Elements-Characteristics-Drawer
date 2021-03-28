@@ -28,6 +28,7 @@
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QPolarChart>
 
+#include <locale>
 
 using Calculation::DataTable;
 using Calculation::DataList;
@@ -50,7 +51,7 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     _whichResponseIsPicked(ResponseType_t::Step),
     _whichCharactersiticIsPicked(CharacteristicType_t::Time),
     _whichIdealRealIsPicked(IdealRealType_t::Ideal),
-    _whichFeedbackIsPicked(FeedbackType_t::None),
+    _whichFeedbackIsPicked(FeedbackType_t::Positive),
     m_dataTable(generateRandomData(m_listCount, 0, 0)), //FIXME initialize data here to 0
     m_ui(new Ui_ThemeWidgetForm)
 {
@@ -84,29 +85,36 @@ ThemeWidget::ThemeWidget(QWidget *parent) :
     m_ui->feedbackLabel->setVisible(false);
 
     //Make line editing accept only numbers
-    m_ui->kLineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this)); //TODO move it to separate function
-    m_ui->t1LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
-    m_ui->t2LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
-    m_ui->t3LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
-    m_ui->t4LineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
+    auto zeroToHundredValidator = new QDoubleValidator(0.0,    100.0, 10, this);
+    auto minusHunToHunValidator = new QDoubleValidator(-100.0, 100.0, 3,  this);
 
-    m_ui->kpLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
-    m_ui->kiLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
-    m_ui->kdLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
-    m_ui->dtLineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 10, this));
-    m_ui->targetLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
-    m_ui->startLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 10, this));
+    //Makes sure that dots can be entered on any type of keyboard
+    zeroToHundredValidator->setLocale(QLocale::C);
+    minusHunToHunValidator->setLocale(QLocale::C);
+
+    m_ui->kLineEdit->setValidator(zeroToHundredValidator);
+    m_ui->t1LineEdit->setValidator(zeroToHundredValidator);
+    m_ui->t2LineEdit->setValidator(zeroToHundredValidator);
+    m_ui->t3LineEdit->setValidator(zeroToHundredValidator);
+    m_ui->t4LineEdit->setValidator(zeroToHundredValidator);
+
+    m_ui->kpLineEdit->setValidator(minusHunToHunValidator);
+    m_ui->kiLineEdit->setValidator(minusHunToHunValidator);
+    m_ui->kdLineEdit->setValidator(minusHunToHunValidator);
+    m_ui->dtLineEdit->setValidator(zeroToHundredValidator);
+    m_ui->targetLineEdit->setValidator(minusHunToHunValidator);
+    m_ui->startLineEdit->setValidator(minusHunToHunValidator);
     m_ui->maxTLineEdit->setValidator(new QIntValidator(0, 100, this));
 
-    m_ui->kpLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
-    m_ui->kiLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
-    m_ui->kdLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
-    m_ui->dtLineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 3, this));
-    m_ui->targetLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
-    m_ui->startLineEdit->setValidator(new QDoubleValidator(-100.0, 100.0, 3, this));
+    m_ui->kpLineEdit->setValidator(minusHunToHunValidator);
+    m_ui->kiLineEdit->setValidator(minusHunToHunValidator);
+    m_ui->kdLineEdit->setValidator(minusHunToHunValidator);
+    m_ui->dtLineEdit->setValidator(zeroToHundredValidator);
+    m_ui->targetLineEdit->setValidator(minusHunToHunValidator);
+    m_ui->startLineEdit->setValidator(minusHunToHunValidator);
 
-    m_ui->tDlineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 2, this));
-    m_ui->tILineEdit->setValidator(new QDoubleValidator(0.0, 100.0, 2, this));
+    m_ui->tDlineEdit->setValidator(zeroToHundredValidator);
+    m_ui->tILineEdit->setValidator(zeroToHundredValidator);
 
     m_ui->t1LineEdit->setEnabled(false);
     m_ui->t2LineEdit->setEnabled(false);
@@ -245,8 +253,8 @@ void ThemeWidget::populateIdealRealTypeBox()
 
 void ThemeWidget::populateFeedbackTypeBox()
 {
-    m_ui->feedbackComboBox->addItem(tr("None"),     FeedbackType_t::None);
     m_ui->feedbackComboBox->addItem(tr("Positive"), FeedbackType_t::Positive);
+    m_ui->feedbackComboBox->addItem(tr("None"),     FeedbackType_t::None);
 }
 
 
@@ -336,6 +344,8 @@ void ThemeWidget::showGraphGotPressed()
     _data.dt         = m_ui->dtLineEdit->text().toDouble();
     _data.target     = m_ui->targetLineEdit->text().toDouble();
     _data.startPoint = m_ui->startLineEdit->text().toDouble();
+
+    _data.ti         = m_ui->tILineEdit->text().toDouble();
 
     _data.maxT       = m_ui->maxTLineEdit->text().toInt();
 
@@ -478,7 +488,7 @@ bool ThemeWidget::isAllDataProvided_PID()
 {
     switch(_whichFeedbackIsPicked)
     {
-    case FeedbackType_t::None:
+    case FeedbackType_t::Positive:
         return !( this->m_ui->kpLineEdit->text().isEmpty()    ||
                   this->m_ui->kiLineEdit->text().isEmpty()    ||
                   this->m_ui->kdLineEdit->text().isEmpty()    ||
@@ -488,7 +498,7 @@ bool ThemeWidget::isAllDataProvided_PID()
                   this->m_ui->maxTLineEdit->text().isEmpty()  );
         break;
 
-    case FeedbackType_t::Positive:
+    case FeedbackType_t::None:
         return !( this->m_ui->kpLineEdit->text().isEmpty() ||
                   this->m_ui->t1LineEdit->text().isEmpty() ||
                   this->m_ui->tDlineEdit->text().isEmpty() ||
@@ -845,7 +855,7 @@ void ThemeWidget::feedbackChangedCallback(int index)
 
     switch(_whichFeedbackIsPicked)
     {
-    case FeedbackType_t::None:
+    case FeedbackType_t::Positive:
         m_ui->t1LineEdit->setVisible(false);
         m_ui->tILineEdit->setVisible(false);
         m_ui->tDlineEdit->setVisible(false);
@@ -865,9 +875,12 @@ void ThemeWidget::feedbackChangedCallback(int index)
         m_ui->dtLabel->setVisible(true);
         m_ui->targetLabel->setVisible(true);
         m_ui->startLabel->setVisible(true);
+
+        m_ui->signalTypeComboBox->setEnabled(false);
+        m_ui->signalTypeLabel->setEnabled(false);
         break;
 
-    case FeedbackType_t::Positive:
+    case FeedbackType_t::None:
         m_ui->t1LineEdit->setVisible(true);
         m_ui->tILineEdit->setVisible(true);
         m_ui->tDlineEdit->setVisible(true);
@@ -890,6 +903,9 @@ void ThemeWidget::feedbackChangedCallback(int index)
         m_ui->dtLabel->setVisible(false);
         m_ui->targetLabel->setVisible(false);
         m_ui->startLabel->setVisible(false);
+
+        m_ui->signalTypeComboBox->setEnabled(true);
+        m_ui->signalTypeLabel->setEnabled(true);
         break;
 
     default:

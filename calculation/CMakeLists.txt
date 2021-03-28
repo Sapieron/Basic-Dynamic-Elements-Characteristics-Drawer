@@ -12,6 +12,7 @@ set(SOURCES
     inc/${NAME}/timeCalc.hpp
     inc/${NAME}/ampPhaseCalc.hpp
     inc/${NAME}/pidCalc.hpp
+    inc/${NAME}/types.hpp
 )
 
 add_library(${NAME} STATIC ${SOURCES})

@@ -4,204 +4,275 @@
 <context>
     <name>ThemeWidget</name>
     <message>
-        <location filename="themewidget.cpp" line="143"/>
+        <location filename="../widget/themewidget.cpp" line="200"/>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Jasny</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="144"/>
+        <location filename="../widget/themewidget.cpp" line="201"/>
         <source>Blue Cerulean</source>
-        <translation type="unfinished"></translation>
+        <translation>Blue Cerulean</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="145"/>
+        <location filename="../widget/themewidget.cpp" line="202"/>
         <source>Dark</source>
-        <translation type="unfinished"></translation>
+        <translation>Ciemny</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="146"/>
+        <location filename="../widget/themewidget.cpp" line="203"/>
         <source>Brown Sand</source>
-        <translation type="unfinished"></translation>
+        <translation>Brown Sand</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="147"/>
+        <location filename="../widget/themewidget.cpp" line="204"/>
         <source>Blue NCS</source>
-        <translation type="unfinished"></translation>
+        <translation>Blue NCS</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="148"/>
+        <location filename="../widget/themewidget.cpp" line="205"/>
         <source>High Contrast</source>
-        <translation type="unfinished"></translation>
+        <translation>Wysoki kontrast</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="149"/>
+        <location filename="../widget/themewidget.cpp" line="206"/>
         <source>Blue Icy</source>
-        <translation type="unfinished"></translation>
+        <translation>Blue Icy</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="150"/>
+        <location filename="../widget/themewidget.cpp" line="207"/>
         <source>Qt</source>
-        <translation type="unfinished"></translation>
+        <translation>Qt</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="157"/>
+        <location filename="../widget/themewidget.cpp" line="214"/>
         <source>Step</source>
-        <translation type="unfinished"></translation>
+        <translation>Heaviside&apos;a</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="158"/>
+        <location filename="../widget/themewidget.cpp" line="215"/>
         <source>Impulse</source>
-        <translation type="unfinished"></translation>
+        <translation>Delta Dirac&apos;a</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="165"/>
+        <location filename="../widget/themewidget.cpp" line="222"/>
         <source>Proportional</source>
-        <translation type="unfinished"></translation>
+        <translation>Proporcjonalny</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="166"/>
+        <location filename="../widget/themewidget.cpp" line="223"/>
         <source>Inertion First Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Inercyjny 1 rzędu</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="167"/>
+        <location filename="../widget/themewidget.cpp" line="224"/>
         <source>Inertion Second Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Inercyjny 2 rzędu</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="168"/>
+        <location filename="../widget/themewidget.cpp" line="225"/>
         <source>Inertion Third Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Inercyjny 3 rzędu</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="169"/>
+        <location filename="../widget/themewidget.cpp" line="226"/>
         <source>Inertion Fourth Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Inercyjny 4 rzędu</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="170"/>
+        <location filename="../widget/themewidget.cpp" line="227"/>
         <source>Integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Całkujący</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="171"/>
+        <location filename="../widget/themewidget.cpp" line="228"/>
         <source>Differentiation</source>
-        <translation type="unfinished"></translation>
+        <translation>Różniczkujący</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="178"/>
+        <location filename="../widget/themewidget.cpp" line="235"/>
         <source>Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Czasowa</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="179"/>
+        <location filename="../widget/themewidget.cpp" line="236"/>
         <source>Amplitude-Phase</source>
-        <translation type="unfinished"></translation>
+        <translation>Amplitudowo-fazowa</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="184"/>
+        <location filename="../widget/themewidget.cpp" line="237"/>
+        <source>PID</source>
+        <translation>PID</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.cpp" line="242"/>
+        <source>Ideal</source>
+        <translation>Idealny</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.cpp" line="243"/>
+        <source>Real</source>
+        <translation>Rzeczywisty</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.cpp" line="248"/>
+        <source>Positive</source>
+        <translation>Dodatnie</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.cpp" line="249"/>
+        <source>None</source>
+        <translation>Brak</translation>
+    </message>
+    <message>
         <source>ChartNameBasedOnTypeEntered</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Wykres</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="185"/>
         <source>Equation: </source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Równanie: </translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="205"/>
-        <location filename="themewidget.cpp" line="491"/>
+        <location filename="../widget/themewidget.cpp" line="271"/>
+        <location filename="../widget/themewidget.cpp" line="370"/>
+        <location filename="../widget/themewidget.cpp" line="566"/>
+        <location filename="../widget/themewidget.cpp" line="581"/>
         <source>t[s]</source>
-        <translation type="unfinished"></translation>
+        <translation>t[s]</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="206"/>
-        <location filename="themewidget.cpp" line="492"/>
+        <location filename="../widget/themewidget.cpp" line="272"/>
+        <location filename="../widget/themewidget.cpp" line="371"/>
+        <location filename="../widget/themewidget.cpp" line="567"/>
+        <location filename="../widget/themewidget.cpp" line="582"/>
         <source>h(t)</source>
-        <translation type="unfinished"></translation>
+        <translation>h(t)</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="281"/>
         <source>Spline chart</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Wykres rysowany metodą spline</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="283"/>
+        <location filename="../widget/themewidget.cpp" line="352"/>
         <source>Function </source>
-        <translation type="unfinished"></translation>
+        <translation>Funkcja </translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="496"/>
+        <location filename="../widget/themewidget.cpp" line="574"/>
         <source>Re</source>
-        <translation type="unfinished"></translation>
+        <translation>Re</translation>
     </message>
     <message>
-        <location filename="themewidget.cpp" line="497"/>
+        <location filename="../widget/themewidget.cpp" line="575"/>
         <source>Im</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>ThemeWidgetForm</name>
     <message>
-        <location filename="themewidget.ui" line="14"/>
+        <location filename="../widget/themewidget.ui" line="20"/>
         <source>ThemeWidget</source>
-        <translation type="unfinished"></translation>
+        <translation>Widget</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="42"/>
+        <location filename="../widget/themewidget.ui" line="55"/>
+        <source>Start:</source>
+        <translation>Start:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="132"/>
+        <source>Kd:</source>
+        <translation>Kd:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="149"/>
+        <source>Kp:</source>
+        <translation>Kp:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="196"/>
+        <source>Target:</source>
+        <translation>Wartość docelowa:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="203"/>
+        <source>dt:</source>
+        <translation>dt:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="217"/>
+        <source>Ti:</source>
+        <translation>Ti:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="234"/>
         <source>T1:</source>
-        <translation type="unfinished"></translation>
+        <translation>T1:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="72"/>
+        <location filename="../widget/themewidget.ui" line="331"/>
+        <source>Ki:</source>
+        <translation>Ki:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="338"/>
+        <source>Feedback:</source>
+        <translation>Sprzężenie zwrotne:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="182"/>
         <source>Characteristic:</source>
-        <translation type="unfinished"></translation>
+        <translation>Charakterystyka:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="95"/>
+        <location filename="../widget/themewidget.ui" line="258"/>
         <source>k:</source>
-        <translation type="unfinished"></translation>
+        <translation>k:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="102"/>
+        <location filename="../widget/themewidget.ui" line="48"/>
         <source>T2:</source>
-        <translation type="unfinished"></translation>
+        <translation>T2:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="109"/>
+        <location filename="../widget/themewidget.ui" line="278"/>
+        <source>Max t:</source>
+        <translation>Maksymalne t:</translation>
+    </message>
+    <message>
+        <location filename="../widget/themewidget.ui" line="311"/>
         <source>T3:</source>
-        <translation type="unfinished"></translation>
+        <translation>T3:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="119"/>
+        <location filename="../widget/themewidget.ui" line="241"/>
         <source>Show graph</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż wykres</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="126"/>
+        <location filename="../widget/themewidget.ui" line="210"/>
         <source>Signal type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wymuszenie:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="146"/>
+        <location filename="../widget/themewidget.ui" line="189"/>
         <source>Member type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Człon:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="153"/>
+        <location filename="../widget/themewidget.ui" line="102"/>
         <source>T4:</source>
-        <translation type="unfinished"></translation>
+        <translation>T4:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="163"/>
+        <location filename="../widget/themewidget.ui" line="95"/>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>Motyw:</translation>
     </message>
     <message>
-        <location filename="themewidget.ui" line="180"/>
+        <location filename="../widget/themewidget.ui" line="251"/>
         <source>Td:</source>
-        <translation type="unfinished"></translation>
+        <translation>Td:</translation>
     </message>
 </context>
 </TS>

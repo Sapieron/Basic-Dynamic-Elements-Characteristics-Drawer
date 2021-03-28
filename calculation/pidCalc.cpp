@@ -80,19 +80,27 @@ QPointF PIDCalculation::getValueInTimePoint( DataAcquired_t& data,
 {
     QPointF result;
 
-    result.setX( timePoint );
-    result.setY( getPIDWithFeedbackValue(data, timePoint) );
+    switch(data.feedbackType)
+    {
+    case FeedbackType_t::None:
+        result = getPIDWithNoFeedbackValue(data, timePoint);
+        break;
+
+    case FeedbackType_t::Positive:
+        result = getPIDWithFeedbackValue(data, timePoint);
+        break;
+    }
 
     return result;
 }
 
 
-qreal PIDCalculation::getPIDWithFeedbackValue(DataAcquired_t& data,
-                                  qreal timePoint )
+QPointF PIDCalculation::getPIDWithFeedbackValue(DataAcquired_t& data,
+                                                qreal timePoint )
 {
-    Q_UNUSED(timePoint);
+    QPointF result;
 
-    qreal result;
+    qreal localResult;
 
     // Calculate error
     qreal error = _setpoint - _pv;
@@ -109,34 +117,44 @@ qreal PIDCalculation::getPIDWithFeedbackValue(DataAcquired_t& data,
     qreal Dout = data.kd * derivative;
 
     // Calculate total output
-    result = Pout + Iout + Dout;
+    localResult = Pout + Iout + Dout;
 
     // Restrict to max/min
-    if( result > _max )
-        result = _max;
-    else if( result < _min )
-        result = _min;
+    if( localResult > _max )
+        localResult = _max;
+    else if( localResult < _min )
+        localResult = _min;
 
     // Save error to previous error
     _prevError = error;
 
-    _pv += result;
+    _pv += localResult;
 
+    result.setX(timePoint);
+    result.setY(localResult);
     return result;
 }
 
 QPointF PIDCalculation::getPIDWithNoFeedbackValue(DataAcquired_t& data,
                                                 qreal timePoint)
 {
-    QPointF result(0.0, 0.0);
+    QPointF result;
 //    Impulse:
 //    kp/Ti + (kp*dirac(t)*(T + Td))/T - (Td*kp*exp(-t/T))/T^2
 
-//    Step:
-//    kp + (kp*t)/Ti + (Td*kp*exp(-t/T))/T
-    result.setX(timePoint);
-    result.setY( data.kp + (data.kp * timePoint)/data.ti + (data.td * data.kp * exp(-timePoint/data.t1)/data.t1 ) );
-//1. add data.ti
+    if(data.responseType == ResponseType_t::Impulse)
+    {
+        result.setX(timePoint);
+        result.setY( data.kp/data.ti +
+                     (data.kp * diracDelta(timePoint) * (data.t1 + data.td))/data.t1 -
+                     (data.td * data.kp * exp(-timePoint/data.t1))/ pow(data.t1, (qreal)2U) );
+    }
+    else
+    {
+        result.setX(timePoint);
+        result.setY( data.kp + (data.kp * timePoint)/data.ti + (data.td * data.kp * exp(-timePoint/data.t1))/data.t1 );
+    }
+
     return result;
 }
 
