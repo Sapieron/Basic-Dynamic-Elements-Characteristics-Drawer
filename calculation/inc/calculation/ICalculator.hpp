@@ -15,6 +15,8 @@ namespace Calculation
     {
     public:
         virtual DataTable calculate(DataAcquired_t& data, QPair<int, int> span) = 0;
+
+        qreal diracDelta(qreal timePoint) const;
     };
 }
 

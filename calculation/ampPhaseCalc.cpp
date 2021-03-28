@@ -1,6 +1,7 @@
 #include "ampPhaseCalc.hpp"
 #include <cmath>
 #include <qlist.h>
+#include <QtGui/QPen>
 
 using Calculation::AmplitudePhaseCalculation;
 using Calculation::DataAcquired_t;
@@ -20,11 +21,13 @@ DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, 
 
     {
         //just calculate very big omega
-        for (qreal omega(samplingFrequency); omega < 100; omega += samplingFrequency) {
+        for (qreal omega(samplingFrequency); omega < 100; omega += samplingFrequency)
+        {
             QPointF value = this->getValueInOmegaPoint(data, omega);
             QString label = "Slice " + QString::number(0) + ":" + QString::number(omega);
             dataList << Data(value, label);
         }
+
         result << dataList;
     }
 
@@ -72,6 +75,7 @@ QPointF AmplitudePhaseCalculation::getValueInOmegaPoint(DataAcquired_t& data,
 
     return result;
 }
+
 
 /*******************************************************************************\
  *                                Proportional
@@ -205,14 +209,18 @@ QPointF AmplitudePhaseCalculation::getIntertionFourthOrder(DataAcquired_t& data,
 QPointF AmplitudePhaseCalculation::getDifferentiation(DataAcquired_t& data,
                                                       qreal omega)
 {
-    //To avoid unused warnings
-    Q_UNUSED(data);
-    Q_UNUSED(omega);
-
     QPointF result;
 
-    result.setX(0);
-    result.setY(0);
+    if(data.idealRealType == IdealRealType_t::Ideal)
+    {
+        result.setX(0);
+        result.setY( (qreal)data.td * omega );
+    }
+    else
+    {
+        result.setX( data.k / ( pow(data.td, (qreal)2) * pow(omega, (qreal)2) + (qreal)1 ) );
+        result.setY( (data.k * data.td * omega)/( pow(data.td, (qreal)2) * pow(omega, (qreal)2) + (qreal)1 ) );
+    }
 
     return result;
 }
@@ -226,7 +234,7 @@ QPointF AmplitudePhaseCalculation::getIntegration(DataAcquired_t& data,
     QPointF result;
 
     result.setX(0);
-    result.setY( (qreal)data.td * omega );
+    result.setY( -(qreal)data.td * omega );
 
     return result;
 }

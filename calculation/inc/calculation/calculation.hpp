@@ -23,6 +23,9 @@ namespace Calculation
         DataTable calculate(DataAcquired_t& data, QPair<int, int> span);
 
       private:
+        DataList calculateXAxis(DataTable *dataTable);
+        DataList calculateYAxis(DataTable *dataTable);
+
         AmplitudePhaseCalculation _amplitudePhaseChartCalculation;
         TimeChartCalculation      _timeChartCalculation;
         PIDCalculation            _pidCalculation;

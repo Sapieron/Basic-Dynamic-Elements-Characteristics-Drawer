@@ -28,11 +28,23 @@ namespace Calculation
         Impulse = 0x02U
     };
 
+    enum IdealRealType_t
+    {
+        Ideal = 0x00U,
+        Real  = 0x01U
+    };
+
     enum CharacteristicType_t
     {
         Time           = 0x01U,
         AmplitudePhase = 0x02U,
         PID            = 0x03U
+    };
+
+    enum FeedbackType_t
+    {
+        Positive = 0x00U,
+        None     = 0x01U
     };
 
     struct DataAcquired_t
@@ -44,6 +56,7 @@ namespace Calculation
         qreal t4 = 0;
 
         qreal td = 0;
+        qreal ti = 0;
 
         qreal kp         = 0;
         qreal ki         = 0;
@@ -56,7 +69,9 @@ namespace Calculation
 
         MemberType_t         memberType;
         ResponseType_t       responseType;
+        IdealRealType_t      idealRealType;
         CharacteristicType_t characteristicType;
+        FeedbackType_t       feedbackType;
     };
 }
 

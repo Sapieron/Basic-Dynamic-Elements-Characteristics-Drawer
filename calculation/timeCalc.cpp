@@ -210,10 +210,27 @@ QPointF TimeChartCalculation::getIntertionFourthOrder(DataAcquired_t& data,
 QPointF TimeChartCalculation::getDifferentiation(DataAcquired_t& data,
                                                  qreal timePoint)
 {
-    Q_UNUSED(data);
-    Q_UNUSED(timePoint);
+    QPointF result;
 
-    QPointF result(0, 0);
+    if(data.idealRealType == IdealRealType_t::Ideal)
+    {
+        result.setX(0);
+        result.setY(0);
+    }
+    else
+    {
+        if(data.responseType == ResponseType_t::Impulse)
+        {
+            result.setX( timePoint );
+            result.setY( (data.k*exp(-timePoint/data.td))/data.td );
+        }
+        else
+        {
+            result.setX( timePoint );
+            result.setY( (data.k * diracDelta(timePoint))/data.td -
+                         (data.k * exp(-timePoint/data.td))/pow(data.td, (qreal)2U) );
+        }
+    }
 
     return result;
 }
