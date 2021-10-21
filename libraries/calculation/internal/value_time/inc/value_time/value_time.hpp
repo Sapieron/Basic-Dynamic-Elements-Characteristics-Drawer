@@ -1,7 +1,7 @@
 #ifndef TIMECHARTS_HPP
 #define TIMECHARTS_HPP
 
-#include "ICalculator.hpp"  //FIXME actually that interfacing won't be needed, I'm not using it anywhere
+#include "calculation/ICalculation.hpp"
 #include <vector>
 
 namespace Calculation

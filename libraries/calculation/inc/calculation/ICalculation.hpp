@@ -5,15 +5,17 @@
 
 #include "types.h"
 
-using Data = QPair<QPointF, QString>;
+using Data = QPair<QPointF, QString>;   //FIXME prefer stdlib over qt libs
 using DataList = QList<Data>;
 using DataTable = QList<DataList>;
 
 namespace Calculation
 {
-    class ICalculator
+    class ICalculation  //FIXME it's not an interface, it's not ppurely abstract!
     {
-    public:
+      public:
+        virtual ~ICalculation() = delete;
+
         virtual DataTable calculate(DataAcquired_t& data, QPair<int, int> span) = 0;
 
         qreal diracDelta(qreal timePoint) const;
