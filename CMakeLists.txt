@@ -19,26 +19,24 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Charts LinguistTools REQUI
 
 add_subdirectory(libraries)
 
-add_subdirectory(calculation)
 add_subdirectory(widget)
-add_subdirectory(utils)
 
-set(TS_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/translations/Drawer_PL.ts
+set(TS_FILES #FIXME it's not a responsibility of this module!
+    ${CMAKE_CURRENT_SOURCE_DIR}/libraries/translations/Drawer_PL.ts
 )
 
 # generate qm files
 qt5_add_translation(QM_FILES ${TS_FILES})
 
 add_executable(${PROJECT_NAME}
-    main.cpp
+    src/main.cpp
     ${QM_FILES}
 )
 
 
 target_link_libraries(Drawer
     PRIVATE
-    calculation
+    calculations    #TODO is that a smell here?
     widget
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Charts

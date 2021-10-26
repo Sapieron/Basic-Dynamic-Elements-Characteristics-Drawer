@@ -1,12 +1,11 @@
 #ifndef CALCULATION_HPP
 #define CALCULATION_HPP
 
-#include "types.h"
-#include <vector>
+#include "calculations/types.h" //TODO do we really need this include?
 
-#include "timeCalc.hpp"
-#include "ampPhaseCalc.hpp"
-#include "pidCalc.hpp"
+//#include "timeCalc.hpp"
+//#include "ampPhaseCalc.hpp"
+//#include "pidCalc.hpp"
 
 
 namespace Calculation
@@ -26,9 +25,9 @@ namespace Calculation
         DataList calculateXAxis(DataTable *dataTable);
         DataList calculateYAxis(DataTable *dataTable);
 
-        AmplitudePhaseCalculation _amplitudePhaseChartCalculation;
-        TimeChartCalculation      _timeChartCalculation;
-        PIDCalculation            _pidCalculation;
+//        AmplitudePhaseCalculation _amplitudePhaseChartCalculation;
+//        TimeChartCalculation      _timeChartCalculation;
+//        PIDCalculation            _pidCalculation;
     };
 }
 

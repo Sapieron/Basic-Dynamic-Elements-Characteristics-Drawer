@@ -1,1 +1,4 @@
+add_subdirectory(app)
+add_subdirectory(calculations)
 add_subdirectory(external)
+add_subdirectory(translations)

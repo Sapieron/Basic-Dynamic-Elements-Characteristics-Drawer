@@ -1,7 +1,7 @@
 #include "ampPhaseCalc.hpp"
 #include <cmath>
-#include <qlist.h>
-#include <QtGui/QPen>
+#include <qlist.h>  //FIXME use std::list
+#include <QtGui/QPen> //FIXME mixing responsibilites of a module!
 
 using Calculation::AmplitudePhaseCalculation;
 using Calculation::DataAcquired_t;
@@ -12,7 +12,7 @@ using Calculation::DataTable;
 \*******************************************************************************/
 DataTable AmplitudePhaseCalculation::calculate(DataAcquired_t& data, QPair<int, int> timeSpan)
 {
-    Q_UNUSED(timeSpan);
+    Q_UNUSED(timeSpan); //FIXME unused is a smell - interface is badly designed!
 
     DataTable result;
     DataList dataList;

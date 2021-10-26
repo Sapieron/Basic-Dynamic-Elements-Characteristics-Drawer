@@ -1,12 +1,11 @@
 #ifndef AMPLITUDEPHASECHARTS_HPP
 #define AMPLITUDEPHASECHARTS_HPP
 
-#include "ICalculator.hpp"
-#include "vector"
+#include "calculations/ICalculations.hpp"
 
 namespace Calculation
 {
-    class AmplitudePhaseCalculation : public ICalculator
+    class AmplitudePhaseCalculation : public ICalculation
     {
       public:
         AmplitudePhaseCalculation() = default;

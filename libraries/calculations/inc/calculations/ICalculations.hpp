@@ -1,10 +1,12 @@
 #ifndef ICALCULATOR_HPP
 #define ICALCULATOR_HPP
-#include "QPair"
+
+#include "QPair"    //FIXME use std::lib!
 #include "QPointF"
 
 #include "types.h"
 
+//FIXME if we really need this, than it should be defined in types.hpp or something!
 using Data = QPair<QPointF, QString>;   //FIXME prefer stdlib over qt libs
 using DataList = QList<Data>;
 using DataTable = QList<DataList>;

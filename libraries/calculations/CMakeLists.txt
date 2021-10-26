@@ -1,19 +1,13 @@
-set(NAME calculation)
+set(NAME calculations)
 
 set(SOURCES
     ICalculator.cpp
-    calculation.cpp
-    timeCalc.cpp
-    ampPhaseCalc.cpp
-    pidCalc.cpp
-
-    inc/${NAME}/ICalculator.hpp
-    inc/${NAME}/calculation.hpp
-    inc/${NAME}/timeCalc.hpp
-    inc/${NAME}/ampPhaseCalc.hpp
-    inc/${NAME}/pidCalc.hpp
-    inc/${NAME}/types.hpp
+    # calculations.cpp //TODO add this file
 )
+
+add_subdirectory(amp_phase)
+add_subdirectory(pid)
+add_subdirectory(value_time)
 
 add_library(${NAME} STATIC ${SOURCES})
 

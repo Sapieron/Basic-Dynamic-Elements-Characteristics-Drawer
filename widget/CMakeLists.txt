@@ -9,8 +9,7 @@ set(SOURCES
 add_library(${NAME} STATIC ${SOURCES})
 
 target_link_libraries(${NAME}
-    calculation
-    utils
+    app_calculations
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Charts
 )

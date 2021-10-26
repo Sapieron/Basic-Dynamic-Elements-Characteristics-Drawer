@@ -1,9 +1,9 @@
-#include "ICalculator.hpp"
+#include "ICalculations.hpp"
 #include <limits>
 
-using Calculation::ICalculator;
+using Calculation::ICalculation;
 
-qreal ICalculator::diracDelta(qreal timePoint) const    //FIXME Interface with a source file? What is that?
+qreal ICalculation::diracDelta(qreal timePoint) const    //FIXME Interface with a source file? What is that?
 {
     if(timePoint != 0)
     {
