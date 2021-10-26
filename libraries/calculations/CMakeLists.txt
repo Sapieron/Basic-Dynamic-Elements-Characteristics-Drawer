@@ -8,6 +8,7 @@ set(SOURCES
 add_subdirectory(amp_phase)
 add_subdirectory(pid)
 add_subdirectory(value_time)
+add_subdirectory(unit_tests)
 
 add_library(${NAME} STATIC ${SOURCES})
 

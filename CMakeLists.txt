@@ -5,6 +5,8 @@ set(CMAKE_CXX_COMPILER_WORKS 1)
 
 project(Drawer LANGUAGES CXX)
 
+enable_testing()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
